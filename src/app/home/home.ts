@@ -26,11 +26,12 @@ export class Home implements AfterViewInit, OnDestroy {
 
   // Frame animation properties
   private readonly TOTAL_FRAMES = 200;
-  private readonly BASE_URL =
-    'https://lethgiylpcoexwhtxagu.supabase.co/storage/v1/object/public/hamatoz/';
+  private readonly BASE_URL = 'frames/';
   private frames: HTMLImageElement[] = [];
   private ctx: CanvasRenderingContext2D | null = null;
   private currentFrame = 0;
+  private currentFrameFloat = 0;
+  private targetFrame = 0;
   private animationId: number | null = null;
   private scrollHandler: (() => void) | null = null;
   private resizeHandler: (() => void) | null = null;
@@ -123,36 +124,44 @@ export class Home implements AfterViewInit, OnDestroy {
   private setupScrollListener(): void {
     this.ngZone.runOutsideAngular(() => {
       this.scrollHandler = () => {
-        if (this.animationId) {
-          cancelAnimationFrame(this.animationId);
-        }
-
-        this.animationId = requestAnimationFrame(() => {
-          this.updateFrameOnScroll();
-        });
+        this.updateTargetFrame();
       };
 
       window.addEventListener('scroll', this.scrollHandler, { passive: true });
+      this.startRenderLoop();
     });
   }
 
-  private updateFrameOnScroll(): void {
-    // Calculate scroll progress (0 to 1) based on hero section height
+  private updateTargetFrame(): void {
     const scrollTop = window.scrollY;
-    const heroHeight = window.innerHeight * 15; // Extended scroll distance to view all 200 frames smoothly
+    // Lowered to 8x viewport height so it scrolls through all frames faster
+    const heroHeight = window.innerHeight * 8; 
     const scrollProgress = Math.min(scrollTop / heroHeight, 1);
 
-    // Calculate which frame to show
-    const targetFrame = Math.min(
-      Math.floor(scrollProgress * (this.TOTAL_FRAMES - 1)),
-      this.TOTAL_FRAMES - 1
-    );
+    this.targetFrame = scrollProgress * (this.TOTAL_FRAMES - 1);
+  }
 
-    // Only render if frame changed
-    if (targetFrame !== this.currentFrame) {
-      this.currentFrame = targetFrame;
-      this.renderFrame(targetFrame);
-    }
+  private startRenderLoop(): void {
+    const render = () => {
+      // Smooth interpolation (lerp) for Apple-like momentum
+      // Increased from 0.08 to 0.25 to make it snappier and faster
+      this.currentFrameFloat += (this.targetFrame - this.currentFrameFloat) * 0.25;
+      
+      const frameIndex = Math.min(
+        Math.max(Math.round(this.currentFrameFloat), 0),
+        this.TOTAL_FRAMES - 1
+      );
+
+      // Only draw if the integer frame actually changed, saving performance
+      if (frameIndex !== this.currentFrame) {
+        this.currentFrame = frameIndex;
+        this.renderFrame(frameIndex);
+      }
+
+      this.animationId = requestAnimationFrame(render);
+    };
+
+    this.animationId = requestAnimationFrame(render);
   }
 
   private renderFrame(frameIndex: number): void {

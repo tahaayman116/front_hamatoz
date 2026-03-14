@@ -1,1 +1,40 @@
-<p>nav-bar works!</p>
+<header
+  class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between whitespace-nowrap px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 py-3">
+  <a class="flex items-center gap-3 text-white transition-opacity hover:opacity-80" routerLink="/">
+    <div class="size-6">
+      <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#clip0_6_330)">
+          <path clip-rule="evenodd"
+            d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z"
+            fill="currentColor" fill-rule="evenodd"></path>
+        </g>
+        <defs>
+          <clipPath id="clip0_6_330">
+            <rect fill="white" height="48" width="48"></rect>
+          </clipPath>
+        </defs>
+      </svg>
+    </div>
+    <h2 class="text-xl font-bold leading-tight tracking-tight">Hamatoz</h2>
+  </a>
+
+  <nav class="hidden md:flex items-center gap-2 rounded-full border border-white/10 bg-black/20 p-1 backdrop-blur-md">
+    <a class="nav-link" routerLink="/cars">Cars</a>
+    <a class="nav-link" href="#">Parts</a>
+    <a class="nav-link" href="#">Services</a>
+    <a class="nav-link" href="#">About</a>
+  </nav>
+
+  <div class="hidden md:flex items-center gap-4">
+    <button class="btn-ghost">
+      <span class="truncate">Login</span>
+    </button>
+    <button class="btn-primary">
+      <span class="truncate">Sign Up</span>
+    </button>
+  </div>
+
+  <button class="md:hidden" type="button" aria-label="Open menu">
+    <span class="material-symbols-outlined text-3xl">menu</span>
+  </button>
+</header>

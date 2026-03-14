@@ -1,0 +1,345 @@
+<div class="font-display bg-background-dark text-white antialiased">
+  <!-- Hamatoz NavBar -->
+  <header
+    class="flex items-center justify-between whitespace-nowrap px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 py-3 sticky top-0 z-20 bg-background-dark/80 backdrop-blur-md border-b border-white/10">
+    <a class="flex items-center gap-3 text-white transition-opacity hover:opacity-80" routerLink="/">
+      <div class="size-6">
+        <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <g clip-path="url(#clip0_6_330)">
+            <path clip-rule="evenodd"
+              d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z"
+              fill="currentColor" fill-rule="evenodd"></path>
+          </g>
+          <defs>
+            <clipPath id="clip0_6_330">
+              <rect fill="white" height="48" width="48"></rect>
+            </clipPath>
+          </defs>
+        </svg>
+      </div>
+      <h2 class="text-white text-xl font-bold leading-tight tracking-tight">Hamatoz</h2>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-2 rounded-full border border-white/10 bg-black/20 p-1 backdrop-blur-md">
+      <a class="text-white/70 hover:text-white hover:bg-white/10 text-sm font-medium leading-normal transition-all px-4 py-1.5 rounded-full"
+        href="#">Cars</a>
+      <a class="text-white/70 hover:text-white hover:bg-white/10 text-sm font-medium leading-normal transition-all px-4 py-1.5 rounded-full"
+        href="#">Parts</a>
+      <a class="text-white/70 hover:text-white hover:bg-white/10 text-sm font-medium leading-normal transition-all px-4 py-1.5 rounded-full"
+        href="#">Services</a>
+      <a class="text-white/70 hover:text-white hover:bg-white/10 text-sm font-medium leading-normal transition-all px-4 py-1.5 rounded-full"
+        href="#">About</a>
+    </nav>
+
+    <div class="hidden md:flex items-center gap-4">
+      <button
+        class="min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-5 bg-transparent text-white text-sm font-semibold leading-normal transition-all hover:bg-white/10 border border-transparent hover:border-white/20">
+        <span class="truncate">Login</span>
+      </button>
+      <button
+        class="min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-5 bg-gradient-to-b from-metal-light to-metal-dark text-white text-sm font-semibold leading-normal shadow-md shadow-black/30 transition-all hover:shadow-lg hover:shadow-black/40 hover:from-metal-light/90 hover:to-metal-dark/90 border border-white/10">
+        <span class="truncate">Sign Up</span>
+      </button>
+    </div>
+
+    <button class="md:hidden" type="button" aria-label="Menu">
+      <span class="material-symbols-outlined text-3xl">menu</span>
+    </button>
+  </header>
+
+  <div class="relative flex min-h-screen w-full">
+    <!-- Side Navigation Bar -->
+    <aside
+      class="flex h-screen w-64 flex-col border-r border-gray-200 dark:border-gray-700 bg-card-light dark:bg-card-dark p-6 sticky top-0">
+      <div class="flex flex-col gap-2 flex-grow [&>a:hover]:text-black">
+        <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12" style="
+            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCbRzb7nDXJ9elyLunKMJcgaCwqgoGAPzKLkzM5pFt8dw-gYY0d_027JyU3auUPxt5EUCfgSXPVCtoOuigyy94sKKaOaNqSqbT54aFooqISvEjqqv-CbttmJdOQbNEJdF3xQ7ptHiXWGSTEFY5hmzkAVQLKNsRJLd8-o1d0OCeqYU5LD6Q4v5Kwa5sLgjs553GEgvZILVrwODZL7zMAtfGeIB_0GjGM49rTZ1BbTMuTWgBTIjVu-LSuz41eo7fSGP4xRYR-dbJNadoJ');
+          "></div>
+
+        <div class="flex flex-col">
+          <h1 class="text-text-light-primary dark:text-text-dark-primary text-base font-semibold">
+            James Smith
+          </h1>
+          <p class="text-text-light-secondary dark:text-text-dark-secondary text-sm font-normal">
+            james.s@email.com
+          </p>
+        </div>
+      </div>
+
+      <nav class="flex flex-col gap-2 flex-grow [&>a:hover]:text-black">
+        <a class="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-primary/10 text-primary" href="#">
+          <span class="material-symbols-outlined text-2xl">dashboard</span>
+          <p class="text-sm font-semibold">Dashboard</p>
+        </a>
+
+        <a class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-text-light-secondary dark:text-text-dark-secondary hover:bg-gray-100 dark:hover:bg-white/5 transition-colors duration-200"
+          href="#">
+          <span class="material-symbols-outlined text-2xl">favorite</span>
+          <p class="text-sm font-medium">Saved Cars</p>
+        </a>
+
+        <a class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-text-light-secondary dark:text-text-dark-secondary hover:bg-gray-100 dark:hover:bg-white/5 transition-colors duration-200"
+          href="#">
+          <span class="material-symbols-outlined text-2xl">history</span>
+          <p class="text-sm font-medium">Recently Viewed</p>
+        </a>
+
+        <a class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-text-light-secondary dark:text-text-dark-secondary hover:bg-gray-100 dark:hover:bg-white/5 transition-colors duration-200"
+          href="#">
+          <span class="material-symbols-outlined text-2xl">mail</span>
+          <p class="text-sm font-medium">Messages</p>
+        </a>
+
+        <a class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-text-light-secondary dark:text-text-dark-secondary hover:bg-gray-100 dark:hover:bg-white/5 transition-colors duration-200"
+          href="#">
+          <span class="material-symbols-outlined text-2xl">person</span>
+          <p class="text-sm font-medium">My Profile</p>
+        </a>
+
+        <a class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-text-light-secondary dark:text-text-dark-secondary hover:bg-gray-100 dark:hover:bg-white/5 transition-colors duration-200"
+          href="#">
+          <span class="material-symbols-outlined text-2xl">settings</span>
+          <p class="text-sm font-medium">Settings</p>
+        </a>
+      </nav>
+
+      <div class="flex flex-col gap-2 flex-grow [&>a:hover]:text-black">
+        <button
+          class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors duration-200">
+          <span class="truncate">Search for Cars</span>
+        </button>
+        <a class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-text-light-secondary dark:text-text-dark-secondary hover:bg-gray-100 dark:hover:bg-white/5 transition-colors duration-200"
+          href="#">
+          <span class="material-symbols-outlined text-2xl">logout</span>
+          <p class="text-sm font-medium">Logout</p>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8 overflow-y-auto">
+      <div class="max-w-5xl mx-auto">
+        <!-- Page Heading -->
+        <header class="flex flex-wrap items-center justify-between gap-4 mb-8">
+          <div class="flex flex-col gap-1">
+            <h1 class="text-text-light-primary dark:text-text-dark-primary text-4xl font-black tracking-tight">
+              Welcome back, James!
+            </h1>
+            <p class="text-text-light-secondary dark:text-text-dark-secondary text-base">
+              Here is an overview of your activity.
+            </p>
+          </div>
+
+          <button
+            class="relative flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full size-12 bg-card-light dark:bg-card-dark text-text-light-primary dark:text-text-dark-primary shadow-sm hover:bg-gray-100 dark:hover:bg-white/5 transition-colors duration-200">
+            <span class="material-symbols-outlined text-2xl">notifications</span>
+            <div class="absolute top-2 right-2 flex size-3 items-center justify-center">
+              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-secondary opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+            </div>
+          </button>
+        </header>
+
+        <!-- Sections -->
+        <div class="flex flex-col gap-10">
+          <!-- Saved Cars Section -->
+          <section>
+            <h2 class="text-text-light-primary dark:text-text-dark-primary text-2xl font-bold tracking-tight mb-4 px-1">
+              Your Saved Cars
+            </h2>
+
+            <div
+              class="overflow-x-auto [-ms-scrollbar-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -mx-4">
+              <div class="flex items-stretch px-4 gap-6">
+                <!-- Card 1 -->
+                <div
+                  class="flex h-full flex-1 flex-col gap-3 rounded-xl bg-card-light dark:bg-card-dark shadow-sm min-w-64 transform transition-transform duration-300 hover:-translate-y-1">
+                  <div class="w-full bg-center bg-no-repeat aspect-[4/3] bg-cover rounded-t-xl" style="
+                      background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAYIl72VXOVdFQYBLh6RSKJtPS5g3j1p_sJ24dTZdFBtO1kJBkbUTw1obVG9H_S7Cl3nmovzFyRu0_1tVpu_mx6_EIODntZLcVy_cmP4M_eatiAA9N6xyNtmB0dp0SGDgVDy2u3j-Ym-rCXEsOknevR3U2I2mdpRq3WoQZBUxpfkSth4R9al27YjE741TiAujOEOB_Xs5NKSxrlXrMSrytttghpfMp-v9TDTgLsmHz3v9L778zu8Oskrp-EgujR_VsIK7UdJvzFknPr');
+                    "></div>
+
+                  <div class="flex flex-col flex-1 justify-between p-4 pt-0">
+                    <div>
+                      <p class="text-text-light-primary dark:text-text-dark-primary text-base font-semibold">
+                        2022 Tesla Model 3
+                      </p>
+                      <p class="text-primary text-sm font-medium">$45,000</p>
+                    </div>
+
+                    <button
+                      class="flex mt-3 min-w-[84px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 transition-colors duration-200">
+                      <span class="truncate">Remove</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div
+                  class="flex h-full flex-1 flex-col gap-3 rounded-xl bg-card-light dark:bg-card-dark shadow-sm min-w-64 transform transition-transform duration-300 hover:-translate-y-1">
+                  <div class="w-full bg-center bg-no-repeat aspect-[4/3] bg-cover rounded-t-xl" style="
+                      background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBFFGJCimK0_bASx7we-mVTzV5KaKDxF5hZ_IxTK9HceNcZjz-mQhXwzvscLxxXcr0DuMg5Zf-gKZRAM89sFSE42_SS8tN395hW64S4Q_R7eGlH5kHI7l0FjAgboosqLuJnIOFw2XzBhfLIWzFSG6a5YvOxrbqoSrMxApPwgW3RV-veA82k8EQf8g3Tga4rTEF7QRy3HL_jEdKBC4m3OyxDS1ZOAA4ztdv_Eh4BRq-pfQSqv-r728RYJAawEe4Dm0UkCSWOQYW6u-gc');
+                    "></div>
+
+                  <div class="flex flex-col flex-1 justify-between p-4 pt-0">
+                    <div>
+                      <p class="text-text-light-primary dark:text-text-dark-primary text-base font-semibold">
+                        2021 Ford Bronco
+                      </p>
+                      <p class="text-primary text-sm font-medium">$48,500</p>
+                    </div>
+
+                    <button
+                      class="flex mt-3 min-w-[84px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 transition-colors duration-200">
+                      <span class="truncate">Remove</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div
+                  class="flex h-full flex-1 flex-col gap-3 rounded-xl bg-card-light dark:bg-card-dark shadow-sm min-w-64 transform transition-transform duration-300 hover:-translate-y-1">
+                  <div class="w-full bg-center bg-no-repeat aspect-[4/3] bg-cover rounded-t-xl" style="
+                      background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCV5fGDtSehgjXFMS2fg4mlpLQMfBFlejrbX2CLY01wnw2ZV0xsLn1ZiDJPQFIugOItqs0omJu7eVLZWOKVJFLEvFpxIcpmwavUry0-Krknb-jGnSwggpuKGKufUGTua4lVHml8y_59QHvlLXNrTuKUPJ3qzr3J9XUGWi_Y35baF2MAtC79U8mm3NSvR4_E4Rmo0ymQ6_1_fMF-GpW7OHEMfvvFhgR_7v9Asu3mLwk1gJsA0-EGYXujzMNgefxUPasSBY01OUMZKrfR');
+                    "></div>
+
+                  <div class="flex flex-col flex-1 justify-between p-4 pt-0">
+                    <div>
+                      <p class="text-text-light-primary dark:text-text-dark-primary text-base font-semibold">
+                        2023 BMW Z4
+                      </p>
+                      <p class="text-primary text-sm font-medium">$65,300</p>
+                    </div>
+
+                    <button
+                      class="flex mt-3 min-w-[84px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 transition-colors duration-200">
+                      <span class="truncate">Remove</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div
+                  class="flex h-full flex-1 flex-col gap-3 rounded-xl bg-card-light dark:bg-card-dark shadow-sm min-w-64 transform transition-transform duration-300 hover:-translate-y-1">
+                  <div class="w-full bg-center bg-no-repeat aspect-[4/3] bg-cover rounded-t-xl" style="
+                      background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAOtcsvPNP102iZudPo2ioyIC5FMTox2ynnUVynsIo7E-FwajdPcmjwW7C_lA6asTCpkkywdDFMjnrkhyX_UDhISVvFZGlOYz4X2DlPqSBAWgAsi34oh7FCEzIwvJ_bDi0otgeu5NeyGi3tpNFbOB5kdkKu7Q1UP4vH255GVS8UGttHpNgkRXjnUeJAwo8D4SzUKPocbvWoqU10A79WWkJVtwFrkfo9r9NsmprjgoeuhGc9Az6lbINKu1rL4wdbXGHW7VFAkWW1CHRE');
+                    "></div>
+
+                  <div class="flex flex-col flex-1 justify-between p-4 pt-0">
+                    <div>
+                      <p class="text-text-light-primary dark:text-text-dark-primary text-base font-semibold">
+                        2022 Porsche 911
+                      </p>
+                      <p class="text-primary text-sm font-medium">$114,400</p>
+                    </div>
+
+                    <button
+                      class="flex mt-3 min-w-[84px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 transition-colors duration-200">
+                      <span class="truncate">Remove</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Recently Viewed + Alerts -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Recently Viewed -->
+            <section class="lg:col-span-2">
+              <h2
+                class="text-text-light-primary dark:text-text-dark-primary text-2xl font-bold tracking-tight mb-4 px-1">
+                Pick Up Where You Left Off
+              </h2>
+
+              <div
+                class="overflow-x-auto [-ms-scrollbar-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -mx-4">
+                <div class="flex items-stretch px-4 gap-6">
+                  <div
+                    class="flex h-full flex-1 flex-col gap-3 rounded-xl bg-card-light dark:bg-card-dark shadow-sm min-w-64 transform transition-transform duration-300 hover:-translate-y-1">
+                    <div class="w-full bg-center bg-no-repeat aspect-[4/3] bg-cover rounded-t-xl" style="
+                        background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD9SOxtjnZ9YJr5fiTzKmTDdUkzUwqM7UuEEDQQVHFnLSS1VJtW2S0YyNg8Yyh2aUP6nVj1J-5fojw-qOaBoV52YbLIU0Pc5ktx26XmW_yGzrA4XkovSUzKXwWS6l2iKXTPyioRlq3_A-_Cq7FR_01ARLyVCruPy3spxBvZATGjEpm_ufFtp9Lw7jse4m3cDAuUSbu-XzKPkuR7LkB5RJlgA88BFCGk5ct2Q4HeTfSgVX8Df8pvPCbR6iYf_6Zh7dbXl5HbUZ7TaUk8');
+                      "></div>
+                    <div class="p-4 pt-0">
+                      <p class="text-text-light-primary dark:text-text-dark-primary text-base font-semibold">
+                        2021 Audi A4
+                      </p>
+                      <p class="text-primary text-sm font-medium">$39,100</p>
+                    </div>
+                  </div>
+
+                  <div
+                    class="flex h-full flex-1 flex-col gap-3 rounded-xl bg-card-light dark:bg-card-dark shadow-sm min-w-64 transform transition-transform duration-300 hover:-translate-y-1">
+                    <div class="w-full bg-center bg-no-repeat aspect-[4/3] bg-cover rounded-t-xl" style="
+                        background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCJ1qI667xzfyqTJtybFiT3eu4YuLeshrZXs5yWAJHQTGzWmTimYdxbSMDvpuGApEdRW5qJLJMLUX5Dm9I06FRzXR7_KIkInW8fV5vcZ7KqSM7UGv4H7U4MPQqbbnEDuJJSB__t02bUcbiN7vR_trTWMdvDLc4bNAy4d2zhHA7M_ZyJzQLD0_-lusekLpVPJ3HWY1BPzb9GKEWInHqwAw2Et-ONymIAXNSw-B3Bl5MOpzZnSHdjSKw2Vq8AWYNXjvAy4KT8aQGbrL42');
+                      "></div>
+                    <div class="p-4 pt-0">
+                      <p class="text-text-light-primary dark:text-text-dark-primary text-base font-semibold">
+                        2020 Mercedes-Benz C-Class
+                      </p>
+                      <p class="text-primary text-sm font-medium">$41,400</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Alerts -->
+            <section>
+              <h2
+                class="text-text-light-primary dark:text-text-dark-primary text-2xl font-bold tracking-tight mb-4 px-1">
+                Your Alerts &amp; Updates
+              </h2>
+
+              <div class="flex flex-col gap-4 [&>div:hover]:text-black">
+                <div
+                  class="group bg-card-light dark:bg-card-dark p-4 rounded-xl shadow-sm flex items-start gap-4 hover:bg-gray-50 transition-colors duration-200 hover:text-black">
+                  <div class="mt-1 flex-shrink-0 size-8 rounded-full bg-secondary/20 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-secondary text-xl">trending_down</span>
+                  </div>
+                  <div>
+                    <p class="text-text-light-primary dark:text-text-dark-primary text-sm font-medium">
+                      Price drop on the 2021 Audi A4
+                    </p>
+                    <p class="text-text-light-secondary dark:text-text-dark-secondary text-xs">
+                      2 hours ago
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  class="bg-card-light dark:bg-card-dark p-4 rounded-xl shadow-sm flex items-start gap-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors duration-200">
+                  <div class="mt-1 flex-shrink-0 size-8 rounded-full bg-primary/20 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-primary text-xl">chat</span>
+                  </div>
+                  <div>
+                    <p class="text-text-light-primary dark:text-text-dark-primary text-sm font-medium">
+                      New message from SellerX
+                    </p>
+                    <p class="text-text-light-secondary dark:text-text-dark-secondary text-xs">
+                      1 day ago
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  class="bg-card-light dark:bg-card-dark p-4 rounded-xl shadow-sm flex items-start gap-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors duration-200">
+                  <div class="mt-1 flex-shrink-0 size-8 rounded-full bg-secondary/20 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-secondary text-xl">sell</span>
+                  </div>
+                  <div>
+                    <p class="text-text-light-primary dark:text-text-dark-primary text-sm font-medium">
+                      The 2023 BMW Z4 you saved was sold
+                    </p>
+                    <p class="text-text-light-secondary dark:text-text-dark-secondary text-xs">
+                      3 days ago
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

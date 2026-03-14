@@ -1,0 +1,272 @@
+<div
+  class="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-background-light dark:bg-background-dark font-display text-white antialiased">
+  <!-- HERO (Background + Header + Center Text) -->
+  <section class="relative">
+    <!-- Frame Animation Canvas Background -->
+    <div class="fixed top-0 left-0 h-screen w-full overflow-hidden z-0">
+      <!-- Canvas for frame animation -->
+      <canvas #frameCanvas class="absolute inset-0 w-full h-full object-cover"></canvas>
+
+      <!-- Gradient overlay for better text readability -->
+      <div class="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/40 to-background-dark/20">
+      </div>
+      <div class="absolute inset-0 bg-black/20"></div>
+
+      <!-- Loading Indicator -->
+      @if (isLoading()) {
+      <div class="absolute inset-0 flex items-center justify-center bg-background-dark z-50">
+        <div class="flex flex-col items-center gap-6">
+          <!-- Animated Car Icon -->
+          <div class="relative">
+            <div class="loading-pulse">
+              <svg class="w-16 h-16 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z" />
+              </svg>
+            </div>
+            <div class="absolute -inset-2 rounded-full border-2 border-primary/30 animate-ping"></div>
+          </div>
+
+          <!-- Progress Text -->
+          <div class="flex flex-col items-center gap-2">
+            <p class="text-white/80 text-sm font-medium">Loading Experience</p>
+            <div class="w-48 h-1.5 bg-white/10 rounded-full overflow-hidden">
+              <div
+                class="h-full bg-gradient-to-r from-primary to-secondary rounded-full transition-all duration-300 ease-out"
+                [style.width.%]="loadProgress()">
+              </div>
+            </div>
+            <p class="text-white/60 text-xs">{{ loadProgress() }}%</p>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+
+    <!-- Content -->
+    <div class="relative z-10 flex min-h-screen flex-col">
+      <div class="flex flex-1 justify-center px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 py-5">
+        <div class="flex w-full max-w-[1200px] flex-1 flex-col">
+          <!-- Header / Navbar -->
+          <header
+            class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between whitespace-nowrap px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 py-3">
+            <a class="flex items-center gap-3 text-white transition-opacity hover:opacity-80" href="#">
+              <div class="size-6">
+                <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                  <g clip-path="url(#clip0_6_330)">
+                    <path clip-rule="evenodd"
+                      d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z"
+                      fill="currentColor" fill-rule="evenodd"></path>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_6_330">
+                      <rect fill="white" height="48" width="48"></rect>
+                    </clipPath>
+                  </defs>
+                </svg>
+              </div>
+              <h2 class="text-xl font-bold leading-tight tracking-tight">Hamatoz</h2>
+            </a>
+
+            <nav
+              class="hidden md:flex items-center gap-2 rounded-full border border-white/10 bg-black/20 p-1 backdrop-blur-md">
+              <a class="nav-link" routerLink="/cars">Cars</a>
+              <a class="nav-link" href="#">Parts</a>
+              <a class="nav-link" href="#">Services</a>
+              <a class="nav-link" href="#">About</a>
+            </nav>
+
+            <div class="hidden md:flex items-center gap-4">
+              <button class="btn-ghost">
+                <span class="truncate">Login</span>
+              </button>
+              <button class="btn-primary">
+                <span class="truncate">Sign Up</span>
+              </button>
+            </div>
+
+            <button class="md:hidden" type="button" aria-label="Open menu">
+              <span class="material-symbols-outlined text-3xl">menu</span>
+            </button>
+          </header>
+
+          <!-- Hero Text -->
+          <div class="flex h-[calc(100vh-120px)] flex-col items-center justify-center text-center px-4">
+            <div class="flex max-w-2xl flex-col gap-5">
+              <h1 class="text-4xl font-bold leading-tight tracking-tight sm:text-6xl">Hamatoz</h1>
+              <p class="text-white/80 text-base font-normal leading-relaxed sm:text-lg">
+                Discover a seamless experience for buying, selling, and servicing vehicles with
+                cutting-edge technology and unparalleled support.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Spacer for Scroll Animation - keeps canvas visible -->
+  <section class="relative" style="height: 1400vh; background: transparent;">
+    <!-- This spacer allows the hero canvas to stay visible while scrolling through all 200 frames -->
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <section class="relative bg-background-dark py-16 sm:py-24">
+    <div class="flex justify-center px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24">
+      <div class="w-full max-w-[1200px]">
+        <main class="flex flex-col gap-16 sm:gap-24 md:gap-32">
+          <!-- Categories -->
+          <section class="flex flex-col gap-8">
+            <div class="flex flex-col gap-2 px-4">
+              <h2 class="text-3xl font-bold leading-tight tracking-tight">
+                Explore Our Categories
+              </h2>
+              <p class="text-white/60 text-base">
+                Find the perfect vehicle or part for your needs.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
+              <!-- Left: 3 circles -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div class="category-circle">
+                  <div class="circle-icon">
+                    <span class="material-symbols-outlined text-4xl text-primary">new_releases</span>
+                  </div>
+                  <div class="flex flex-col">
+                    <h3 class="text-base font-semibold leading-tight">Zero Cars</h3>
+                    <p class="text-sm text-white/60">Details</p>
+                  </div>
+                </div>
+
+                <div class="category-circle">
+                  <div class="circle-icon">
+                    <span class="material-symbols-outlined text-4xl text-primary">public</span>
+                  </div>
+                  <div class="flex flex-col">
+                    <h3 class="text-base font-semibold leading-tight">Imported Cars</h3>
+                    <p class="text-sm text-white/60">Details</p>
+                  </div>
+                </div>
+
+                <div class="category-circle">
+                  <div class="circle-icon">
+                    <span class="material-symbols-outlined text-4xl text-primary">sell</span>
+                  </div>
+                  <div class="flex flex-col">
+                    <h3 class="text-base font-semibold leading-tight">Used Cars</h3>
+                    <p class="text-sm text-white/60">Details</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right: 3 image cards -->
+              <div class="flex flex-col gap-4">
+                <div class="image-tile" style="
+                    background-image: linear-gradient(rgba(10, 14, 19, 0.4), rgba(10, 14, 19, 0.7)),
+                      url('https://lh3.googleusercontent.com/aida-public/AB6AXuD1loDn4qSZ-psAi-g9PFYbu2PGqDpDdAWRQntvLgn8Xw7ouaq4xa_ybHEHwtbey9DDgc_8pPUexA4WLFrSdZzsgLjWXMnhqDYwDmDnF6PdyI2I-nqxx0JaGEGjd5D4Z8ZjT1KL0QfLBYy6u-E3I1SQ059SxaGlgS_2v9GxP0PV9c-BwMyhW9jYyNZRRlwEUOgzWBVhahP-KdbhQ4Y6WG_7IoUlVMOUQIE8Ox1DCJJdJTB0EOAoDBw3f-jjzVG-GvmWAnqvvSP8pKw');
+                  ">
+                  <div class="absolute inset-0 bg-black/30 transition-colors duration-300 hover:bg-black/10"></div>
+                  <h3 class="relative z-10 text-lg font-semibold drop-shadow-md">
+                    Passenger Parts
+                  </h3>
+                </div>
+
+                <div class="image-tile" style="
+                    background-image: linear-gradient(rgba(10, 14, 19, 0.4), rgba(10, 14, 19, 0.7)),
+                      url('https://lh3.googleusercontent.com/aida-public/AB6AXuB8nCQxBmSwXCTuaWfbg6XTWhBqiB31XUiizT7POCUCZ9k6jl6FaSUv_mb6vM7sAhtJsXNRNn50i-kfqiqJU1BwlN9omOXFyaON8wfrmOiFosIGhJBT09zGodiK-LhBNXq3oCduSurnlDKtlKb941CIwbTlsABEB2qz_m-0lCCahtaISCfvKc0YOynpThvaMLvBSljtYwCWC1VBHDpeLWsZDYgGr5qvPApPcHijv5Atb4AY4mVvnMPVCWAuRO9NYgPUY5D5baxODk8');
+                  ">
+                  <div class="absolute inset-0 bg-black/30 transition-colors duration-300 hover:bg-black/10"></div>
+                  <h3 class="relative z-10 text-lg font-semibold drop-shadow-md">
+                    Heavy Truck Parts
+                  </h3>
+                </div>
+
+                <div class="image-tile" style="
+                    background-image: linear-gradient(rgba(10, 14, 19, 0.4), rgba(10, 14, 19, 0.7)),
+                      url('https://lh3.googleusercontent.com/aida-public/AB6AXuBglaEOJVz2y0Bh_GgJFGw3vbVaAXe9Ke1pF8TxkAWDVYB4YF8WvI370p6_cbXKPS0sk0ZZYYOUKdNLhWO-E6hWFJ7mHhlkI-GunjNXggK5HCV-xWluxwlz85IznBzwohDSXKjtUurVeismsZCm9RQkZvfiL-asKm4dzxvup8hJ4Zhxe_a30XjNNtp7_-ajngu5bqjSOfng__we4KaIHrP-6dNcg4_iJ7NkAXfFA0oJ-wjkSnyGyxhX7hztsR9nMlMR-Z8WKzltT4o');
+                  ">
+                  <div class="absolute inset-0 bg-black/30 transition-colors duration-300 hover:bg-black/10"></div>
+                  <h3 class="relative z-10 text-lg font-semibold drop-shadow-md">Van Parts</h3>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Services -->
+          <section class="flex flex-col gap-8 p-4">
+            <div class="flex flex-col gap-2">
+              <h2 class="text-3xl font-bold leading-tight tracking-tight">Our Services</h2>
+              <p class="text-white/60 text-base">Comprehensive solutions for a modern world.</p>
+            </div>
+
+            <div
+              class="relative flex min-h-[400px] w-full items-center justify-center rounded-xl bg-cover bg-center p-6 sm:p-10"
+              style="
+                background-image: linear-gradient(rgba(10, 14, 19, 0.8), rgba(10, 14, 19, 0.95)),
+                  url('https://lh3.googleusercontent.com/aida-public/AB6AXuDsfd77NYNcCv9YOiMvzZmS2au_IuoJRRpEtbQ6pa0F7jac6d1Oqm6KSlpwcZp3Bcyoc5ElYqwwEuZuHPqDs-k51rrnGGMlxzTPv5vP2USoyP9jQINbDLxfB2oFvItnsvE9HNDeiaJt7o_nbmCULsqHRP3ujhhr5UQ8IWY-Yd8QtFQ3RJkENUkTHhWr6jSApsE7e5cU0-VqwVQXddXyc_nKOekx9AMX1eUQr5I-jRQiM81qUBZ92Z7g_Ci7vaFkPR7-uU-jveqZJwU');
+              ">
+              <div class="max-w-3xl rounded-lg border border-white/10 bg-[#0A0E13]/70 p-8 backdrop-blur-sm sm:p-10">
+                <div class="flex flex-col gap-4 text-center">
+                  <h3 class="text-2xl font-bold leading-tight sm:text-3xl">
+                    Seamless Automotive Solutions
+                  </h3>
+                  <p class="text-white/80 text-base font-normal leading-relaxed">
+                    Our platform simplifies every step of your automotive journey. From discovering
+                    and financing your next vehicle to sourcing genuine spare parts from a global
+                    network, we provide a streamlined, tech-driven experience. Use our app to get
+                    instant quotes, schedule maintenance, and track your orders, all in one place.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="mt-16 sm:mt-24 md:mt-32 border-t border-white/10 pt-12 pb-8 px-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
+            <div class="flex flex-col gap-4 items-center md:items-start">
+              <h4 class="font-semibold">Company</h4>
+              <ul class="flex flex-col gap-2.5">
+                <li><a class="footer-link" href="#">About Us</a></li>
+                <li><a class="footer-link" href="#">Our Team</a></li>
+                <li><a class="footer-link" href="#">Careers</a></li>
+              </ul>
+            </div>
+
+            <div class="flex flex-col gap-4 items-center md:items-start">
+              <h4 class="font-semibold">Legal & Project</h4>
+              <ul class="flex flex-col gap-2.5">
+                <li><a class="footer-link" href="#">Terms of Service</a></li>
+                <li><a class="footer-link" href="#">Privacy Policy</a></li>
+                <li><a class="footer-link" href="#">Project GitHub</a></li>
+              </ul>
+            </div>
+
+            <div class="flex flex-col gap-4 items-center md:items-end">
+              <div class="flex items-center gap-3">
+                <div class="size-6">
+                  <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_6_330_footer)">
+                      <path clip-rule="evenodd"
+                        d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z"
+                        fill="currentColor" fill-rule="evenodd"></path>
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_6_330_footer">
+                        <rect fill="white" height="48" width="48"></rect>
+                      </clipPath>
+                    </defs>
+                  </svg>
+                </div>
+                <h2 class="text-xl font-bold leading-tight tracking-tight">Hamatoz</h2>
+              </div>
+              <p class="text-sm text-white/50">© 2025 Hamatoz. All rights reserved.</p>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </section>
+</div>

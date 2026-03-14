@@ -1,0 +1,423 @@
+<div
+  class="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-background-dark font-display text-white antialiased"
+>
+  <!-- PAGE WRAPPER -->
+  <div class="layout-container relative z-10 flex h-full grow flex-col">
+    <div class="flex flex-1 justify-center px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 py-5">
+      <div class="layout-content-container flex flex-col w-full max-w-[1200px] flex-1">
+        <!-- HEADER -->
+        <header class="flex items-center justify-between whitespace-nowrap px-4 py-3">
+          <a
+            class="flex items-center gap-3 text-white transition-opacity hover:opacity-80"
+            href="#"
+          >
+            <div class="size-6">
+              <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_6_330)">
+                  <path
+                    clip-rule="evenodd"
+                    d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  ></path>
+                </g>
+                <defs>
+                  <clipPath id="clip0_6_330">
+                    <rect fill="white" height="48" width="48"></rect>
+                  </clipPath>
+                </defs>
+              </svg>
+            </div>
+            <h2 class="text-white text-xl font-bold leading-tight tracking-tight">Hamatoz</h2>
+          </a>
+
+          <nav
+            class="hidden md:flex items-center gap-2 rounded-full border border-white/10 bg-black/20 p-1 backdrop-blur-md"
+          >
+            <a
+              class="text-white/70 hover:text-white hover:bg-white/10 text-sm font-medium leading-normal transition-all px-4 py-1.5 rounded-full"
+              href="#"
+              >Cars</a
+            >
+            <a
+              class="text-white/70 hover:text-white hover:bg-white/10 text-sm font-medium leading-normal transition-all px-4 py-1.5 rounded-full"
+              href="#"
+              >Parts</a
+            >
+            <a
+              class="text-white/70 hover:text-white hover:bg-white/10 text-sm font-medium leading-normal transition-all px-4 py-1.5 rounded-full"
+              href="#"
+              >Services</a
+            >
+            <a
+              class="text-white/70 hover:text-white hover:bg-white/10 text-sm font-medium leading-normal transition-all px-4 py-1.5 rounded-full"
+              href="#"
+              >About</a
+            >
+          </nav>
+
+          <div class="hidden md:flex items-center gap-4">
+            <button
+              class="min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-5 bg-transparent text-white text-sm font-semibold leading-normal transition-all hover:bg-white/10 border border-transparent hover:border-white/20"
+            >
+              <span class="truncate">Login</span>
+            </button>
+            <button
+              class="min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-5 bg-gradient-to-b from-metal-light to-metal-dark text-white text-sm font-semibold leading-normal shadow-md shadow-black/30 transition-all hover:shadow-lg hover:shadow-black/40 hover:from-metal-light/90 hover:to-metal-dark/90 border border-white/10"
+            >
+              <span class="truncate">Sign Up</span>
+            </button>
+          </div>
+
+          <button class="md:hidden" type="button" aria-label="Open menu">
+            <span class="material-symbols-outlined text-3xl">menu</span>
+          </button>
+        </header>
+
+        <!-- MAIN -->
+        <main class="layout-container flex h-full grow flex-col">
+          <div class="px-4 sm:px-8 md:px-16 lg:px-24 flex flex-1 justify-center py-5">
+            <div class="layout-content-container flex flex-col w-full max-w-7xl flex-1 gap-6">
+              <!-- TITLE -->
+              <div class="px-4">
+                <h1 class="text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em]">
+                  2021 Honda Civic Sport Sedan
+                </h1>
+              </div>
+
+              <!-- TOP GRID -->
+              <section class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                <!-- LEFT: GALLERY -->
+                <div class="lg:col-span-3 flex flex-col gap-4">
+                  <div
+                    class="w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden rounded-xl min-h-96 shadow-sm transition-transform duration-300 hover:scale-[1.02]"
+                    style="
+                      background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAcEyKX1NZoz37bNIivX-ly9jTOyoqBaFBB_8ql9we72t65KWWBBnJDmwaqAECMse-rXF9jntovYkO6lwtml_tOm7opE5-l9OeHWbGzRyleITT0d6WMmbMpqXZp_fDrnm4MqYwasM_zuHyY2WtYxbmMqIaBXyn_RV4_4-4laB36qWwsktO4oO5NyKOluwiggd6rK_NGNsD8yrBFk5x6Vv7zSIj1GOtR7Rp3WAUqRKguL6xtJsvXVuvMyP0FgHTyKZuWvbC9xnEab_Ti');
+                    "
+                  ></div>
+
+                  <div
+                    class="flex overflow-x-auto [-ms-scrollbar-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                  >
+                    <div class="flex items-stretch p-1 gap-3">
+                      <div
+                        class="flex h-full flex-1 flex-col gap-2 rounded-lg min-w-32 cursor-pointer border-2 border-primary transition-all duration-300 transform scale-105"
+                      >
+                        <div
+                          class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg"
+                          style="
+                            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDd5KxGuMgS3enTsGkC63QPBOqTeX38sbWIs2Nj6HD2-A7KyCNtY_UyE9VU4t3fkOYKPNwrNWKtRgDYU48NT46fm0d0fxKjW0PrlTlN8n-AltFaYt48XJqmuY8ZqbvSBf-T_QfdTLGUWG60hauUb6IdiODqaAfOIc2--omNqiLbdSh73SPW2I1S93sX9ukbdrqWQPN_-xtlQTzawERnSq3S33CPee_4zieyfTMqR1RndkkciN-4a6ZRPROuBiNQYsCVW3zxGotpIHvz');
+                          "
+                        ></div>
+                      </div>
+
+                      <div
+                        class="flex h-full flex-1 flex-col gap-2 rounded-lg min-w-32 cursor-pointer opacity-60 hover:opacity-100 transition-all duration-300 hover:scale-105"
+                      >
+                        <div
+                          class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg"
+                          style="
+                            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBDhZeWgjvvz3wAlzguN5hkLW0wi9OUIHnN2m-BPX0GXdDO5heS_yanQ0ooTAwDx8T0mLL8-RMPMOBoWCRMCg_k-2HMCK27Ckz1zoLIb2yOItg611ZFvbsuqc9S5nDnx2s8Am9w5PM-y4EgaTZjaAOgOeIGdVowayypLopXXOk4ajywchbWi-miYKLt69ETpAoy_WqMaTAZfvFQrDZbuwKwsZpQR-9FBi881PgxWr4gUGWHi1Zjw7-YLBQX6y2xPp4fhf6pX69pvkIF');
+                          "
+                        ></div>
+                      </div>
+
+                      <div
+                        class="flex h-full flex-1 flex-col gap-2 rounded-lg min-w-32 cursor-pointer opacity-60 hover:opacity-100 transition-all duration-300 hover:scale-105"
+                      >
+                        <div
+                          class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg"
+                          style="
+                            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDigkyfrfz9BqGQfAvOhVHIN1CM9gddZlUwKzJYv70oeNF8bKsm8ltCC0Je75mg22Q5oZLgMHWkYs7CzlsAKu3IF5fkZIONHydgZd3fAd_JG2Ff12T24cvJ7yduJm3hHciFbPLJMepnRsvDTXi2jibWOCX7v7IMulzlyuLX-oTSD9ZCScbahgjyINE-Kfohgeo1tHJjwcOij4YiGMHh30UQUsTz6FDZKXWMFfN8p2lrBoVOZUH18ma78utiehhziYGdSxAflm8FRZ5T');
+                          "
+                        ></div>
+                      </div>
+
+                      <div
+                        class="flex h-full flex-1 flex-col gap-2 rounded-lg min-w-32 cursor-pointer opacity-60 hover:opacity-100 transition-all duration-300 hover:scale-105"
+                      >
+                        <div
+                          class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg"
+                          style="
+                            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuATt9nG93f_Mi1kMh235ErinvRO3QlZaJ-z1Go5gEOFl-AM83bt-Qz8DDfdaiK2V8vvC6JgUFm1FyEGSeOT0GdMSqlFnf1lrTAv3BEBrqcYfbSK2ZfcaRUMJIoAldKRF0DjfgiFoMHwohUkPldO7sr_tJQ1ougWzrmi-6FAEjyA7hQmqCWFd5uRncszt-CKyxJIrfnegpafunc7Yzok5JRwf9kVhFBHVx0N1NgUff5-UwveBoKT0JMosxG5BYmCzuizWFPViDkUeY0h');
+                          "
+                        ></div>
+                      </div>
+
+                      <div
+                        class="flex h-full flex-1 flex-col gap-2 rounded-lg min-w-32 cursor-pointer opacity-60 hover:opacity-100 transition-all duration-300 hover:scale-105"
+                      >
+                        <div
+                          class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg"
+                          style="
+                            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCabnnLn8EjsK6bJRa9wNGcrIUJO6YWZLIXOGeBhQTXGJogyDukE7w-IUikrIFn3Cm_bd_6xxII7b8sNzUNRvUxtokfWzey-03uiSgI71JogqAxb4e5W24tY3N7crO6tZ5dxTlFrUA0XcgX0vpCRNe87hLzCQZEQx1qbSNApkWw1SHW4HRY7plcOHJ2hknSy8NJQ3QNBKdTWTumwz0zm004prUb8P_N9qaZ_rjeG6dFTCd19EU0Cw4dgCPCmfcew3M2ylLAX8ybKERD');
+                          "
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- RIGHT: PRICE + SELLER -->
+                <aside class="lg:col-span-2 flex flex-col gap-6">
+                  <!-- Price Card -->
+                  <div
+                    class="p-4 bg-metal-dark/50 border border-white/10 rounded-xl shadow-sm flex items-center justify-between"
+                  >
+                    <div class="flex flex-col">
+                      <span class="text-sm text-gray-300">Price</span>
+                      <span class="text-primary text-3xl font-bold">$22,500</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <button
+                        class="flex size-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary/20 text-primary transition-all duration-300 hover:bg-primary/30 hover:scale-110"
+                      >
+                        <span class="material-symbols-outlined">share</span>
+                      </button>
+                      <button
+                        class="flex size-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary/20 text-primary transition-all duration-300 hover:bg-primary/30 hover:scale-110"
+                      >
+                        <span class="material-symbols-outlined">favorite_border</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Seller Card -->
+                  <div
+                    class="p-4 bg-metal-dark/50 border border-white/10 rounded-xl shadow-sm flex flex-col gap-4"
+                  >
+                    <h3 class="text-lg font-bold">Seller Information</h3>
+
+                    <div class="flex items-start gap-4">
+                      <div
+                        class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-14"
+                        style="
+                          background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB9rykAvLQpuu8hYkLNMc6f_rZ_C41XCMcFsBRXL-owZag9HDrTutgl0dqk91AGm9od5cXKlyQMBnAZe7sCPgVRveOiGVHrEuRh7Dm4FDAgjBa1r47wJfIQ1O4F4hnrPecD66vTMQRsdnDhjQs2AWFxqUz6M_EHHFkT3up3Qiaus0fvqugijwURQ71Q-bOdETXuaa8nmngHfll8JaoG-PKnhrgcGq-3GUSZWePI9ZPqRkSzOmKsqJsWea_jjIsRns51V7lnNRcI4lLK');
+                        "
+                      ></div>
+
+                      <div class="flex-1">
+                        <p class="font-bold">John D.</p>
+                        <div class="flex items-center gap-2 text-green-300">
+                          <span class="material-symbols-outlined !text-base">verified_user</span>
+                          <span class="text-sm font-medium">Verified Seller</span>
+                        </div>
+                        <div class="flex items-center gap-1 mt-1 text-gray-400">
+                          <span
+                            class="material-symbols-outlined !text-base text-yellow-500"
+                            style="font-variation-settings: 'FILL' 1"
+                            >star</span
+                          >
+                          <span class="text-sm">4.9 (125 reviews)</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="border-t border-white/10 pt-4 flex flex-col gap-2">
+                      <div class="flex items-center gap-2 text-sm text-gray-300">
+                        <span class="material-symbols-outlined !text-base">schedule</span>
+                        <span>Typically replies in 2 hours</span>
+                      </div>
+                      <div class="flex items-center gap-2 text-sm text-gray-300">
+                        <span class="material-symbols-outlined !text-base">location_on</span>
+                        <span>San Francisco, CA</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    class="flex w-full cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-12 px-6 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-all duration-300 hover:scale-105 shadow-lg shadow-primary/30"
+                  >
+                    <span class="material-symbols-outlined">chat</span>
+                    <span class="truncate">Chat with Seller</span>
+                  </button>
+                </aside>
+              </section>
+
+              <!-- TABS + CONTENT -->
+              <section
+                class="mt-4 bg-metal-dark/50 border border-white/10 rounded-xl shadow-sm overflow-hidden"
+              >
+                <div class="border-b border-white/10">
+                  <nav class="flex gap-6 -mb-px px-6">
+                    <button
+                      class="py-4 px-1 inline-flex items-center gap-2 border-b-2 border-primary text-sm whitespace-nowrap text-primary font-semibold"
+                    >
+                      Overview
+                    </button>
+                    <button
+                      class="py-4 px-1 inline-flex items-center gap-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-300 hover:text-primary font-medium transition-colors"
+                    >
+                      Engine Specs
+                    </button>
+                    <button
+                      class="py-4 px-1 inline-flex items-center gap-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-300 hover:text-primary font-medium transition-colors"
+                    >
+                      Features
+                    </button>
+                  </nav>
+                </div>
+
+                <div class="p-6">
+                  <h4 class="text-lg font-bold mb-4">Vehicle Overview</h4>
+                  <p class="text-gray-300 leading-relaxed">
+                    This 2021 Honda Civic Sport Sedan is a reliable and fuel-efficient vehicle,
+                    perfect for daily commutes and road trips...
+                  </p>
+
+                  <div class="mt-6 grid grid-cols-2 md:grid-cols-3 gap-6">
+                    <div class="flex flex-col">
+                      <span class="text-sm text-gray-400">Color</span>
+                      <span class="font-semibold">White</span>
+                    </div>
+                    <div class="flex flex-col">
+                      <span class="text-sm text-gray-400">Transmission</span>
+                      <span class="font-semibold">Automatic</span>
+                    </div>
+                    <div class="flex flex-col">
+                      <span class="text-sm text-gray-400">Drive Type</span>
+                      <span class="font-semibold">FWD</span>
+                    </div>
+                    <div class="flex flex-col">
+                      <span class="text-sm text-gray-400">Fuel Type</span>
+                      <span class="font-semibold">Gasoline</span>
+                    </div>
+                    <div class="flex flex-col">
+                      <span class="text-sm text-gray-400">VIN</span>
+                      <span class="font-semibold">...XXXX1234</span>
+                    </div>
+                    <div class="flex flex-col">
+                      <span class="text-sm text-gray-400">Condition</span>
+                      <span class="font-semibold">Used - Excellent</span>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- INFO CARDS -->
+              <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
+                <div
+                  class="bg-metal-dark/50 border border-white/10 rounded-xl shadow-sm p-6 flex flex-col gap-4"
+                >
+                  <h3 class="text-xl font-bold">Agency Center</h3>
+                  <p class="text-gray-300">
+                    This vehicle is offered through a certified agency, ensuring quality and peace
+                    of mind...
+                  </p>
+                  <div class="flex items-center gap-4 pt-2 border-t border-white/10">
+                    <span class="material-symbols-outlined text-primary text-3xl"
+                      >local_police</span
+                    >
+                    <div>
+                      <p class="font-semibold">AutoConnect Certified</p>
+                      <p class="text-sm text-gray-400">Quality Assured</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="bg-metal-dark/50 border border-white/10 rounded-xl shadow-sm p-6 flex flex-col gap-4"
+                >
+                  <h3 class="text-xl font-bold">Flexible Payment</h3>
+                  <p class="text-gray-300">
+                    We accept multiple payment methods for your convenience...
+                  </p>
+                  <div class="flex items-center justify-between pt-2 border-t border-white/10">
+                    <div class="flex items-center gap-4">
+                      <span class="material-symbols-outlined text-primary">credit_card</span>
+                      <span class="material-symbols-outlined text-primary">payments</span>
+                      <p class="font-semibold">Cash / Visa</p>
+                    </div>
+                    <a
+                      class="text-sm font-medium text-primary hover:underline transition-all"
+                      href="#"
+                    >
+                      Explore Financing
+                    </a>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER SECTION -->
+  <section class="relative bg-background-dark py-16 sm:py-24">
+    <div class="flex justify-center px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24">
+      <div class="w-full max-w-[1200px]">
+        <footer class="border-t border-white/10 pt-12 pb-8 px-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
+            <div class="flex flex-col gap-4 items-center md:items-start">
+              <h4 class="font-semibold text-white">Company</h4>
+              <ul class="flex flex-col gap-2.5">
+                <li>
+                  <a class="text-sm text-white/60 hover:text-white transition-colors" href="#"
+                    >About Us</a
+                  >
+                </li>
+                <li>
+                  <a class="text-sm text-white/60 hover:text-white transition-colors" href="#"
+                    >Our Team</a
+                  >
+                </li>
+                <li>
+                  <a class="text-sm text-white/60 hover:text-white transition-colors" href="#"
+                    >Careers</a
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <div class="flex flex-col gap-4 items-center md:items-start">
+              <h4 class="font-semibold text-white">Legal &amp; Project</h4>
+              <ul class="flex flex-col gap-2.5">
+                <li>
+                  <a class="text-sm text-white/60 hover:text-white transition-colors" href="#"
+                    >Terms of Service</a
+                  >
+                </li>
+                <li>
+                  <a class="text-sm text-white/60 hover:text-white transition-colors" href="#"
+                    >Privacy Policy</a
+                  >
+                </li>
+                <li>
+                  <a class="text-sm text-white/60 hover:text-white transition-colors" href="#"
+                    >Project GitHub</a
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <div class="flex flex-col gap-4 items-center md:items-end">
+              <div class="flex items-center gap-3 text-white">
+                <div class="size-6">
+                  <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_6_330_footer)">
+                      <path
+                        clip-rule="evenodd"
+                        d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                      ></path>
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_6_330_footer">
+                        <rect fill="white" height="48" width="48"></rect>
+                      </clipPath>
+                    </defs>
+                  </svg>
+                </div>
+                <h2 class="text-white text-xl font-bold leading-tight tracking-tight">Hamatoz</h2>
+              </div>
+              <p class="text-sm text-white/50">© 2025 Hamatoz. All rights reserved.</p>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </section>
+</div>

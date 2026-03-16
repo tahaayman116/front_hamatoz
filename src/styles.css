@@ -38,3 +38,11 @@
 html {
     scroll-behavior: smooth;
 }
+
+body, app-root {
+    display: block;
+    width: 100%;
+    background-color: #0a0e10;
+    margin: 0;
+    padding: 0;
+}

@@ -28,6 +28,9 @@
   border: 1px solid transparent;
   cursor: pointer;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-ghost:hover {
@@ -48,6 +51,9 @@
   background: linear-gradient(to bottom, #374151, #1f2937);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
   transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-primary:hover {

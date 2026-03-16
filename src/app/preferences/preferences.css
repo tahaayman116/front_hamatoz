@@ -1,0 +1,115 @@
+/* Preferences Page Animations */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Container Animation */
+:host ::ng-deep {
+  animation: slideInUp 0.6s ease-out;
+}
+
+/* Grid Items Animation */
+:host ::ng-deep button {
+  animation: scaleIn 0.3s ease-out;
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep button:hover:not(:disabled) {
+  transform: scale(1.05);
+}
+
+:host ::ng-deep button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Selected State */
+:host ::ng-deep .border-blue-500 {
+  animation: scaleIn 0.2s ease-out;
+}
+
+/* Progress Bar */
+:host ::ng-deep .shadow-lg.shadow-blue-500\/50 {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Icon Animations */
+:host ::ng-deep .material-symbols-outlined {
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep .border-blue-500 .material-symbols-outlined {
+  animation: slideInUp 0.2s ease-out;
+}
+
+/* Logo Circle Styling */
+:host ::ng-deep [style*="backgroundColor"] {
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+}
+
+:host ::ng-deep button:hover [style*="backgroundColor"]:not(.border-blue-500 [style*="backgroundColor"]) {
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.2);
+}
+
+:host ::ng-deep .border-blue-500 [style*="backgroundColor"] {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* Stagger Animation for Grid Items */
+:host ::ng-deep .grid > button:nth-child(1) { animation-delay: 0s; }
+:host ::ng-deep .grid > button:nth-child(2) { animation-delay: 0.05s; }
+:host ::ng-deep .grid > button:nth-child(3) { animation-delay: 0.1s; }
+:host ::ng-deep .grid > button:nth-child(4) { animation-delay: 0.15s; }
+:host ::ng-deep .grid > button:nth-child(5) { animation-delay: 0.2s; }
+:host ::ng-deep .grid > button:nth-child(6) { animation-delay: 0.25s; }
+:host ::ng-deep .grid > button:nth-child(7) { animation-delay: 0.3s; }
+:host ::ng-deep .grid > button:nth-child(8) { animation-delay: 0.35s; }
+:host ::ng-deep .grid > button:nth-child(9) { animation-delay: 0.4s; }
+:host ::ng-deep .grid > button:nth-child(10) { animation-delay: 0.45s; }
+
+/* Button Focus State */
+:host ::ng-deep button:focus-visible {
+  outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  :host ::ng-deep h2 {
+    font-size: 1.875rem;
+  }
+
+  :host ::ng-deep h1 {
+    font-size: 2rem;
+  }
+
+  :host ::ng-deep button {
+    font-size: 0.875rem;
+  }
+}

@@ -20,18 +20,14 @@
 
   <nav class="hidden md:flex items-center gap-2 rounded-full border border-white/10 bg-black/20 p-1 backdrop-blur-md">
     <a class="nav-link" routerLink="/cars">Cars</a>
-    <a class="nav-link" href="#">Parts</a>
-    <a class="nav-link" href="#">Services</a>
-    <a class="nav-link" href="#">About</a>
+    <a class="nav-link" routerLink="/parts">Parts</a>
+    <a class="nav-link" routerLink="/services">Services</a>
+    <a class="nav-link" routerLink="/about">About</a>
   </nav>
 
   <div class="hidden md:flex items-center gap-4">
-    <button class="btn-ghost">
-      <span class="truncate">Login</span>
-    </button>
-    <button class="btn-primary">
-      <span class="truncate">Sign Up</span>
-    </button>
+    <a routerLink="/sign-in" class="btn-ghost">Login</a>
+    <a routerLink="/sign-up" class="btn-primary">Sign Up</a>
   </div>
 
   <button class="md:hidden" type="button" aria-label="Open menu">

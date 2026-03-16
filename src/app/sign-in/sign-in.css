@@ -1,0 +1,108 @@
+/* Sign In Page Animations */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Container Animation */
+:host ::ng-deep {
+  animation: slideInUp 0.6s ease-out;
+}
+
+/* Form Elements */
+:host ::ng-deep input[type="text"],
+:host ::ng-deep input[type="email"],
+:host ::ng-deep input[type="password"] {
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: #2563eb;
+}
+
+/* Input Focus Effect */
+:host ::ng-deep input:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(37, 99, 235, 0.2);
+}
+
+/* Button Styles */
+:host ::ng-deep button {
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+/* Social Buttons */
+:host ::ng-deep button.flex.items-center {
+  animation: fadeIn 0.4s ease-out;
+}
+
+:host ::ng-deep button.flex.items-center:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+:host ::ng-deep button.flex.items-center:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+/* Icon Animations */
+:host ::ng-deep .material-symbols-outlined {
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep input:focus + .material-symbols-outlined {
+  color: #60a5fa;
+}
+
+/* Checkbox Animation */
+:host ::ng-deep input[type="checkbox"]:checked {
+  animation: slideInDown 0.2s ease-out;
+}
+
+/* Link Hover Effects */
+:host ::ng-deep a {
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep a:hover {
+  text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  :host ::ng-deep input,
+  :host ::ng-deep button {
+    font-size: 16px;
+  }
+}

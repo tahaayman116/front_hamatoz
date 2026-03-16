@@ -1,0 +1,300 @@
+<div class="min-h-screen bg-background-dark text-white">
+  <!-- Hero Section -->
+  <section class="relative min-h-[600px] pt-28 pb-20 px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 overflow-hidden flex items-center">
+    <!-- Animated Background -->
+    <div class="absolute inset-0 -z-10 overflow-hidden">
+      <!-- Gradient orbs -->
+      <div class="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-600/20 to-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+      <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-blue-500/15 to-transparent rounded-full blur-3xl animate-pulse" style="animation-delay: 0.5s;"></div>
+      <div class="absolute top-1/2 right-1/4 w-72 h-72 bg-gradient-to-bl from-blue-400/10 to-transparent rounded-full blur-3xl"></div>
+      <!-- Grid pattern overlay -->
+      <div class="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.03)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
+    </div>
+
+    <div class="max-w-6xl mx-auto w-full text-center space-y-8">
+      <!-- Badge -->
+      <div class="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600/20 to-blue-500/10 border border-blue-500/40 backdrop-blur-sm hover:from-blue-600/30 hover:to-blue-500/20 transition-all duration-300">
+        <div class="flex items-center gap-2">
+          <div class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></div>
+          <span class="text-xs font-bold text-blue-200 uppercase tracking-wider">Excellence in Motion</span>
+        </div>
+      </div>
+
+      <!-- Main Heading -->
+      <div class="space-y-4">
+        <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[1.2] tracking-tighter">
+          Your Gateway to
+          <br/>
+          <span class="bg-gradient-to-r from-blue-400 via-blue-300 to-cyan-300 bg-clip-text text-transparent">Premium Solutions</span>
+        </h1>
+      </div>
+
+      <!-- Subheading -->
+      <p class="text-lg sm:text-xl text-white/75 max-w-3xl mx-auto leading-relaxed font-medium">
+        Connect with a trusted AI-powered marketplace for buying, selling, and discovering premium vehicles and spare parts.
+      </p>
+
+      <!-- Stats or Features Row -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-12 max-w-3xl mx-auto">
+        <div class="text-center">
+          <div class="text-2xl md:text-3xl font-black text-blue-400 mb-2">🔍</div>
+          <div class="text-xs md:text-sm text-white/70 font-medium">AI-Powered Search</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl md:text-3xl font-black text-blue-400 mb-2">✓</div>
+          <div class="text-xs md:text-sm text-white/70 font-medium">Verified Sellers</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl md:text-3xl font-black text-blue-400 mb-2">🛡️</div>
+          <div class="text-xs md:text-sm text-white/70 font-medium">Trusted Marketplace</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl md:text-3xl font-black text-blue-400 mb-2">⇄</div>
+          <div class="text-xs md:text-sm text-white/70 font-medium">Exchange Platform</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Grid Section -->
+  <section class="py-20 px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16 space-y-4">
+        <h2 class="text-5xl md:text-6xl font-black text-white">Our Services</h2>
+        <p class="text-white/70 text-xl max-w-3xl mx-auto leading-relaxed">Explore the complete range of premium automotive solutions tailored to meet your every need.</p>
+      </div>
+
+      <!-- Service Cards Grid -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-7">
+        <div *ngFor="let service of services" 
+          class="group p-8 rounded-2xl bg-gradient-to-br from-blue-600/8 to-white/5 border border-blue-500/20 hover:border-blue-400/50 hover:from-blue-600/12 hover:to-white/10 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-lg hover:shadow-blue-500/10">
+          
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/40 to-blue-400/20 flex items-center justify-center text-blue-200 mb-6 group-hover:scale-110 transition-transform shadow-lg shadow-blue-500/10">
+            <span class="material-symbols-outlined text-4xl">{{service.icon}}</span>
+          </div>
+
+          <h3 class="text-2xl font-black mb-3 text-white">{{service.title}}</h3>
+          <p class="text-white/70 text-base mb-6 leading-relaxed">{{service.description}}</p>
+
+          <div class="space-y-4">
+            <div class="space-y-3">
+              <ul class="space-y-3">
+                <li *ngFor="let feature of service.features" class="flex items-start gap-3">
+                  <span class="material-symbols-outlined text-blue-300 text-xl flex-shrink-0 mt-0.5">check_circle</span>
+                  <span class="text-sm text-white/80 font-medium">{{feature}}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="py-20 px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16 space-y-4">
+        <h2 class="text-5xl md:text-6xl font-black text-white">The Process</h2>
+        <p class="text-white/70 text-xl max-w-2xl mx-auto">Simple, straightforward steps to find and connect with sellers or buyers.</p>
+      </div>
+
+      <div class="grid md:grid-cols-4 gap-8">
+        <!-- Step 1 -->
+        <div class="relative">
+          <div class="p-8 rounded-2xl bg-gradient-to-br from-blue-600/8 to-white/5 border border-blue-500/20 text-center space-y-4 hover:border-blue-400/50 transition-all">
+            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500/40 to-blue-400/20 flex items-center justify-center mx-auto text-blue-200 font-black text-2xl shadow-lg shadow-blue-500/10">
+              1
+            </div>
+            <h4 class="text-lg font-bold text-white">Search</h4>
+            <p class="text-sm text-white/70">Browse our marketplace using smart filters to find vehicles and parts that match your needs.</p>
+          </div>
+          <div class="hidden md:block absolute top-1/2 -right-4 w-8 h-px bg-gradient-to-r from-blue-500 to-transparent"></div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="relative">
+          <div class="p-8 rounded-2xl bg-gradient-to-br from-blue-600/8 to-white/5 border border-blue-500/20 text-center space-y-4 hover:border-blue-400/50 transition-all">
+            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500/40 to-blue-400/20 flex items-center justify-center mx-auto text-blue-200 font-black text-2xl shadow-lg shadow-blue-500/10">
+              2
+            </div>
+            <h4 class="text-lg font-bold text-white">Connect</h4>
+            <p class="text-sm text-white/70">Message sellers securely through our protected messaging platform.</p>
+          </div>
+          <div class="hidden md:block absolute top-1/2 -right-4 w-8 h-px bg-gradient-to-r from-blue-500 to-transparent"></div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="relative">
+          <div class="p-8 rounded-2xl bg-gradient-to-br from-blue-600/8 to-white/5 border border-blue-500/20 text-center space-y-4 hover:border-blue-400/50 transition-all">
+            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500/40 to-blue-400/20 flex items-center justify-center mx-auto text-blue-200 font-black text-2xl shadow-lg shadow-blue-500/10">
+              3
+            </div>
+            <h4 class="text-lg font-bold text-white">Verify</h4>
+            <p class="text-sm text-white/70">Review seller profiles, listing details, and verified information before making decisions.</p>
+          </div>
+          <div class="hidden md:block absolute top-1/2 -right-4 w-8 h-px bg-gradient-to-r from-blue-500 to-transparent"></div>
+        </div>
+
+        <!-- Step 4 -->
+        <div>
+          <div class="p-8 rounded-2xl bg-gradient-to-br from-blue-600/8 to-white/5 border border-blue-500/20 text-center space-y-4 hover:border-blue-400/50 transition-all">
+            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500/40 to-blue-400/20 flex items-center justify-center mx-auto text-blue-200 font-black text-2xl shadow-lg shadow-blue-500/10">
+              4
+            </div>
+            <h4 class="text-lg font-bold text-white">Complete</h4>
+            <p class="text-sm text-white/70">Finalize your agreement and arrange delivery, pickup, or meeting with the seller.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="py-20 px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16 space-y-4">
+        <h2 class="text-5xl md:text-6xl font-black text-white">Why Choose Hamatoz</h2>
+        <p class="text-white/70 text-xl max-w-3xl mx-auto leading-relaxed">Industry-leading features and an unwavering commitment to excellence in every automotive transaction.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Feature 1 -->
+        <div class="p-6 rounded-2xl bg-gradient-to-br from-blue-600/10 to-blue-500/5 border border-blue-500/20 hover:border-blue-400/50 hover:bg-gradient-to-br hover:from-blue-600/15 hover:to-blue-500/10 transition-all group">
+          <div class="w-12 h-12 rounded-xl bg-blue-500/30 flex items-center justify-center text-blue-300 mb-4 group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined">verified</span>
+          </div>
+          <h4 class="text-lg font-bold text-white mb-2">Verified Sellers</h4>
+          <p class="text-white/60 text-sm">All sellers and suppliers are verified to ensure reliability and build trust within our community.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="p-6 rounded-2xl bg-gradient-to-br from-blue-600/10 to-blue-500/5 border border-blue-500/20 hover:border-blue-400/50 hover:bg-gradient-to-br hover:from-blue-600/15 hover:to-blue-500/10 transition-all group">
+          <div class="w-12 h-12 rounded-xl bg-blue-500/30 flex items-center justify-center text-blue-300 mb-4 group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined">security</span>
+          </div>
+          <h4 class="text-lg font-bold text-white mb-2">Secure Communication</h4>
+          <p class="text-white/60 text-sm">Encrypted messaging protects your conversations and ensures safe buyer-seller interaction.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="p-6 rounded-2xl bg-gradient-to-br from-blue-600/10 to-blue-500/5 border border-blue-500/20 hover:border-blue-400/50 hover:bg-gradient-to-br hover:from-blue-600/15 hover:to-blue-500/10 transition-all group">
+          <div class="w-12 h-12 rounded-xl bg-blue-500/30 flex items-center justify-center text-blue-300 mb-4 group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined">shield_verified</span>
+          </div>
+          <h4 class="text-lg font-bold text-white mb-2">Trusted Marketplace</h4>
+          <p class="text-white/60 text-sm">Moderated listings and verified providers create a safe environment for all transactions.</p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="p-6 rounded-2xl bg-gradient-to-br from-blue-600/10 to-blue-500/5 border border-blue-500/20 hover:border-blue-400/50 hover:bg-gradient-to-br hover:from-blue-600/15 hover:to-blue-500/10 transition-all group">
+          <div class="w-12 h-12 rounded-xl bg-blue-500/30 flex items-center justify-center text-blue-300 mb-4 group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined">psychology</span>
+          </div>
+          <h4 class="text-lg font-bold text-white mb-2">Intelligent Matching</h4>
+          <p class="text-white/60 text-sm">AI-powered algorithms help you find the most relevant listings and trading opportunities.</p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="p-6 rounded-2xl bg-gradient-to-br from-blue-600/10 to-blue-500/5 border border-blue-500/20 hover:border-blue-400/50 hover:bg-gradient-to-br hover:from-blue-600/15 hover:to-blue-500/10 transition-all group">
+          <div class="w-12 h-12 rounded-xl bg-blue-500/30 flex items-center justify-center text-blue-300 mb-4 group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined">done_all</span>
+          </div>
+          <h4 class="text-lg font-bold text-white mb-2">Comprehensive Search</h4>
+          <p class="text-white/60 text-sm">Advanced filters and smart suggestions make it easy to find exactly what you're looking for.</p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="p-6 rounded-2xl bg-gradient-to-br from-blue-600/10 to-blue-500/5 border border-blue-500/20 hover:border-blue-400/50 hover:bg-gradient-to-br hover:from-blue-600/15 hover:to-blue-500/10 transition-all group">
+          <div class="w-12 h-12 rounded-xl bg-blue-500/30 flex items-center justify-center text-blue-300 mb-4 group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined">handshake</span>
+          </div>
+          <h4 class="text-lg font-bold text-white mb-2">Seamless Exchange</h4>
+          <p class="text-white/60 text-sm">Streamlined process for trading and exchanging vehicles with transparent terms and support.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="py-16 px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 bg-gradient-to-b from-blue-600/5 to-transparent">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-12 space-y-3">
+        <h2 class="text-4xl md:text-5xl font-black text-white">Get In Touch</h2>
+        <p class="text-white/70 text-lg max-w-2xl mx-auto">Have questions? Our team is here to help with any inquiries.</p>
+      </div>
+
+      <form (ngSubmit)="submitContactForm()" class="space-y-6 p-8 rounded-2xl bg-gradient-to-br from-blue-600/12 to-blue-500/8 border border-blue-500/25 backdrop-blur-sm">
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="space-y-2.5">
+            <label class="text-sm font-bold text-blue-200">Full Name *</label>
+            <input 
+              [(ngModel)]="contactForm.name"
+              name="name"
+              type="text" 
+              placeholder="John Doe"
+              class="w-full px-4 py-2.5 rounded-lg bg-blue-600/10 border border-blue-500/30 text-white text-sm placeholder-white/50 focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-200">
+          </div>
+          <div class="space-y-2.5">
+            <label class="text-sm font-bold text-blue-200">Email Address *</label>
+            <input 
+              [(ngModel)]="contactForm.email"
+              name="email"
+              type="email" 
+              placeholder="john@example.com"
+              class="w-full px-4 py-2.5 rounded-lg bg-blue-600/10 border border-blue-500/30 text-white text-sm placeholder-white/50 focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-200">
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="space-y-2.5">
+            <label class="text-sm font-bold text-blue-200">Phone (Optional)</label>
+            <input 
+              [(ngModel)]="contactForm.phone"
+              name="phone"
+              type="tel" 
+              placeholder="+1 (555) 000-0000"
+              class="w-full px-4 py-2.5 rounded-lg bg-blue-600/10 border border-blue-500/30 text-white text-sm placeholder-white/50 focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-200">
+          </div>
+          <div class="space-y-2.5">
+            <label class="text-sm font-bold text-blue-200">Subject *</label>
+            <input 
+              [(ngModel)]="contactForm.subject"
+              name="subject"
+              type="text" 
+              placeholder="How can we help?"
+              class="w-full px-4 py-2.5 rounded-lg bg-blue-600/10 border border-blue-500/30 text-white text-sm placeholder-white/50 focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-200">
+          </div>
+        </div>
+
+        <div class="space-y-2.5">
+          <label class="text-sm font-bold text-blue-200">Message *</label>
+          <textarea 
+            [(ngModel)]="contactForm.message"
+            name="message"
+            placeholder="Tell us more about your inquiry..."
+            rows="4"
+            class="w-full px-4 py-2.5 rounded-lg bg-blue-600/10 border border-blue-500/30 text-white text-sm placeholder-white/50 focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-200 resize-none"></textarea>
+        </div>
+
+        <button 
+          type="submit"
+          class="w-full py-3 px-4 rounded-lg bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-600/30 active:scale-95 text-sm">
+          Send Message
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-24 px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 bg-gradient-to-r from-blue-600/20 via-blue-500/15 to-blue-600/20 border-y border-blue-500/30 backdrop-blur-sm">
+    <div class="max-w-4xl mx-auto text-center space-y-8">
+      <h2 class="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight">
+        Ready to Explore?
+      </h2>
+      <p class="text-xl text-white/80 leading-relaxed max-w-2xl mx-auto">
+        Join our trusted automotive community and discover a smarter way to buy, sell, exchange, and explore vehicles and spare parts.
+      </p>
+    </div>
+  </section>
+</div>

@@ -1,3 +1,6 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+
 /* You can add global styles to this file, and also import other style files */
 
 /* Custom Scrollbar - Dark Theme */

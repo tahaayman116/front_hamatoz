@@ -1,0 +1,179 @@
+<main class="admin-shell">
+  <aside class="admin-sidebar" [class.open]="isSidebarOpen">
+    <div class="brand-block">
+      <div class="brand-mark">H</div>
+      <div>
+        <p>Hamatoz</p>
+        <span>Admin control</span>
+      </div>
+    </div>
+
+    <nav class="admin-nav">
+      <button (click)="setActiveSection('overview')" [class.active]="activeSection === 'overview'">
+        <span class="material-symbols-outlined">dashboard</span>
+        Overview
+      </button>
+      <button (click)="setActiveSection('agencies')" [class.active]="activeSection === 'agencies'">
+        <span class="material-symbols-outlined">storefront</span>
+        Agencies
+        <small>{{ stats.pendingAgencies }}</small>
+      </button>
+      <button (click)="setActiveSection('posts')" [class.active]="activeSection === 'posts'">
+        <span class="material-symbols-outlined">fact_check</span>
+        Listings
+        <small>{{ stats.pendingListings }}</small>
+      </button>
+      <button (click)="setActiveSection('requests')" [class.active]="activeSection === 'requests'">
+        <span class="material-symbols-outlined">assignment</span>
+        Requests
+        <small>{{ stats.pendingRequests }}</small>
+      </button>
+    </nav>
+
+    <button class="logout-button" (click)="logout()">
+      <span class="material-symbols-outlined">logout</span>
+      Logout
+    </button>
+  </aside>
+
+  <section class="admin-main">
+    <header class="admin-topbar">
+      <button class="menu-button" (click)="toggleSidebar()" aria-label="Toggle sidebar">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <div>
+        <p class="eyebrow">Operations</p>
+        <h1>
+          {{
+            activeSection === 'overview'
+              ? 'Approval overview'
+              : activeSection === 'agencies'
+                ? 'Agency accounts'
+                : activeSection === 'posts'
+                  ? 'Listing moderation'
+                  : 'Request review'
+          }}
+        </h1>
+      </div>
+      <div class="admin-user">
+        <span class="material-symbols-outlined">admin_panel_settings</span>
+        <div>
+          <strong>{{ authService.getCurrentUser()?.name || 'Admin' }}</strong>
+          <small>Admin dashboard</small>
+        </div>
+      </div>
+    </header>
+
+    <section *ngIf="activeSection === 'overview'" class="overview-grid">
+      <article class="metric-panel agency-panel urgent">
+        <div class="metric-main">
+          <span class="material-symbols-outlined">storefront</span>
+          <div>
+            <p>Registered agencies waiting approval</p>
+            <strong>{{ stats.pendingAgencies }}</strong>
+          </div>
+        </div>
+
+        <div class="agency-preview" *ngIf="!isLoadingStats && pendingAgencies.length > 0">
+          <button *ngFor="let agency of pendingAgencies | slice:0:4" type="button" (click)="setActiveSection('agencies')">
+            <span>{{ agency.name.charAt(0) }}</span>
+            <div>
+              <strong>{{ agency.name }}</strong>
+              <small>{{ agency.city || 'No city' }}{{ agency.area ? ', ' + agency.area : '' }} · {{ agency.status }}</small>
+            </div>
+          </button>
+        </div>
+
+        <p *ngIf="!isLoadingStats && pendingAgencies.length === 0" class="empty-metric">
+          No pending agency registrations from the API.
+        </p>
+      </article>
+      <article class="metric-panel urgent">
+        <span class="material-symbols-outlined">fact_check</span>
+        <div>
+          <p>Pending listing approvals</p>
+          <strong>{{ stats.pendingListings }}</strong>
+        </div>
+      </article>
+      <article class="metric-panel urgent">
+        <span class="material-symbols-outlined">assignment</span>
+        <div>
+          <p>Pending customer requests</p>
+          <strong>{{ stats.pendingRequests }}</strong>
+        </div>
+      </article>
+
+      <section class="workflow-panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Workflow</p>
+            <h2>What needs review</h2>
+          </div>
+          <button class="ghost-button" (click)="loadStats()">
+            <span class="material-symbols-outlined">refresh</span>
+            Refresh
+          </button>
+        </div>
+
+        <div *ngIf="apiError" class="api-alert">
+          <span class="material-symbols-outlined">lock</span>
+          <p>{{ apiError }}</p>
+        </div>
+
+        <div class="workflow-list">
+          <button (click)="setActiveSection('agencies')">
+            <span class="material-symbols-outlined">storefront</span>
+            <div>
+              <strong>Approve agency accounts</strong>
+              <p>New agencies cannot sign in until their account is active.</p>
+            </div>
+          </button>
+          <button (click)="setActiveSection('posts')">
+            <span class="material-symbols-outlined">fact_check</span>
+            <div>
+              <strong>Approve marketplace listings</strong>
+              <p>Cars and parts submitted by agencies stay pending until review.</p>
+            </div>
+          </button>
+          <button (click)="setActiveSection('requests')">
+            <span class="material-symbols-outlined">assignment</span>
+            <div>
+              <strong>Review customer requests</strong>
+              <p>Requests stay pending until the admin reviews them.</p>
+            </div>
+          </button>
+        </div>
+      </section>
+    </section>
+
+    <section *ngIf="activeSection === 'agencies'" class="admin-section">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Access control</p>
+          <h2>Approve agencies before login</h2>
+        </div>
+      </div>
+      <app-agencies-list (changed)="loadStats()"></app-agencies-list>
+    </section>
+
+    <section *ngIf="activeSection === 'posts'" class="admin-section">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Marketplace</p>
+          <h2>Approve cars and parts before publishing</h2>
+        </div>
+      </div>
+      <app-posts-list (changed)="loadStats()"></app-posts-list>
+    </section>
+
+    <section *ngIf="activeSection === 'requests'" class="admin-section">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Requests</p>
+          <h2>Review customer requests</h2>
+        </div>
+      </div>
+      <app-requests-list (changed)="loadStats()"></app-requests-list>
+    </section>
+  </section>
+</main>

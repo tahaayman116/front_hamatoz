@@ -1,0 +1,80 @@
+<section class="queue-panel">
+  <div class="queue-head">
+    <div>
+      <p class="eyebrow">Customer requests</p>
+      <h3>Pending requests</h3>
+    </div>
+    <button type="button" class="ghost-button" (click)="loadRequests()" [disabled]="isLoading">
+      <span class="material-symbols-outlined">refresh</span>
+      Refresh
+    </button>
+  </div>
+
+  <div *ngIf="successMessage" class="state-message success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="state-message error">{{ errorMessage }}</div>
+
+  <div *ngIf="isLoading" class="state-message">Loading pending requests from /api/admin/requests/pending...</div>
+
+  <div *ngIf="!isLoading && requests.length === 0" class="empty-queue">
+    <span class="material-symbols-outlined">task_alt</span>
+    <h4>No pending requests</h4>
+    <p>The admin requests endpoint returned an empty queue.</p>
+  </div>
+
+  <div *ngIf="!isLoading && requests.length > 0" class="request-grid">
+    <article
+      *ngFor="let request of requests"
+      class="request-card"
+      [class.active]="selectedRequest?.id === request.id"
+      (click)="selectRequest(request)"
+    >
+      <div>
+        <span class="status-chip">{{ request.status }}</span>
+        <h4>Request #{{ request.id }}</h4>
+        <p>{{ request.message || 'No message provided.' }}</p>
+      </div>
+      <dl>
+        <div>
+          <dt>Listing</dt>
+          <dd>#{{ request.listingId || 'N/A' }}</dd>
+        </div>
+        <div>
+          <dt>Customer</dt>
+          <dd>#{{ request.customerUserId || 'N/A' }}</dd>
+        </div>
+        <div>
+          <dt>Created</dt>
+          <dd>{{ request.createdAt | date:'medium' }}</dd>
+        </div>
+      </dl>
+    </article>
+  </div>
+
+  <aside *ngIf="selectedRequest" class="review-panel">
+    <div>
+      <p class="eyebrow">Review</p>
+      <h3>Request #{{ selectedRequest.id }}</h3>
+      <p>{{ selectedRequest.message || 'No message provided.' }}</p>
+    </div>
+
+    <label>
+      Admin message
+      <textarea
+        [(ngModel)]="adminMessage"
+        rows="3"
+        placeholder="Optional for approval, required when denying..."
+      ></textarea>
+    </label>
+
+    <div class="review-actions">
+      <button type="button" class="approve-button" (click)="approveRequest()" [disabled]="isProcessing">
+        <span class="material-symbols-outlined">check</span>
+        {{ isProcessing ? 'Processing...' : 'Approve' }}
+      </button>
+      <button type="button" class="deny-button" (click)="rejectRequest()" [disabled]="isProcessing">
+        <span class="material-symbols-outlined">close</span>
+        {{ isProcessing ? 'Processing...' : 'Deny' }}
+      </button>
+    </div>
+  </aside>
+</section>

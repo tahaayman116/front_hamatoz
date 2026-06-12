@@ -1,0 +1,337 @@
+<main class="profile-shell">
+  <section *ngIf="isLoading" class="profile-loading">
+    <span class="material-symbols-outlined">progress_activity</span>
+    <p>Loading profile</p>
+  </section>
+
+  <section *ngIf="!isLoading && currentUser" class="profile-layout">
+    <aside class="profile-rail">
+      <div class="identity-block">
+        <div class="avatar-mark">{{ currentUser.name.charAt(0).toUpperCase() }}</div>
+        <div>
+          <p class="eyebrow">{{ isAgency ? 'Agency account' : 'Customer account' }}</p>
+          <h1>{{ currentUser.name }}</h1>
+          <p class="muted">{{ currentUser.email }}</p>
+        </div>
+      </div>
+
+      <div class="status-pill" [class.pending]="currentUser.status === 'pending'">
+        <span class="material-symbols-outlined">{{ currentUser.status === 'active' ? 'verified' : 'hourglass_top' }}</span>
+        {{ currentUser.status === 'active' ? 'Active' : 'Pending approval' }}
+      </div>
+
+      <nav class="profile-tabs">
+        <button (click)="setActiveTab('overview')" [class.active]="activeTab === 'overview'">
+          <span class="material-symbols-outlined">account_circle</span>
+          Overview
+        </button>
+        <button *ngIf="!isAgency" (click)="setActiveTab('favorites')" [class.active]="activeTab === 'favorites'">
+          <span class="material-symbols-outlined">favorite</span>
+          Favorites
+        </button>
+        <button *ngIf="isAgency" (click)="setActiveTab('agency-profile')" [class.active]="activeTab === 'agency-profile'">
+          <span class="material-symbols-outlined">storefront</span>
+          Agency profile
+        </button>
+        <button *ngIf="isAgency" (click)="setActiveTab('agency-listings')" [class.active]="activeTab === 'agency-listings'">
+          <span class="material-symbols-outlined">fact_check</span>
+          Listings
+        </button>
+        <button *ngIf="isAgency" (click)="setActiveTab('new-listing')" [class.active]="activeTab === 'new-listing'" [disabled]="!canAgencyPublish">
+          <span class="material-symbols-outlined">add_circle</span>
+          New listing
+        </button>
+      </nav>
+
+      <button class="secondary-action" (click)="logout()">
+        <span class="material-symbols-outlined">logout</span>
+        Sign out
+      </button>
+    </aside>
+
+    <section class="profile-content">
+      <div *ngIf="feedbackMessage" class="notice success">
+        <span class="material-symbols-outlined">check_circle</span>
+        {{ feedbackMessage }}
+      </div>
+      <div *ngIf="errorMessage" class="notice error">
+        <span class="material-symbols-outlined">error</span>
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="isAgency && !canAgencyPublish" class="notice warning">
+        <span class="material-symbols-outlined">lock_clock</span>
+        Complete your agency profile so admins can review it. Listings unlock after approval.
+      </div>
+
+      <section *ngIf="activeTab === 'overview'" class="panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Account</p>
+            <h2>Profile details</h2>
+          </div>
+          <button class="ghost-action" (click)="toggleEditMode()">
+            <span class="material-symbols-outlined">{{ isEditMode ? 'close' : 'edit' }}</span>
+            {{ isEditMode ? 'Cancel' : 'Edit' }}
+          </button>
+        </div>
+
+        <form *ngIf="isEditMode" class="form-grid" (ngSubmit)="saveProfile()">
+          <label>
+            <span>Name</span>
+            <input [(ngModel)]="editFormData.name" name="name" type="text" />
+          </label>
+          <label>
+            <span>Email</span>
+            <input [(ngModel)]="editFormData.email" name="email" type="email" />
+          </label>
+          <label>
+            <span>Phone</span>
+            <input [(ngModel)]="editFormData.phone" name="phone" type="tel" />
+          </label>
+          <label>
+            <span>Location</span>
+            <input [(ngModel)]="editFormData.bio" name="bio" type="text" />
+          </label>
+          <button class="primary-action" type="submit">
+            <span class="material-symbols-outlined">save</span>
+            Save changes
+          </button>
+        </form>
+
+        <div *ngIf="!isEditMode" class="details-grid">
+          <div>
+            <span>Name</span>
+            <strong>{{ currentUser.name }}</strong>
+          </div>
+          <div>
+            <span>Email</span>
+            <strong>{{ currentUser.email }}</strong>
+          </div>
+          <div>
+            <span>Role</span>
+            <strong>{{ isAgency ? 'Agency' : 'Customer' }}</strong>
+          </div>
+          <div>
+            <span>Status</span>
+            <strong>{{ currentUser.status }}</strong>
+          </div>
+          <div>
+            <span>Phone</span>
+            <strong>{{ currentUser.phone || 'Not set' }}</strong>
+          </div>
+          <div>
+            <span>Saved items</span>
+            <strong>{{ stats.total }}</strong>
+          </div>
+        </div>
+      </section>
+
+      <section *ngIf="activeTab === 'favorites'" class="panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Wishlist</p>
+            <h2>Favorites</h2>
+          </div>
+          <a routerLink="/cars" class="ghost-action">Browse marketplace</a>
+        </div>
+
+        <div class="metric-row">
+          <div><span>Cars</span><strong>{{ stats.totalCars }}</strong></div>
+          <div><span>Parts</span><strong>{{ stats.totalParts }}</strong></div>
+          <div><span>Total</span><strong>{{ stats.total }}</strong></div>
+        </div>
+
+        <div class="favorite-section">
+          <h3>Cars</h3>
+          <p *ngIf="!userFavorites || userFavorites.cars.length === 0" class="empty-copy">No saved cars yet.</p>
+          <div class="item-list">
+            <article *ngFor="let car of userFavorites?.cars" class="list-item">
+              <span class="material-symbols-outlined">directions_car</span>
+              <div>
+                <strong>{{ car.name }}</strong>
+                <p>{{ car.price | number }} EGP</p>
+              </div>
+              <button (click)="removeFavoriteCar(+car.id)" class="icon-button" aria-label="Remove car">
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </article>
+          </div>
+        </div>
+
+        <div class="favorite-section">
+          <h3>Parts</h3>
+          <p *ngIf="!userFavorites || userFavorites.parts.length === 0" class="empty-copy">No saved parts yet.</p>
+          <div class="item-list">
+            <article *ngFor="let part of userFavorites?.parts" class="list-item">
+              <span class="material-symbols-outlined">settings</span>
+              <div>
+                <strong>{{ part.name }}</strong>
+                <p>{{ part.price | number }} EGP</p>
+              </div>
+              <button (click)="removeFavoritePart(+part.id)" class="icon-button" aria-label="Remove part">
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section *ngIf="activeTab === 'agency-profile'" class="panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Agency</p>
+            <h2>Business profile</h2>
+          </div>
+        </div>
+
+        <form class="form-grid" (ngSubmit)="saveAgencyProfile()">
+          <label>
+            <span>Agency name</span>
+            <input [(ngModel)]="agencyProfileForm.agencyName" name="agencyName" type="text" required />
+          </label>
+          <label>
+            <span>Branch address</span>
+            <input [(ngModel)]="agencyProfileForm.branchAddress" name="branchAddress" type="text" required />
+          </label>
+          <label>
+            <span>City</span>
+            <input [(ngModel)]="agencyProfileForm.city" name="city" type="text" required />
+          </label>
+          <label>
+            <span>Area</span>
+            <input [(ngModel)]="agencyProfileForm.area" name="area" type="text" required />
+          </label>
+          <label>
+            <span>Commercial registration</span>
+            <input [(ngModel)]="agencyProfileForm.commercialRegistrationNumber" name="commercialRegistrationNumber" type="text" required />
+          </label>
+          <label>
+            <span>Tax card</span>
+            <input [(ngModel)]="agencyProfileForm.taxCardNumber" name="taxCardNumber" type="text" required />
+          </label>
+          <label class="wide">
+            <span>Description</span>
+            <textarea [(ngModel)]="agencyProfileForm.description" name="description" rows="4"></textarea>
+          </label>
+          <button class="primary-action" type="submit" [disabled]="isSaving || !canEditAgencyProfile">
+            <span class="material-symbols-outlined">save</span>
+            {{ isSaving ? 'Saving...' : (canAgencyPublish ? 'Save agency profile' : 'Submit agency profile') }}
+          </button>
+        </form>
+      </section>
+
+      <section *ngIf="activeTab === 'agency-listings'" class="panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Moderation</p>
+            <h2>Your submitted listings</h2>
+          </div>
+          <button class="primary-action" (click)="setActiveTab('new-listing')" [disabled]="!canAgencyPublish">
+            <span class="material-symbols-outlined">add</span>
+            New listing
+          </button>
+        </div>
+
+        <p *ngIf="myListings.length === 0" class="empty-copy">No listings submitted yet.</p>
+        <div class="item-list">
+          <article *ngFor="let listing of myListings" class="list-item listing">
+            <span class="material-symbols-outlined">{{ listing.type === 'part' || listing.type === 'Part' ? 'settings' : 'directions_car' }}</span>
+            <div>
+              <strong>{{ listing.title }}</strong>
+              <p>{{ listing.brand || 'No brand' }} · {{ listing.modelOrPartName || listing.model || 'No model' }}</p>
+            </div>
+            <span class="status-chip" [class.pending]="listing.status === 'pending' || listing.status === 'Pending'">{{ listing.status }}</span>
+          </article>
+        </div>
+      </section>
+
+      <section *ngIf="activeTab === 'new-listing'" class="panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Submit for review</p>
+            <h2>New car or part</h2>
+          </div>
+        </div>
+
+        <form class="form-grid" (ngSubmit)="submitListing()">
+          <label>
+            <span>Type</span>
+            <select [(ngModel)]="listingForm.type" name="type">
+              <option value="Car">Car</option>
+              <option value="Part">Part</option>
+            </select>
+          </label>
+          <label>
+            <span>Title</span>
+            <input [(ngModel)]="listingForm.title" name="title" type="text" required />
+          </label>
+          <label>
+            <span>Price</span>
+            <input [(ngModel)]="listingForm.price" name="price" type="number" min="1" required />
+          </label>
+          <label>
+            <span>Brand</span>
+            <input [(ngModel)]="listingForm.brand" name="brand" type="text" required />
+          </label>
+          <label>
+            <span>Model or part name</span>
+            <input [(ngModel)]="listingForm.modelOrPartName" name="modelOrPartName" type="text" required />
+          </label>
+          <label>
+            <span>Condition</span>
+            <select [(ngModel)]="listingForm.condition" name="condition">
+              <option>New</option>
+              <option>Used</option>
+            </select>
+          </label>
+          <label>
+            <span>City</span>
+            <input [(ngModel)]="listingForm.city" name="city" type="text" required />
+          </label>
+          <label>
+            <span>Area</span>
+            <input [(ngModel)]="listingForm.area" name="area" type="text" required />
+          </label>
+          <label>
+            <span>Year</span>
+            <input [(ngModel)]="listingForm.year" name="year" type="number" min="1900" max="2026" required />
+          </label>
+          <label>
+            <span>Kilometers</span>
+            <input [(ngModel)]="listingForm.kmsDriven" name="kmsDriven" type="number" min="0" required />
+          </label>
+          <label>
+            <span>Fuel</span>
+            <input [(ngModel)]="listingForm.fuel" name="fuel" type="text" required />
+          </label>
+          <label>
+            <span>Transmission</span>
+            <input [(ngModel)]="listingForm.transmission" name="transmission" type="text" required />
+          </label>
+          <label>
+            <span>Assembly</span>
+            <input [(ngModel)]="listingForm.assembly" name="assembly" type="text" required />
+          </label>
+          <label class="wide">
+            <span>Description</span>
+            <textarea [(ngModel)]="listingForm.description" name="description" rows="4" required></textarea>
+          </label>
+          <label class="wide">
+            <span>Image URLs</span>
+            <textarea
+              [(ngModel)]="listingForm.imagesUrlsText"
+              name="imagesUrlsText"
+              rows="3"
+              placeholder="Paste one image URL per line"
+            ></textarea>
+          </label>
+          <button class="primary-action" type="submit" [disabled]="isSaving || !canAgencyPublish">
+            <span class="material-symbols-outlined">send</span>
+            {{ isSaving ? 'Submitting...' : 'Submit for admin approval' }}
+          </button>
+        </form>
+      </section>
+    </section>
+  </section>
+</main>

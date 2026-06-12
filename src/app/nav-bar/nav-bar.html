@@ -26,8 +26,14 @@
   </nav>
 
   <div class="hidden md:flex items-center gap-4">
-    <a routerLink="/sign-in" class="btn-ghost">Login</a>
-    <a routerLink="/sign-up" class="btn-primary">Sign Up</a>
+    <a *ngIf="!currentUser" routerLink="/sign-in" class="btn-ghost">Login</a>
+    <a *ngIf="!currentUser" routerLink="/sign-up" class="btn-primary">Sign Up</a>
+    
+    <a *ngIf="currentUser" routerLink="/profile" class="btn-ghost flex items-center gap-2">
+      <span class="material-symbols-outlined text-lg">person</span>
+      Profile
+    </a>
+    <button *ngIf="currentUser" (click)="logout()" class="btn-ghost">Logout</button>
   </div>
 
   <button class="md:hidden" type="button" aria-label="Open menu">

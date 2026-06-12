@@ -31,28 +31,28 @@
         <!-- User Type -->
         <button
           type="button"
-          (click)="userType = 'user'"
+          (click)="userType = 'Customer'"
           class="p-4 rounded-xl border-2 transition-all cursor-pointer flex flex-col items-center gap-3"
           [ngClass]="{
-            'border-blue-500 bg-blue-600/15': userType === 'user',
-            'border-white/10 bg-white/5 hover:border-blue-400/50': userType !== 'user'
+            'border-blue-500 bg-blue-600/15': userType === 'Customer',
+            'border-white/10 bg-white/5 hover:border-blue-400/50': userType !== 'Customer'
           }"
         >
-          <span class="material-symbols-outlined text-3xl" [ngClass]="userType === 'user' ? 'text-blue-400' : 'text-white/50'">person</span>
+          <span class="material-symbols-outlined text-3xl" [ngClass]="userType === 'Customer' ? 'text-blue-400' : 'text-white/50'">person</span>
           <span class="text-xs font-bold">Individual</span>
         </button>
 
         <!-- Agency Type -->
         <button
           type="button"
-          (click)="userType = 'agency'"
+          (click)="userType = 'Agency'"
           class="p-4 rounded-xl border-2 transition-all cursor-pointer flex flex-col items-center gap-3"
           [ngClass]="{
-            'border-blue-500 bg-blue-600/15': userType === 'agency',
-            'border-white/10 bg-white/5 hover:border-blue-400/50': userType !== 'agency'
+            'border-blue-500 bg-blue-600/15': userType === 'Agency',
+            'border-white/10 bg-white/5 hover:border-blue-400/50': userType !== 'Agency'
           }"
         >
-          <span class="material-symbols-outlined text-3xl" [ngClass]="userType === 'agency' ? 'text-blue-400' : 'text-white/50'">domain</span>
+          <span class="material-symbols-outlined text-3xl" [ngClass]="userType === 'Agency' ? 'text-blue-400' : 'text-white/50'">domain</span>
           <span class="text-xs font-bold">Agency</span>
         </button>
       </div>
@@ -60,13 +60,24 @@
 
     <!-- Sign Up Form -->
     <form (ngSubmit)="onSignUp()" class="space-y-4 mb-8">
-      <!-- Name Input -->
+      <!-- Full Name Input -->
       <div class="relative">
         <input
-          [(ngModel)]="formData.name"
-          name="name"
+          [(ngModel)]="formData.fullName"
+          name="fullName"
           type="text"
           placeholder="Full Name"
+          class="w-full bg-white/5 border border-blue-500/20 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:border-blue-400 focus:bg-white/10 focus:ring-1 focus:ring-blue-500/20 transition-all outline-none"
+        />
+      </div>
+
+      <!-- Phone Input -->
+      <div class="relative">
+        <input
+          [(ngModel)]="formData.phone"
+          name="phone"
+          type="tel"
+          placeholder="Phone Number"
           class="w-full bg-white/5 border border-blue-500/20 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:border-blue-400 focus:bg-white/10 focus:ring-1 focus:ring-blue-500/20 transition-all outline-none"
         />
       </div>
@@ -82,13 +93,25 @@
         />
       </div>
 
+      <!-- National ID Input -->
+      <div class="relative">
+        <input
+          [(ngModel)]="formData.nationalId"
+          name="nationalId"
+          type="text"
+          placeholder="National ID (14 digits)"
+          maxlength="14"
+          class="w-full bg-white/5 border border-blue-500/20 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:border-blue-400 focus:bg-white/10 focus:ring-1 focus:ring-blue-500/20 transition-all outline-none"
+        />
+      </div>
+
       <!-- Password Input -->
       <div class="relative">
         <input
           [(ngModel)]="formData.password"
           name="password"
           type="password"
-          placeholder="Password"
+          placeholder="Password (min 6 characters)"
           class="w-full bg-white/5 border border-blue-500/20 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:border-blue-400 focus:bg-white/10 focus:ring-1 focus:ring-blue-500/20 transition-all outline-none"
         />
       </div>
@@ -120,9 +143,10 @@
       <!-- Sign Up Button -->
       <button
         type="submit"
-        class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold py-3 rounded-lg transition-all shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-0.5 active:translate-y-0"
+        [disabled]="isLoading"
+        class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold py-3 rounded-lg transition-all shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Create Account
+        {{ isLoading ? '⏳ Creating Account...' : 'Create Account' }}
       </button>
     </form>
 

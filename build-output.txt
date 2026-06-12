@@ -1,0 +1,5 @@
+
+> hamatoz@0.0.0 build
+> ng build
+
+[33m>[39m Building...

@@ -1,245 +1,194 @@
-<div class="font-display bg-background-dark text-white antialiased">
-  <div class="relative flex h-auto min-h-screen w-full flex-col bg-background-dark group/design-root overflow-x-hidden">
-    <main class="flex-1 w-full mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 max-w-[1400px]">
-      <!-- Mobile Filter Toggle Button -->
-      <div class="lg:hidden mb-6 flex items-center gap-2">
-        <button (click)="toggleMobileFilters()"
-          class="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary/90 transition-all duration-200 active:scale-95"
-          [attr.aria-label]="showMobileFilters ? 'Close filters' : 'Open filters'">
-          <span class="material-symbols-outlined text-lg">tune</span>
-          <span>{{showMobileFilters ? 'Hide' : 'Show'}} Filters</span>
+<div class="catalog-page">
+  <main class="catalog-shell">
+    <header class="catalog-hero">
+      <div>
+        <p class="eyebrow">Hamatoz marketplace</p>
+        <h1>Cars from approved agencies</h1>
+        <p class="hero-copy">
+          Browse live listings from the API only. AI semantic search and image matching call the
+          backend endpoints, then the page shows real approved cars only.
+        </p>
+      </div>
+
+      <div class="hero-panel">
+        <span class="material-symbols-outlined">verified</span>
+        <strong>{{ totalCars }}</strong>
+        <span>approved cars</span>
+      </div>
+    </header>
+
+    <section class="search-band" aria-label="Car search">
+      <div class="search-input">
+        <span class="material-symbols-outlined">psychology</span>
+        <input
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="runSemanticSearch()"
+          type="text"
+          autocomplete="off"
+          placeholder="Try: لادا, bmw, automatic, akhmim"
+          aria-label="AI semantic car search"
+        />
+        <button *ngIf="searchQuery" (click)="clearSearch()" type="button" aria-label="Clear search">
+          <span class="material-symbols-outlined">close</span>
         </button>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
-        <!-- Filter Sidebar - Responsive -->
-        <aside class="lg:col-span-1" 
-          [class.fixed]="showMobileFilters" 
-          [class.inset-0]="showMobileFilters"
-          [class.z-40]="showMobileFilters"
-          [class.hidden]="!showMobileFilters && !isLargeScreen"
-          [class.lg:fixed]="false"
-          [class.lg:inset-0]="false"
-          [class.lg:z-40]="false"
-          [class.lg:hidden]="false">
-          
-          <!-- Mobile Filter Backdrop -->
-          <div *ngIf="showMobileFilters && !isLargeScreen"
-            (click)="toggleMobileFilters()"
-            class="fixed inset-0 bg-black/50 z-30 lg:hidden"></div>
+      <input #carImageSearch class="hidden-input" type="file" accept="image/*" (change)="runVisualSearch($event)" />
 
-          <!-- Filter Card -->
-          <div class="lg:sticky lg:top-24 h-fit bg-gray-800/50 dark:bg-gray-800/50 p-5 sm:p-6 rounded-xl shadow-sm border border-gray-600 dark:border-gray-700 relative z-40 lg:z-auto"
-            [class.w-80]="showMobileFilters && !isLargeScreen"
-            [class.mx-auto]="showMobileFilters && !isLargeScreen">
-            
-            <div class="flex items-center justify-between mb-6 lg:mb-6">
-              <h3 class="text-lg font-bold text-white">Filters</h3>
-              <button *ngIf="showMobileFilters && !isLargeScreen"
-                (click)="toggleMobileFilters()"
-                class="lg:hidden p-1 hover:bg-gray-700 rounded-lg transition-colors"
-                aria-label="Close filters">
-                <span class="material-symbols-outlined">close</span>
-              </button>
+      <button class="primary-action" (click)="runSemanticSearch()" [disabled]="isAiSearching || isLoading">
+        <span class="material-symbols-outlined">psychology</span>
+        AI Search
+      </button>
+      <button class="secondary-action" (click)="carImageSearch.click()" [disabled]="isAiSearching || isLoading">
+        <span class="material-symbols-outlined">image_search</span>
+        Image AI
+      </button>
+    </section>
+
+    <button class="mobile-filter" (click)="toggleMobileFilters()" type="button">
+      <span class="material-symbols-outlined">tune</span>
+      {{ showMobileFilters ? 'Hide filters' : 'Show filters' }}
+      <b *ngIf="activeFilterCount">{{ activeFilterCount }}</b>
+    </button>
+
+    <div class="catalog-layout">
+      <aside class="filter-rail" [class.open]="showMobileFilters || isLargeScreen">
+        <div *ngIf="showMobileFilters && !isLargeScreen" class="filter-backdrop" (click)="toggleMobileFilters()"></div>
+
+        <div class="filter-panel">
+          <div class="filter-head">
+            <div>
+              <span>Filters</span>
+              <small>{{ activeFilterCount || 'No' }} active</small>
             </div>
-            
-            <!-- Brand Filter -->
-            <div class="py-4 border-b border-gray-600 dark:border-gray-700">
-              <h4 class="font-semibold mb-3 text-white/90 text-sm">Brand</h4>
-              <div class="relative mb-3">
-                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-white/40 text-lg">search</span>
-                <input class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-gray-700 dark:bg-gray-700 border border-gray-600 dark:border-gray-600 focus:ring-2 focus:ring-primary focus:border-primary text-white placeholder-white/50 text-sm transition-all" 
-                  placeholder="Search brands..." 
-                  type="text"
-                  autocomplete="off"
-                  [(ngModel)]="brandSearch"
-                  (ngModelChange)="filterBrands()" 
-                  aria-label="Search for car brands"/>
-              </div>
-              <div class="space-y-2 max-h-40 overflow-y-auto scrollbar-thin">
-                <label class="flex items-center space-x-2 cursor-pointer p-1.5 rounded hover:bg-gray-700/50 transition-colors" *ngFor="let brand of filteredBrands">
-                  <input class="rounded text-primary focus:ring-primary/50 cursor-pointer" 
-                    type="checkbox" 
-                    [(ngModel)]="selectedBrands[brand]"
-                    (ngModelChange)="applyFilters()"
-                    [attr.aria-label]="'Filter by ' + brand" />
-                  <span class="text-white/90 text-sm">{{brand}}</span>
-                </label>
-                <div *ngIf="filteredBrands.length === 0" class="text-white/50 text-xs py-2 text-center">
-                  No brands found
-                </div>
-              </div>
-            </div>
-            
-            <!-- Price Range Filter -->
-            <div class="py-4 border-b border-gray-600 dark:border-gray-700">
-              <h4 class="font-semibold mb-4 text-white/90 text-sm">Price Range</h4>
-              <div class="relative h-2 bg-gray-700 dark:bg-gray-700 rounded-full mb-4">
-                <div class="absolute h-2 bg-primary rounded-full" [style.left.%]="minPricePercent" [style.width.%]="maxPricePercent - minPricePercent"></div>
-                <input type="range" min="0" max="100" [(ngModel)]="minPricePercent" (ngModelChange)="applyFilters()" 
-                  class="absolute w-full h-2 top-0 appearance-none bg-transparent rounded-full cursor-pointer pointer-events-none z-5"
-                  aria-label="Minimum price" />
-                <input type="range" min="0" max="100" [(ngModel)]="maxPricePercent" (ngModelChange)="applyFilters()" 
-                  class="absolute w-full h-2 top-0 appearance-none bg-transparent rounded-full cursor-pointer pointer-events-none z-6"
-                  aria-label="Maximum price" />
-              </div>
-              <div class="flex justify-between text-xs text-white/60 px-1">
-                <span class="font-medium">${{(minPricePercent / 100 * 100000) | number:'1.0-0'}}</span>
-                <span class="font-medium">${{(maxPricePercent / 100 * 100000) | number:'1.0-0'}}</span>
-              </div>
-            </div>
-            
-            <!-- Condition Filter -->
-            <div class="py-4 border-b border-gray-600 dark:border-gray-700">
-              <h4 class="font-semibold mb-3 text-white/90 text-sm">Condition</h4>
-              <div class="space-y-2">
-                <label class="flex items-center space-x-2 cursor-pointer p-1.5 rounded hover:bg-gray-700/50 transition-colors">
-                  <input class="text-primary focus:ring-primary/50 cursor-pointer" 
-                    name="condition" 
-                    type="radio" 
-                    value=""
-                    [(ngModel)]="selectedCondition"
-                    (ngModelChange)="applyFilters()"
-                    aria-label="All conditions" />
-                  <span class="text-white/90 text-sm">All</span>
-                </label>
-                <label class="flex items-center space-x-2 cursor-pointer p-1.5 rounded hover:bg-gray-700/50 transition-colors">
-                  <input class="text-primary focus:ring-primary/50 cursor-pointer" 
-                    name="condition" 
-                    type="radio" 
-                    value="new"
-                    [(ngModel)]="selectedCondition"
-                    (ngModelChange)="applyFilters()"
-                    aria-label="New cars" />
-                  <span class="text-white/90 text-sm">New</span>
-                </label>
-                <label class="flex items-center space-x-2 cursor-pointer p-1.5 rounded hover:bg-gray-700/50 transition-colors">
-                  <input class="text-primary focus:ring-primary/50 cursor-pointer" 
-                    name="condition" 
-                    type="radio" 
-                    value="used"
-                    [(ngModel)]="selectedCondition"
-                    (ngModelChange)="applyFilters()"
-                    aria-label="Used cars" />
-                  <span class="text-white/90 text-sm">Used</span>
-                </label>
-              </div>
-            </div>
-            
-            <!-- Filter Buttons -->
-            <div class="pt-6 flex flex-col gap-3">
-              <button (click)="applyFilters()"
-                class="w-full flex items-center justify-center rounded-lg h-10 sm:h-11 px-4 bg-primary text-white text-sm font-bold tracking-wide hover:bg-primary/90 active:scale-95 transition-all duration-200"
-                aria-label="Apply selected filters">
-                Apply Filters
-              </button>
-              <button (click)="resetFilters()"
-                class="w-full flex items-center justify-center rounded-lg h-10 sm:h-11 px-4 bg-gray-700 dark:bg-gray-700 text-white text-sm font-bold tracking-wide hover:bg-gray-600 dark:hover:bg-gray-600 active:scale-95 transition-all duration-200"
-                aria-label="Reset all filters">
-                Reset
-              </button>
-            </div>
-          </div>
-        </aside>
-        
-        <!-- Main Content -->
-        <div class="lg:col-span-3">
-          <!-- PageHeading and Sort Bar -->
-          <div class="flex flex-col gap-4 mb-6 sm:mb-8">
-            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
-              <div class="flex flex-col gap-1">
-                <h1 class="text-white text-3xl sm:text-4xl font-black leading-tight tracking-tighter">Find Your Next Car</h1>
-                <p class="text-white/60 text-sm sm:text-base font-normal leading-normal">Browse thousands of new and used cars from trusted sellers.</p>
-              </div>
-            </div>
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <p class="text-white/60 text-xs sm:text-sm font-normal">
-                Showing <span class="text-primary font-semibold">{{filteredCars.length}}</span> of <span class="text-primary font-semibold">{{totalCars}}</span> results
-              </p>
-              <button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-gray-800 dark:bg-gray-800 border border-gray-600 dark:border-gray-600 px-3 sm:px-4 hover:bg-gray-700 transition-colors"
-                aria-label="Sort results">
-                <p class="text-white text-xs sm:text-sm font-medium">{{sortBy}}</p>
-                <span class="material-symbols-outlined text-white/60 dark:text-white/60 text-base">expand_more</span>
-              </button>
-            </div>
-          </div>
-          
-          <!-- Empty State -->
-          <div *ngIf="filteredCars.length === 0" class="flex flex-col items-center justify-center py-12 sm:py-16 px-4 text-center rounded-xl bg-gray-800/25 border border-gray-600">
-            <span class="material-symbols-outlined text-5xl sm:text-6xl text-white/30 mb-4">directions_car</span>
-            <h2 class="text-lg sm:text-xl font-bold text-white mb-2">No Cars Found</h2>
-            <p class="text-white/60 text-sm sm:text-base mb-6">Try adjusting your filters to find more cars.</p>
-            <button (click)="resetFilters()"
-              class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors">
-              Reset Filters
+            <button *ngIf="showMobileFilters && !isLargeScreen" (click)="toggleMobileFilters()" type="button" aria-label="Close filters">
+              <span class="material-symbols-outlined">close</span>
             </button>
           </div>
-          
-          <!-- Cars Grid -->
-          <div *ngIf="filteredCars.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            <div *ngFor="let car of filteredCars" 
-              class="group flex flex-col gap-3 pb-3 bg-gray-800/50 dark:bg-gray-800/50 rounded-xl shadow-sm border border-gray-600 dark:border-gray-700 overflow-hidden transform hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
-              <div class="relative overflow-hidden bg-gray-700 aspect-video">
-                <div class="w-full h-full bg-center bg-no-repeat bg-cover group-hover:scale-105 transition-transform duration-300" 
-                  [attr.data-alt]="car.name"
-                  [style.background-image]="'url(' + car.image + ')'">
-                </div>
-                <button (click)="toggleFavorite(car.id)"
-                  class="absolute top-3 right-3 flex items-center justify-center size-8 sm:size-9 rounded-full bg-white/50 backdrop-blur-sm text-gray-700 hover:bg-white/80 hover:text-red-500 focus:ring-2 focus:ring-primary transition-all duration-200"
-                  [attr.aria-label]="car.isFavorited ? 'Remove from favorites' : 'Add to favorites'">
-                  <span class="material-symbols-outlined text-lg sm:text-xl" [class.filled]="car.isFavorited">
-                    {{car.isFavorited ? 'favorite' : 'favorite_border'}}
-                  </span>
-                </button>
-                <span *ngIf="car.badge" class="absolute bottom-3 left-3 bg-yellow-500 text-white text-xs font-bold px-2.5 py-1 rounded transition-all">
-                  {{car.badge}}
-                </span>
+
+          <section class="filter-block">
+            <label>Brand</label>
+            <div class="compact-input">
+              <span class="material-symbols-outlined">search</span>
+              <input
+                [(ngModel)]="brandSearch"
+                (ngModelChange)="filterBrands()"
+                type="text"
+                autocomplete="off"
+                placeholder="Filter brands"
+              />
+            </div>
+            <div class="option-list">
+              <label *ngFor="let brand of filteredBrands" class="check-row">
+                <input type="checkbox" [(ngModel)]="selectedBrands[brand]" (ngModelChange)="applyFilters()" />
+                <span>{{ brand }}</span>
+              </label>
+              <p *ngIf="filteredBrands.length === 0" class="muted-line">No brands in current results.</p>
+            </div>
+          </section>
+
+          <section class="filter-block">
+            <label>Price</label>
+            <div class="range-wrap">
+              <div class="range-track">
+                <span [style.left.%]="minPricePercent" [style.width.%]="maxPricePercent - minPricePercent"></span>
+                <input type="range" min="0" max="100" [(ngModel)]="minPricePercent" (ngModelChange)="applyFilters()" aria-label="Minimum price" />
+                <input type="range" min="0" max="100" [(ngModel)]="maxPricePercent" (ngModelChange)="applyFilters()" aria-label="Maximum price" />
               </div>
-              <div class="px-4 sm:px-4">
-                <p class="text-white text-sm sm:text-base font-bold leading-normal line-clamp-1">{{car.name}}</p>
-                <p class="text-primary text-base sm:text-lg font-semibold leading-normal">${{ car.price | number }}</p>
-                <p class="text-white/60 text-xs sm:text-sm font-normal leading-normal mt-1">
-                  {{car.miles | number}} miles • {{car.transmission}} • {{car.location}}
-                </p>
+              <div class="range-values">
+                <span>EGP {{ (minPricePercent / 100 * maxAvailablePrice) | number:'1.0-0' }}</span>
+                <span>EGP {{ (maxPricePercent / 100 * maxAvailablePrice) | number:'1.0-0' }}</span>
               </div>
             </div>
-          </div>
-          
-          <!-- Pagination -->
-          <div *ngIf="filteredCars.length > 0" class="flex justify-center items-center gap-1 sm:gap-2 mt-8 sm:mt-12 flex-wrap">
-            <button (click)="previousPage()"
-              class="flex items-center justify-center size-9 sm:size-10 rounded-lg border border-gray-600 dark:border-gray-600 bg-gray-800 dark:bg-gray-800 text-white/60 dark:text-white/60 hover:bg-gray-700 dark:hover:bg-gray-700 focus:ring-2 focus:ring-primary transition-all duration-200"
-              [disabled]="currentPage === 1"
-              aria-label="Previous page">
-              <span class="material-symbols-outlined text-lg sm:text-xl">chevron_left</span>
-            </button>
-            <button *ngFor="let page of [1,2,3]" (click)="goToPage(page)"
-              [class.bg-primary]="currentPage === page"
-              [class.text-white]="currentPage === page"
-              [class.bg-gray-800]="currentPage !== page"
-              [class.dark:bg-gray-800]="currentPage !== page"
-              [class.text-white/60]="currentPage !== page"
-              [class.dark:text-white/60]="currentPage !== page"
-              class="flex items-center justify-center size-8 sm:size-10 rounded-lg border-0 font-bold dark:hover:bg-gray-700 hover:bg-gray-700 focus:ring-2 focus:ring-primary transition-all duration-200"
-              [attr.aria-label]="'Go to page ' + page"
-              [attr.aria-current]="currentPage === page ? 'page' : null">
-              {{page}}
-            </button>
-            <span class="text-white/60 text-xs sm:text-sm mx-1">...</span>
-            <button (click)="goToPage(12)"
-              class="flex items-center justify-center size-8 sm:size-10 rounded-lg bg-gray-800 dark:bg-gray-800 text-white/60 dark:text-white/60 hover:bg-gray-700 dark:hover:bg-gray-700 font-medium focus:ring-2 focus:ring-primary transition-all duration-200"
-              aria-label="Go to page 12">
-              12
-            </button>
-            <button (click)="nextPage()"
-              class="flex items-center justify-center size-9 sm:size-10 rounded-lg border border-gray-600 dark:border-gray-600 bg-gray-800 dark:bg-gray-800 text-white/60 dark:text-white/60 hover:bg-gray-700 dark:hover:bg-gray-700 focus:ring-2 focus:ring-primary transition-all duration-200"
-              [disabled]="currentPage === 12"
-              aria-label="Next page">
-              <span class="material-symbols-outlined text-lg sm:text-xl">chevron_right</span>
-            </button>
-          </div>
+          </section>
+
+          <section class="filter-block">
+            <label>Condition</label>
+            <div class="segmented">
+              <label>
+                <input name="carCondition" type="radio" value="" [(ngModel)]="selectedCondition" (ngModelChange)="applyFilters()" />
+                <span>All</span>
+              </label>
+              <label>
+                <input name="carCondition" type="radio" value="new" [(ngModel)]="selectedCondition" (ngModelChange)="applyFilters()" />
+                <span>New</span>
+              </label>
+              <label>
+                <input name="carCondition" type="radio" value="used" [(ngModel)]="selectedCondition" (ngModelChange)="applyFilters()" />
+                <span>Used</span>
+              </label>
+            </div>
+          </section>
+
+          <button class="reset-action" (click)="resetFilters()" type="button">
+            <span class="material-symbols-outlined">restart_alt</span>
+            Reset catalog
+          </button>
         </div>
-      </div>
-    </main>
-  </div>
+      </aside>
+
+      <section class="results-panel">
+        <div class="results-head">
+          <div>
+            <h2>{{ isAiResultMode ? 'Matched cars' : 'Available cars' }}</h2>
+            <p>{{ filteredCars.length }} shown from {{ totalCars }} API listings</p>
+          </div>
+          <span class="sort-chip">{{ sortBy }}</span>
+        </div>
+
+        <div *ngIf="isLoading || isAiSearching" class="state-banner info">
+          <span class="material-symbols-outlined">progress_activity</span>
+          {{ isAiSearching ? 'Running backend AI search...' : 'Loading approved cars...' }}
+        </div>
+
+        <div *ngIf="errorMessage" class="state-banner error">
+          <span class="material-symbols-outlined">error</span>
+          {{ errorMessage }}
+        </div>
+
+        <div *ngIf="!isLoading && !isAiSearching && filteredCars.length === 0" class="empty-state">
+          <span class="material-symbols-outlined">directions_car</span>
+          <h3>No cars found</h3>
+          <p>Only approved, non-demo API listings are shown here.</p>
+          <button (click)="resetFilters()" type="button">Reset filters</button>
+        </div>
+
+        <div *ngIf="filteredCars.length > 0" class="listing-grid">
+          <article *ngFor="let car of filteredCars" class="listing-card">
+            <a class="listing-media" [routerLink]="['/cars', car.id]" [attr.aria-label]="'View ' + car.name">
+              <img *ngIf="car.imageUrl" [src]="car.imageUrl" [alt]="car.name" loading="lazy" (error)="car.imageUrl = ''" />
+              <div *ngIf="!car.imageUrl" class="media-fallback">
+                <span class="material-symbols-outlined">directions_car</span>
+              </div>
+              <span class="status-pill">{{ car.badge || 'Approved' }}</span>
+              <span *ngIf="car.matchScore" class="score-pill">{{ car.matchScore * 100 | number:'1.0-0' }}% match</span>
+            </a>
+
+            <div class="listing-body">
+              <div>
+                <p class="brand-line">{{ car.brand }} · {{ car.condition || 'listed' }}</p>
+                <a class="listing-title" [routerLink]="['/cars', car.id]">{{ car.name }}</a>
+              </div>
+              <p class="price">EGP {{ car.price | number:'1.0-0' }}</p>
+              <div class="meta-row">
+                <span><i class="material-symbols-outlined">speed</i>{{ car.miles | number:'1.0-0' }} km</span>
+                <span><i class="material-symbols-outlined">settings</i>{{ car.transmission }}</span>
+              </div>
+              <div class="location-row">
+                <span class="material-symbols-outlined">location_on</span>
+                {{ car.location }}
+              </div>
+            </div>
+
+            <footer class="card-actions">
+              <a [routerLink]="['/cars', car.id]">View details</a>
+              <button (click)="toggleFavorite(car.id)" type="button" [attr.aria-label]="car.isFavorited ? 'Remove from favorites' : 'Add to favorites'">
+                <span class="material-symbols-outlined" [class.filled]="car.isFavorited">{{ car.isFavorited ? 'favorite' : 'favorite_border' }}</span>
+              </button>
+            </footer>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
 </div>

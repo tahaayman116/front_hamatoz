@@ -1,6 +1,11 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-import { NgForOf, NgIf, DecimalPipe, UpperCasePipe } from '@angular/common';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { DecimalPipe, NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { FavoritesService } from '../core/services/favorites.service';
+import { AuthService } from '../core/services/auth.service';
+import { ListingsService } from '../core/services/listings.service';
+import { ListingDto } from '../core/models/api.dtos';
 
 interface Car {
   id: number;
@@ -9,122 +14,70 @@ interface Car {
   miles: number;
   transmission: string;
   location: string;
-  image: string;
   isFavorited: boolean;
   badge?: string;
   brand: string;
   condition: string;
+  imageUrl?: string;
+  matchScore?: number;
+  searchableText: string;
+  numericYear: number;
 }
 
 @Component({
   selector: 'app-cars',
-  imports: [NgForOf, NgIf, FormsModule, DecimalPipe, UpperCasePipe],
+  imports: [NgForOf, NgIf, FormsModule, DecimalPipe, RouterLink],
   templateUrl: './cars.html',
   styleUrl: './cars.css',
 })
 export class Cars implements OnInit {
-  // Mobile UI states
-  showMobileFilters: boolean = false;
-  isLargeScreen: boolean = window.innerWidth >= 1024;
-
-  // Filter states
-  brandSearch: string = '';
+  showMobileFilters = false;
+  isLargeScreen = window.innerWidth >= 1024;
+  currentUserId = '';
+  searchQuery = '';
+  brandSearch = '';
   selectedBrands: { [key: string]: boolean } = {};
   filteredBrands: string[] = [];
-  minPricePercent: number = 0;
-  maxPricePercent: number = 100;
-  selectedCondition: string = '';
-  
-  // Cars data
-  allCars: Car[] = [
-    {
-      id: 1,
-      name: '2022 Ford Bronco',
-      price: 45000,
-      miles: 55000,
-      transmission: 'Automatic',
-      location: 'San Francisco, CA',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDQL0ZTtMCajtk7ncId_LQmsgg2XGg5kxEZ2idvIgiJdbfCPn6xuvcx5qwS5r2nsLBuB4PTNwaWxYbwhHwVAJ6iH0XrV8v8pPvURF20qzaYnDYbdESNcAER98aKs9m9NHuhv2F1DVRfdz75bfy3c4E5U59yrW_tkPLg3Xf-EJbElAZuEMXOpbt1G-cCKM-ptdIZQCUIoEJgd7K0i4H66GHY87AY2ddRtu86UMs2-M8Zkt2kKrsDnKJVRzJBCmaRUr6ZF0lUdgBmHdW-',
-      isFavorited: false,
-      brand: 'Ford',
-      condition: 'used'
-    },
-    {
-      id: 2,
-      name: '2021 Toyota RAV4',
-      price: 32000,
-      miles: 30000,
-      transmission: 'Automatic',
-      location: 'Los Angeles, CA',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDbPZKrDAMZMXy74aSv1tqJd-mGIHt9a94Ijpjxkd_PG6b3gdh0tBA4F6skCr7q9jiGOi3R-CQECFdyWL4FgObGgZBNc39wwEXVurUa22HFjSne1Lv1aRFDpFEBpn-laAMuuCF-U8BNQZ7H5XI_aglEeqMwf5v3Xj6Xya0a1QbquPc0v2GgY7kh41S1us1bHTDcVesIsGFisx1gjz7AkHG6_qgEni1AS0UISl06y-xERCQKqLee8P-gUL8beX0_rugU1yvxO3vYT2Bv',
-      isFavorited: false,
-      brand: 'Toyota',
-      condition: 'used'
-    },
-    {
-      id: 3,
-      name: '2023 Honda Civic',
-      price: 28500,
-      miles: 5000,
-      transmission: 'Automatic',
-      location: 'New York, NY',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAE0gJGRGll6bfWUgy2y7bcBY8nO_n3Gmmao269vsrYVFSwDHJ6_LSS7ELSds4b7-C7Pd_oIv3Pq_LsjxeDh1Yr8PYujLJaZqhTF4OQTW4G0cwkgBgOObHW2HAjNkR4xJIuKrF-4BFkqRHerS_WkLptOUtFF300NoJ8G2vly6jFOI-PjL9STM3C-cXr_Yv0zwYf7McK8OknrwBluyn_vl-aES8Fv2-5e1PPZZ1DOX85d9DU7h6be9R5tWQSoZcIGSBftL1BCLixzxKv',
-      isFavorited: false,
-      brand: 'Honda',
-      condition: 'new'
-    },
-    {
-      id: 4,
-      name: '2020 BMW X5',
-      price: 55000,
-      miles: 40000,
-      transmission: 'Automatic',
-      location: 'Chicago, IL',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuANteO2LsPO1ANUjU0Wcb8kueb4a6ODxv8ccL4CIELHJG_3lVplmdeuw8qaxsExI-o9yxHkGngKH6Qg3T6EqN38A4O700dVmmqaJ0Wlmv8Ph0qBqB0PVnORfyGmR_tWp1RTpKSFlYSUaWzyfJ2Ze5xTM0clzuAtogaAz1oB2aUoOb5WAmOJNsTk9EKeqjQ2jkBArKZepfFtO-hz-WFiesrVRDrB5hSSUUYNeKnZgzfEyYKBdDeFY7or7vw2KmlULwoS10iArRvz9IAb',
-      isFavorited: false,
-      brand: 'BMW',
-      condition: 'used'
-    },
-    {
-      id: 5,
-      name: '2022 Tesla Model 3',
-      price: 48000,
-      miles: 15000,
-      transmission: 'Automatic',
-      location: 'Austin, TX',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBvUmuaedY8yE6TEGnM993HHgdip2Zs8xtUce5NdCKqCDM2fZ6qaOngXn4CH5NfmKmQ_HStonnwuWzqmiOhMUvhWvV9zJflCNFvYiijKyz-9hM3MjOiOebc0AKjVxiNQDSfHESNP_3A8YnDimTHYloB4w3gaivDGt3fjAZ-fN3YQ79vALFwnW4SPC-2zrKPYLsMRGDO4Sz0QElMYpCfV0ifhD3l4cnNiqPRcq9QVXtPjmCDPiMnS4t7oWBYpWKTg-Xcdcbk8e6D0E1W',
-      isFavorited: true,
-      badge: 'Great Deal',
-      brand: 'Tesla',
-      condition: 'used'
-    },
-    {
-      id: 6,
-      name: '2019 Audi Q5',
-      price: 41000,
-      miles: 35000,
-      transmission: 'Automatic',
-      location: 'Miami, FL',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDUHCVf6KBJXIz36ofHj_y75uI0ISaSp6O6te1n2KzvtiCJL36mu8yKaNopM0GeDd98s5XXgDX5lHM1TYXjyZMgdF4bofXCCzSRfhEsVXUlqYS3530midb79sPmq6sULoNhzxwhB_E5JChWxsH4ihmSv4UeoHDYHk6xguB_ysQyavwyGZo2Rz3qH1YyEsTNg1RtECTSDOXBGCXH6_OVuwzPAixXKlwQ63df81WPcmfdJn1PqpATLSNM2y_jJ4AbEzN9Rbq6mheF0_c4',
-      isFavorited: false,
-      brand: 'Audi',
-      condition: 'used'
-    }
-  ];
-
+  minPricePercent = 0;
+  maxPricePercent = 100;
+  selectedCondition = '';
+  allCars: Car[] = [];
   filteredCars: Car[] = [];
-  totalCars: number = 1280;
-  currentPage: number = 1;
-  sortBy: string = 'Recommended';
-  allBrands: string[] = ['Toyota', 'Ford', 'Honda', 'BMW', 'Tesla', 'Audi'];
+  totalCars = 0;
+  isLoading = false;
+  isAiSearching = false;
+  isAiResultMode = false;
+  errorMessage = '';
+  currentPage = 1;
+  sortBy = 'Recommended';
+  allBrands: string[] = [];
+  maxAvailablePrice = 100000;
 
-  ngOnInit() {
-    this.initializeBrands();
-    this.filteredCars = [...this.allCars];
+  get activeFilterCount(): number {
+    const brandCount = Object.values(this.selectedBrands).filter(Boolean).length;
+    const hasPriceFilter = this.minPricePercent > 0 || this.maxPricePercent < 100 ? 1 : 0;
+    const hasConditionFilter = this.selectedCondition ? 1 : 0;
+    return brandCount + hasPriceFilter + hasConditionFilter;
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
+  constructor(
+    private favoritesService: FavoritesService,
+    private authService: AuthService,
+    private listingsService: ListingsService
+  ) {}
+
+  ngOnInit() {
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.currentUserId = user.id;
+      this.loadUserFavorites();
+    }
+
+    this.loadCarsFromApi();
+  }
+
+  @HostListener('window:resize')
+  onResize() {
     this.isLargeScreen = window.innerWidth >= 1024;
     if (this.isLargeScreen) {
       this.showMobileFilters = false;
@@ -133,76 +86,144 @@ export class Cars implements OnInit {
 
   toggleMobileFilters() {
     this.showMobileFilters = !this.showMobileFilters;
-    // Prevent body scroll when mobile filters are open
-    if (this.showMobileFilters && !this.isLargeScreen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
+    document.body.style.overflow = this.showMobileFilters && !this.isLargeScreen ? 'hidden' : 'auto';
   }
 
   initializeBrands() {
     this.filteredBrands = [...this.allBrands];
-    this.allBrands.forEach(brand => {
+    this.allBrands.forEach((brand) => {
       this.selectedBrands[brand] = false;
     });
   }
 
   filterBrands() {
-    this.filteredBrands = this.allBrands.filter(brand =>
+    this.filteredBrands = this.allBrands.filter((brand) =>
       brand.toLowerCase().includes(this.brandSearch.toLowerCase())
     );
   }
 
   applyFilters() {
-    this.filteredCars = this.allCars.filter(car => {
-      // Brand filter - تطبيق فقط إذا اختار المستخدم أنواع محددة
-      const selectedBrandsList = Object.keys(this.selectedBrands).filter(brand => this.selectedBrands[brand]);
-      if (selectedBrandsList.length > 0 && !selectedBrandsList.includes(car.brand)) {
-        return false;
-      }
+    const query = this.searchQuery.trim().toLowerCase();
+    const selectedBrandsList = Object.keys(this.selectedBrands).filter((brand) => this.selectedBrands[brand]);
+    const minPrice = (this.minPricePercent / 100) * this.maxAvailablePrice;
+    const maxPrice = (this.maxPricePercent / 100) * this.maxAvailablePrice;
 
-      // Price filter - تطبيق النطاق السعري
-      const minPrice = (this.minPricePercent / 100) * 100000;
-      const maxPrice = (this.maxPricePercent / 100) * 100000;
-      if (car.price < minPrice || car.price > maxPrice) {
-        return false;
+    this.filteredCars = this.allCars.filter((car) => {
+      if (selectedBrandsList.length > 0 && !selectedBrandsList.includes(car.brand)) return false;
+      if (car.price < minPrice || car.price > maxPrice) return false;
+      if (this.selectedCondition && car.condition !== this.selectedCondition) return false;
+      if (query && !this.isAiResultMode) {
+        return car.searchableText.includes(this.normalizeSearchText(query));
       }
-
-      // Condition filter - تطبيق فقط إذا اختار المستخدم حالة محددة
-      if (this.selectedCondition && this.selectedCondition !== '' && car.condition !== this.selectedCondition) {
-        return false;
-      }
-
       return true;
     });
-    
-    // إرجاع إلى الصفحة الأولى بعد التصفية
+
     this.currentPage = 1;
   }
 
   resetFilters() {
+    this.searchQuery = '';
     this.brandSearch = '';
     this.selectedBrands = {};
     this.selectedCondition = '';
     this.minPricePercent = 0;
     this.maxPricePercent = 100;
-    this.filteredBrands = [...this.allBrands];
-    this.allBrands.forEach(brand => {
-      this.selectedBrands[brand] = false;
-    });
-    this.filteredCars = [...this.allCars];
     this.currentPage = 1;
+    this.loadCarsFromApi();
+  }
+
+  clearSearch() {
+    this.searchQuery = '';
+    if (this.isAiResultMode) {
+      this.loadCarsFromApi();
+      return;
+    }
+    this.applyFilters();
+  }
+
+  runSemanticSearch() {
+    const query = this.searchQuery.trim();
+    if (!query) {
+      this.loadCarsFromApi();
+      return;
+    }
+
+    this.isAiSearching = true;
+    this.errorMessage = '';
+
+    this.listingsService.semanticSearch(query, 25).subscribe({
+      next: (listings: ListingDto[]) => {
+        this.isAiResultMode = true;
+        this.sortBy = 'AI semantic match';
+        const rankedListings = this.rankListingsForQuery(listings, query);
+        this.setCarsFromListings(rankedListings);
+        this.errorMessage = rankedListings.length ? '' : 'Semantic search did not return real approved cars for this query.';
+        this.isAiSearching = false;
+      },
+      error: (error) => {
+        this.errorMessage = error.message || 'Could not run semantic search.';
+        this.isAiSearching = false;
+      },
+    });
+  }
+
+  runVisualSearch(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file) return;
+
+    this.isAiSearching = true;
+    this.errorMessage = '';
+
+    this.listingsService.visualSearch(file, 'Car', 20).subscribe({
+      next: (listings: ListingDto[]) => {
+        this.searchQuery = '';
+        this.isAiResultMode = true;
+        this.sortBy = 'Image match';
+        this.setCarsFromListings(listings);
+        this.errorMessage = listings.length
+          ? ''
+          : 'Image search did not return any real approved cars. The backend image index may still contain demo listings only.';
+        this.isAiSearching = false;
+      },
+      error: (error) => {
+        this.errorMessage = error.message || 'Could not run image search.';
+        this.isAiSearching = false;
+      },
+    });
   }
 
   toggleFavorite(carId: number) {
-    const car = this.filteredCars.find(c => c.id === carId);
-    if (car) {
-      car.isFavorited = !car.isFavorited;
+    if (!this.currentUserId) {
+      alert('Please sign in to add favorites');
+      return;
     }
-    const originalCar = this.allCars.find(c => c.id === carId);
-    if (originalCar) {
-      originalCar.isFavorited = !originalCar.isFavorited;
+
+    const car = this.filteredCars.find((c) => c.id === carId);
+    if (!car) return;
+
+    const favoriteCar = {
+      id: car.id,
+      name: car.name,
+      price: car.price,
+      image: car.imageUrl || '',
+      addedAt: new Date(),
+    };
+
+    if (car.isFavorited) {
+      this.favoritesService.removeFavoriteCar(this.currentUserId, car.id);
+      car.isFavorited = false;
+      const originalCar = this.allCars.find((c) => c.id === carId);
+      if (originalCar) originalCar.isFavorited = false;
+      return;
+    }
+
+    const success = this.favoritesService.addFavoriteCar(this.currentUserId, favoriteCar);
+    if (success) {
+      car.isFavorited = true;
+      const originalCar = this.allCars.find((c) => c.id === carId);
+      if (originalCar) originalCar.isFavorited = true;
     }
   }
 
@@ -220,5 +241,197 @@ export class Cars implements OnInit {
     if (this.currentPage < 12) {
       this.currentPage++;
     }
+  }
+
+  private loadUserFavorites() {
+    if (!this.currentUserId) return;
+
+    const userFavorites = this.favoritesService.getFavorites(this.currentUserId);
+    this.allCars.forEach((car) => {
+      car.isFavorited = userFavorites.cars.some((fav: any) => fav.id === car.id);
+    });
+
+    this.filteredCars = [...this.allCars];
+  }
+
+  private loadCarsFromApi() {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.listingsService.getPublicListings().subscribe({
+      next: (listings: ListingDto[]) => {
+        this.isAiResultMode = false;
+        this.sortBy = 'Recommended';
+        this.setCarsFromListings(listings);
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.errorMessage = error.message || 'Could not load cars from API';
+        this.allCars = [];
+        this.totalCars = 0;
+        this.applyFilters();
+        this.isLoading = false;
+      },
+    });
+  }
+
+  private setCarsFromListings(listings: ListingDto[]) {
+    const cars = listings
+      .filter((listing) => listing.type?.toLowerCase() === 'car')
+      .map((listing) => this.mapListingToCar(listing));
+
+    this.allCars = cars;
+    this.totalCars = cars.length;
+    this.maxAvailablePrice = Math.max(100000, ...cars.map((car) => car.price || 0));
+    this.allBrands = Array.from(new Set(cars.map((car) => car.brand).filter(Boolean))).sort();
+    this.initializeBrands();
+    this.loadUserFavorites();
+    this.applyFilters();
+  }
+
+  private mapListingToCar(listing: ListingDto): Car {
+    return {
+      id: listing.id,
+      name: listing.title || `${listing.brand || 'Car'} ${listing.modelOrPartName || ''}`.trim(),
+      price: listing.price || 0,
+      miles: listing.kmsDriven || 0,
+      transmission: listing.transmission || 'N/A',
+      location: [listing.city, listing.area].filter(Boolean).join(', ') || 'N/A',
+      isFavorited: false,
+      brand: listing.brand || 'Other',
+      condition: (listing.condition || '').toLowerCase(),
+      badge: listing.status || undefined,
+      imageUrl: this.firstImageUrl(listing.imagesUrlsText),
+      matchScore: (listing as any).score,
+      searchableText: this.searchableListingText(listing),
+      numericYear: listing.year || 0,
+    };
+  }
+
+  private firstImageUrl(imagesUrlsText?: string): string {
+    return this.parseImageUrls(imagesUrlsText)[0] || '';
+  }
+
+  private parseImageUrls(imagesUrlsText?: string): string[] {
+    const value = imagesUrlsText?.trim();
+    if (!value) return [];
+
+    try {
+      const parsed = JSON.parse(value);
+      if (Array.isArray(parsed)) {
+        return parsed.map((url) => String(url).trim()).filter(Boolean);
+      }
+    } catch {
+      // The API usually sends plain text, not JSON.
+    }
+
+    const dataUrls = value.match(/data:image\/[a-zA-Z0-9.+-]+;base64,[a-zA-Z0-9+/=]+/g);
+    if (dataUrls?.length) return dataUrls;
+
+    const httpUrls = value.match(/https?:\/\/[^\s,;]+/g);
+    if (httpUrls?.length) return httpUrls;
+
+    return value
+      .split(/\r?\n|[,;]/)
+      .map((url) => url.trim())
+      .filter(Boolean);
+  }
+
+  private rankListingsForQuery(listings: ListingDto[], query: string): ListingDto[] {
+    const normalizedQuery = this.normalizeSearchText(query);
+    const tokens = normalizedQuery.split(/\s+/).filter(Boolean);
+    if (!tokens.length) return listings;
+
+    const wantsCheap = /\b(cheap|budget|low|affordable|economic|economy)\b/.test(normalizedQuery) || normalizedQuery.includes('رخيص') || normalizedQuery.includes('اقتصاد');
+    const wantsNew = /\b(new|zero)\b/.test(normalizedQuery) || normalizedQuery.includes('زيرو') || normalizedQuery.includes('جديد');
+    const wantsUsed = /\b(used)\b/.test(normalizedQuery) || normalizedQuery.includes('مستعمل');
+
+    return listings
+      .map((listing) => ({ listing, score: this.scoreListing(listing, normalizedQuery, tokens, wantsCheap, wantsNew, wantsUsed) }))
+      .filter((result) => result.score > 0)
+      .sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        if (wantsCheap) return (a.listing.price || 0) - (b.listing.price || 0);
+        return (b.listing.createdAtUtc || '').localeCompare(a.listing.createdAtUtc || '');
+      })
+      .map((result) => result.listing);
+  }
+
+  private scoreListing(
+    listing: ListingDto,
+    normalizedQuery: string,
+    tokens: string[],
+    wantsCheap: boolean,
+    wantsNew: boolean,
+    wantsUsed: boolean
+  ): number {
+    if (listing.type?.toLowerCase() !== 'car') return 0;
+
+    const title = this.normalizeSearchText(listing.title);
+    const brand = this.normalizeSearchText(listing.brand);
+    const model = this.normalizeSearchText(listing.modelOrPartName);
+    const description = this.normalizeSearchText(listing.description);
+    const location = this.normalizeSearchText([listing.city, listing.area].filter(Boolean).join(' '));
+    const specs = this.normalizeSearchText([listing.condition, listing.fuel, listing.transmission, listing.assembly, listing.year].filter(Boolean).join(' '));
+    const combined = [title, brand, model, description, location, specs].join(' ');
+
+    let score = 0;
+    if (brand && brand === normalizedQuery) score += 120;
+    if (model && model === normalizedQuery) score += 95;
+    if (title.includes(normalizedQuery)) score += 70;
+    if (brand.includes(normalizedQuery)) score += 55;
+    if (model.includes(normalizedQuery)) score += 45;
+    if (description.includes(normalizedQuery)) score += 18;
+
+    for (const token of tokens) {
+      if (brand === token) score += 26;
+      else if (brand.includes(token)) score += 18;
+      if (model.includes(token)) score += 15;
+      if (title.includes(token)) score += 12;
+      if (description.includes(token)) score += 5;
+      if (location.includes(token) || specs.includes(token)) score += 4;
+    }
+
+    if (wantsCheap && listing.price) score += Math.max(1, 30 - Math.min(listing.price / 100000, 30));
+    if (wantsNew && this.normalizeSearchText(listing.condition).includes('new')) score += 28;
+    if (wantsUsed && this.normalizeSearchText(listing.condition).includes('used')) score += 28;
+
+    return combined.includes(normalizedQuery) || score >= 8 ? score : 0;
+  }
+
+  private searchableListingText(listing: ListingDto): string {
+    return this.normalizeSearchText(
+      [
+        listing.title,
+        listing.brand,
+        listing.modelOrPartName,
+        listing.description,
+        listing.condition,
+        listing.city,
+        listing.area,
+        listing.year,
+        listing.kmsDriven,
+        listing.fuel,
+        listing.transmission,
+        listing.assembly,
+      ]
+        .filter(Boolean)
+        .join(' ')
+    );
+  }
+
+  private normalizeSearchText(value: unknown): string {
+    return String(value ?? '')
+      .toLowerCase()
+      .normalize('NFKD')
+      .replace(/[\u064B-\u065F]/g, '')
+      .replace(/[إأآا]/g, 'ا')
+      .replace(/ى/g, 'ي')
+      .replace(/ة/g, 'ه')
+      .replace(/ؤ/g, 'و')
+      .replace(/ئ/g, 'ي')
+      .replace(/[^a-z0-9\u0600-\u06FF\s]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
   }
 }

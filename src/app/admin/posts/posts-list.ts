@@ -15,7 +15,7 @@ export class PostsList implements OnInit {
 
   listings: PendingListing[] = [];
   filteredListings: PendingListing[] = [];
-  filterType: 'all' | 'car' | 'part' = 'all';
+  filterType: 'all' | 'car' | 'sparepart' = 'all';
   selectedListing: PendingListing | null = null;
   showDetailModal = false;
   rejectionReason = '';
@@ -57,9 +57,12 @@ export class PostsList implements OnInit {
       return;
     }
 
-    this.filteredListings = this.listings.filter(
-      (listing) => listing.type?.toLowerCase() === this.filterType
-    );
+    this.filteredListings = this.listings.filter((listing) => {
+      const type = listing.type?.toLowerCase();
+      return this.filterType === 'sparepart'
+        ? type === 'sparepart' || type === 'part'
+        : type === this.filterType;
+    });
   }
 
   openDetailModal(listing: PendingListing) {

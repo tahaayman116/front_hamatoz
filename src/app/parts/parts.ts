@@ -273,7 +273,7 @@ export class Parts {
 
     this.listingsService.getForYou(userId).subscribe({
       next: (listings: ListingDto[]) => {
-        const partListings = listings.filter((listing) => listing.type?.toLowerCase() === 'part');
+        const partListings = listings.filter((listing) => this.isPartListing(listing));
         if (!partListings.length) {
           this.loadPartsFromApi('The AI did not return part recommendations for your choices yet, so we are showing approved parts.', true);
           return;
@@ -294,7 +294,7 @@ export class Parts {
 
   private setPartsFromListings(listings: ListingDto[]) {
     const parts = listings
-      .filter((listing) => listing.type?.toLowerCase() === 'part')
+      .filter((listing) => this.isPartListing(listing))
       .map((listing) => this.mapListingToPart(listing));
 
     this.allParts = parts;
@@ -381,7 +381,7 @@ export class Parts {
     wantsNew: boolean,
     wantsUsed: boolean
   ): number {
-    if (listing.type?.toLowerCase() !== 'part') return 0;
+    if (!this.isPartListing(listing)) return 0;
 
     const title = this.normalizeSearchText(listing.title);
     const brand = this.normalizeSearchText(listing.brand);
@@ -445,5 +445,10 @@ export class Parts {
       .replace(/[^a-z0-9\u0600-\u06FF\s]/g, ' ')
       .replace(/\s+/g, ' ')
       .trim();
+  }
+
+  private isPartListing(listing: ListingDto): boolean {
+    const type = listing.type?.toLowerCase();
+    return type === 'part' || type === 'sparepart';
   }
 }

@@ -236,7 +236,7 @@
         <p *ngIf="myListings.length === 0" class="empty-copy">No listings submitted yet.</p>
         <div class="item-list">
           <article *ngFor="let listing of myListings" class="list-item listing">
-            <span class="material-symbols-outlined">{{ listing.type === 'part' || listing.type === 'Part' ? 'settings' : 'directions_car' }}</span>
+            <span class="material-symbols-outlined">{{ listing.type === 'part' || listing.type === 'Part' || listing.type === 'SparePart' ? 'settings' : 'directions_car' }}</span>
             <div>
               <strong>{{ listing.title }}</strong>
               <p>{{ listing.brand || 'No brand' }} · {{ listing.modelOrPartName || listing.model || 'No model' }}</p>
@@ -258,8 +258,8 @@
           <label>
             <span>Type</span>
             <select [(ngModel)]="listingForm.type" name="type">
-              <option value="car">Car</option>
-              <option value="part">Part</option>
+              <option value="Car">Car</option>
+              <option value="SparePart">Part</option>
             </select>
           </label>
           <label>

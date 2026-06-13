@@ -54,7 +54,7 @@ export interface CreateOrUpdateAgencyProfileDto {
 export interface ListingDto {
   id: number;
   ownerUserId: number;
-  type: string; // 'car', 'part', 'service'
+  type: string; // 'Car', 'SparePart'
   status: string; // 'draft', 'pending', 'approved', 'rejected'
   title: string;
   description: string;

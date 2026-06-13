@@ -11,7 +11,7 @@ import { UserFavorites } from '../../core/models/favorites.model';
 import { CreateListingDto, CreateOrUpdateAgencyProfileDto } from '../../core/models/api.dtos';
 
 type ProfileTab = 'overview' | 'favorites' | 'agency-profile' | 'agency-listings' | 'new-listing';
-type ListingType = 'Car' | 'Part';
+type ListingType = 'car' | 'part';
 
 @Component({
   selector: 'app-user-profile',
@@ -49,7 +49,7 @@ export class UserProfile implements OnInit {
   };
 
   listingForm: CreateListingDto = {
-    type: 'Car',
+    type: 'car',
     title: '',
     description: '',
     price: 1,
@@ -326,7 +326,7 @@ export class UserProfile implements OnInit {
   }
 
   private normalizeListingType(type: string): ListingType {
-    return type.toLowerCase() === 'part' ? 'Part' : 'Car';
+    return type.toLowerCase() === 'part' ? 'part' : 'car';
   }
 
   private validateListingPayload(payload: CreateListingDto): string {
@@ -367,7 +367,7 @@ export class UserProfile implements OnInit {
   private resetListingForm() {
     this.listingForm = {
       ...this.listingForm,
-      type: 'Car',
+      type: 'car',
       title: '',
       description: '',
       price: 1,

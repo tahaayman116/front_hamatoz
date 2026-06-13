@@ -7,22 +7,17 @@ import {
   signal,
   NgZone,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 export class Home implements AfterViewInit, OnDestroy {
   @ViewChild('frameCanvas') canvasRef!: ElementRef<HTMLCanvasElement>;
-
-  categories = [
-    { title: 'Zero Cars', icon: 'new_releases' },
-    { title: 'Imported Cars', icon: 'public' },
-    { title: 'Used Cars', icon: 'sell' },
-  ];
 
   // Frame animation properties
   private readonly TOTAL_FRAMES = 200;

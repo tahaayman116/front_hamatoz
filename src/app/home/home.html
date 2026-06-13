@@ -79,64 +79,49 @@
           <section class="flex flex-col gap-8">
             <div class="flex flex-col gap-2 px-4">
               <h2 class="text-3xl font-bold leading-tight tracking-tight">
-                Explore Our Categories
+                Start Exploring Hamatoz
               </h2>
               <p class="text-white/60 text-base">
-                Find the perfect vehicle or part for your needs.
+                Browse approved listings, discover spare parts, or continue with recommendations made for you.
               </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
-              <!-- Left: 3 circles -->
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <div class="category-circle">
-                  <div class="circle-icon">
-                    <span class="material-symbols-outlined text-4xl text-primary">new_releases</span>
-                  </div>
-                  <div class="flex flex-col">
-                    <h3 class="text-base font-semibold leading-tight">Zero Cars</h3>
-                    <p class="text-sm text-white/60">Details</p>
-                  </div>
+            <div class="category-panel">
+              <a class="category-card primary" routerLink="/cars">
+                <span class="material-symbols-outlined">directions_car</span>
+                <div>
+                  <h3>Approved Cars</h3>
+                  <p>Explore live car listings reviewed by the Hamatoz team.</p>
                 </div>
+                <i class="material-symbols-outlined">arrow_forward</i>
+              </a>
 
-                <div class="category-circle">
-                  <div class="circle-icon">
-                    <span class="material-symbols-outlined text-4xl text-primary">public</span>
-                  </div>
-                  <div class="flex flex-col">
-                    <h3 class="text-base font-semibold leading-tight">Imported Cars</h3>
-                    <p class="text-sm text-white/60">Details</p>
-                  </div>
+              <a class="category-card" routerLink="/parts">
+                <span class="material-symbols-outlined">settings</span>
+                <div>
+                  <h3>Spare Parts</h3>
+                  <p>Find approved parts from agencies and trusted sellers.</p>
                 </div>
+                <i class="material-symbols-outlined">arrow_forward</i>
+              </a>
 
-                <div class="category-circle">
-                  <div class="circle-icon">
-                    <span class="material-symbols-outlined text-4xl text-primary">sell</span>
-                  </div>
-                  <div class="flex flex-col">
-                    <h3 class="text-base font-semibold leading-tight">Used Cars</h3>
-                    <p class="text-sm text-white/60">Details</p>
-                  </div>
+              <a class="category-card" routerLink="/cars" [queryParams]="{ mode: 'for-you' }">
+                <span class="material-symbols-outlined">auto_awesome</span>
+                <div>
+                  <h3>For You</h3>
+                  <p>Open personalized recommendations after finishing onboarding.</p>
                 </div>
-              </div>
+                <i class="material-symbols-outlined">arrow_forward</i>
+              </a>
 
-              <!-- Right: marketplace shortcuts without fake vehicle photos -->
-              <div class="flex flex-col gap-4">
-                <div class="image-tile">
-                  <span class="material-symbols-outlined relative z-10 text-3xl text-primary">directions_car</span>
-                  <h3 class="relative z-10 text-lg font-semibold drop-shadow-md">Browse Approved Cars</h3>
+              <a class="agency-card" routerLink="/sign-up" [queryParams]="{ type: 'agency' }">
+                <div>
+                  <p class="text-sm font-bold uppercase tracking-[0.16em] text-blue-200">For agencies</p>
+                  <h3>Publish cars and parts after admin approval</h3>
+                  <span>Create an agency account</span>
                 </div>
-
-                <div class="image-tile">
-                  <span class="material-symbols-outlined relative z-10 text-3xl text-primary">settings</span>
-                  <h3 class="relative z-10 text-lg font-semibold drop-shadow-md">Browse Approved Parts</h3>
-                </div>
-
-                <div class="image-tile">
-                  <span class="material-symbols-outlined relative z-10 text-3xl text-primary">domain</span>
-                  <h3 class="relative z-10 text-lg font-semibold drop-shadow-md">Verified Agency Listings</h3>
-                </div>
-              </div>
+                <span class="material-symbols-outlined">storefront</span>
+              </a>
             </div>
           </section>
 

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink, Router } from '@angular/router';
+import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { AuthService } from '../core/services/auth.service';
 import { RegisterRequestDto } from '../core/models/api.dtos';
 
@@ -29,8 +29,14 @@ export class SignUp {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private authService: AuthService
-  ) {}
+  ) {
+    const requestedType = this.route.snapshot.queryParamMap.get('type')?.toLowerCase();
+    if (requestedType === 'agency') {
+      this.userType = 'Agency';
+    }
+  }
 
   onSignUp() {
     this.errorMessage = '';

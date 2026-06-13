@@ -116,9 +116,9 @@ export class AgenciesList implements OnInit {
 
   private readableError(err: any): string {
     if (err?.status === 401) {
-      return 'Unauthorized. Please sign in with a real admin API account to load and review agencies.';
+      return 'Unauthorized. Please sign in with an admin account to load and review agencies.';
     }
 
-    return err?.message || 'Could not load agencies from the API.';
+    return err?.message || 'Could not load agencies.';
   }
 }

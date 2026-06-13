@@ -146,7 +146,7 @@ export class UserProfile implements OnInit {
         };
 
         this.currentUser = updatedUser;
-        this.authService.currentUser.set(updatedUser);
+        this.authService.updateCurrentUser(updatedUser);
         this.isEditMode = false;
         this.isSaving = false;
         this.feedbackMessage = 'Profile details saved.';
@@ -295,7 +295,7 @@ export class UserProfile implements OnInit {
 
   private readableApiError(err: any, fallback: string): string {
     if (err?.status === 401) {
-      return 'Unauthorized. Please sign in with an API account.';
+      return 'Unauthorized. Please sign in again.';
     }
 
     if (err?.details?.errors) {

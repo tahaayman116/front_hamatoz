@@ -7,7 +7,7 @@
 
     <div *ngIf="isLoading" class="state-panel">
       <span class="material-symbols-outlined">progress_activity</span>
-      Loading car details from the API...
+      Loading car details...
     </div>
 
     <div *ngIf="!isLoading && errorMessage" class="state-panel error">
@@ -106,7 +106,7 @@
       <section *ngIf="similarCars.length > 0" class="similar-panel">
         <div class="section-head">
           <div>
-            <p class="eyebrow">From the API</p>
+            <p class="eyebrow">Recommended</p>
             <h2>Similar cars</h2>
           </div>
           <a routerLink="/cars">Browse all</a>

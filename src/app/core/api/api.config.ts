@@ -12,6 +12,7 @@ export const API_CONFIG = {
     users: {
       me: '/api/users/me',
       profile: '/api/users/me',
+      submitOnboarding: '/api/users/submit',
     },
     agency: {
       profile: '/api/agency/profile',
@@ -27,6 +28,7 @@ export const API_CONFIG = {
       similar: '/api/listings/{id}/similar',
       searchVisual: '/api/listings/search/visual',
       semanticSearch: '/api/listings/semantic-search',
+      forYou: '/api/listings/for-you',
     },
     chat: {
       conversations: '/api/chat/conversations',

@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { DecimalPipe, NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FavoritesService } from '../core/services/favorites.service';
 import { AuthService } from '../core/services/auth.service';
 import { ListingsService } from '../core/services/listings.service';
@@ -47,6 +47,8 @@ export class Cars implements OnInit {
   isLoading = false;
   isAiSearching = false;
   isAiResultMode = false;
+  isForYouMode = false;
+  requestedForYouMode = false;
   errorMessage = '';
   currentPage = 1;
   sortBy = 'Recommended';
@@ -63,7 +65,8 @@ export class Cars implements OnInit {
   constructor(
     private favoritesService: FavoritesService,
     private authService: AuthService,
-    private listingsService: ListingsService
+    private listingsService: ListingsService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -71,6 +74,12 @@ export class Cars implements OnInit {
     if (user) {
       this.currentUserId = user.id;
       this.loadUserFavorites();
+    }
+
+    this.requestedForYouMode = this.isForYouRoute();
+    if (this.requestedForYouMode) {
+      this.loadForYouCars();
+      return;
     }
 
     this.loadCarsFromApi();
@@ -141,6 +150,16 @@ export class Cars implements OnInit {
     this.applyFilters();
   }
 
+  showAllCars() {
+    this.requestedForYouMode = false;
+    this.loadCarsFromApi();
+  }
+
+  showForYouCars() {
+    this.requestedForYouMode = true;
+    this.loadForYouCars();
+  }
+
   runSemanticSearch() {
     const query = this.searchQuery.trim();
     if (!query) {
@@ -153,11 +172,13 @@ export class Cars implements OnInit {
 
     this.listingsService.semanticSearch(query, 25).subscribe({
       next: (listings: ListingDto[]) => {
+        this.isForYouMode = false;
+        this.requestedForYouMode = false;
         this.isAiResultMode = true;
         this.sortBy = 'AI semantic match';
         const rankedListings = this.rankListingsForQuery(listings, query);
         this.setCarsFromListings(rankedListings);
-        this.errorMessage = rankedListings.length ? '' : 'Semantic search did not return real approved cars for this query.';
+        this.errorMessage = rankedListings.length ? '' : 'Smart search did not find approved cars for this query.';
         this.isAiSearching = false;
       },
       error: (error) => {
@@ -179,12 +200,14 @@ export class Cars implements OnInit {
     this.listingsService.visualSearch(file, 'Car', 20).subscribe({
       next: (listings: ListingDto[]) => {
         this.searchQuery = '';
+        this.isForYouMode = false;
+        this.requestedForYouMode = false;
         this.isAiResultMode = true;
         this.sortBy = 'Image match';
         this.setCarsFromListings(listings);
         this.errorMessage = listings.length
           ? ''
-          : 'Image search did not return any real approved cars. The backend image index may still contain demo listings only.';
+          : 'Image search did not return approved cars for this image.';
         this.isAiSearching = false;
       },
       error: (error) => {
@@ -254,25 +277,65 @@ export class Cars implements OnInit {
     this.filteredCars = [...this.allCars];
   }
 
-  private loadCarsFromApi() {
+  private loadCarsFromApi(message = '', keepForYouTab = false) {
     this.isLoading = true;
-    this.errorMessage = '';
+    this.errorMessage = message;
 
     this.listingsService.getPublicListings().subscribe({
       next: (listings: ListingDto[]) => {
+        this.isForYouMode = false;
+        this.requestedForYouMode = keepForYouTab;
         this.isAiResultMode = false;
         this.sortBy = 'Recommended';
         this.setCarsFromListings(listings);
         this.isLoading = false;
       },
       error: (error) => {
-        this.errorMessage = error.message || 'Could not load cars from API';
+        this.errorMessage = error.message || 'Could not load cars.';
         this.allCars = [];
         this.totalCars = 0;
         this.applyFilters();
         this.isLoading = false;
       },
     });
+  }
+
+  private loadForYouCars() {
+    const userId = Number(this.authService.currentUser()?.id);
+    if (!Number.isFinite(userId) || userId <= 0) {
+      this.loadCarsFromApi('Sign in and complete onboarding to unlock AI recommendations.', true);
+      return;
+    }
+
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.listingsService.getForYou(userId).subscribe({
+      next: (listings: ListingDto[]) => {
+        const carListings = listings.filter((listing) => listing.type?.toLowerCase() === 'car');
+        if (!carListings.length) {
+          this.loadCarsFromApi('The AI did not return recommendations for your choices yet, so we are showing approved cars.', true);
+          return;
+        }
+
+        this.isForYouMode = true;
+        this.requestedForYouMode = true;
+        this.isAiResultMode = true;
+        this.sortBy = 'Recommended for you';
+        this.setCarsFromListings(carListings);
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.loadCarsFromApi(error.message || 'Could not load AI recommendations, so we are showing approved cars.', true);
+      },
+    });
+  }
+
+  private isForYouRoute(): boolean {
+    return (
+      this.route.snapshot.routeConfig?.path === 'for-you' ||
+      this.route.snapshot.queryParamMap.get('mode') === 'for-you'
+    );
   }
 
   private setCarsFromListings(listings: ListingDto[]) {

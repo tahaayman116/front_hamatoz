@@ -39,7 +39,7 @@ export class SignUp {
 
     // Validation - Check role is selected
     if (!this.userType || (this.userType !== 'Customer' && this.userType !== 'Agency')) {
-      this.errorMessage = '⚠️ Please select an account type (Individual or Agency)';
+      this.errorMessage = 'Please select an account type (Individual or Agency)';
       this.isLoading = false;
       return;
     }
@@ -120,7 +120,7 @@ export class SignUp {
           this.authService.login(this.formData.email, this.formData.password).subscribe({
             next: () => {
               this.isLoading = false;
-              this.router.navigate(['/']);
+              this.router.navigate(['/preferences']);
             },
             error: () => {
               this.isLoading = false;

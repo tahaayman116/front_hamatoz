@@ -1,42 +1,51 @@
-<header
-  class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between whitespace-nowrap px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 py-3">
-  <a class="flex items-center gap-3 text-white transition-opacity hover:opacity-80" routerLink="/">
-    <div class="size-6">
-      <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-        <g clip-path="url(#clip0_6_330)">
-          <path clip-rule="evenodd"
-            d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z"
-            fill="currentColor" fill-rule="evenodd"></path>
-        </g>
-        <defs>
-          <clipPath id="clip0_6_330">
-            <rect fill="white" height="48" width="48"></rect>
-          </clipPath>
-        </defs>
+<header class="site-header">
+  <a class="brand-link" routerLink="/" (click)="closeMobileMenu()">
+    <div class="brand-icon">
+      <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path
+          clip-rule="evenodd"
+          d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z"
+          fill="currentColor"
+          fill-rule="evenodd"
+        />
       </svg>
     </div>
-    <h2 class="text-xl font-bold leading-tight tracking-tight">Hamatoz</h2>
+    <h2>Hamatoz</h2>
   </a>
 
-  <nav class="hidden md:flex items-center gap-2 rounded-full border border-white/10 bg-black/20 p-1 backdrop-blur-md">
-    <a class="nav-link" routerLink="/cars">Cars</a>
-    <a class="nav-link" routerLink="/parts">Parts</a>
-    <a class="nav-link" routerLink="/services">Services</a>
-    <a class="nav-link" routerLink="/about">About</a>
+  <nav class="desktop-nav">
+    <a class="nav-link" routerLink="/cars" routerLinkActive="active">Cars</a>
+    <a class="nav-link" routerLink="/parts" routerLinkActive="active">Parts</a>
+    <a class="nav-link" routerLink="/services" routerLinkActive="active">Services</a>
+    <a class="nav-link" routerLink="/about" routerLinkActive="active">About</a>
   </nav>
 
-  <div class="hidden md:flex items-center gap-4">
+  <div class="desktop-actions">
     <a *ngIf="!currentUser" routerLink="/sign-in" class="btn-ghost">Login</a>
     <a *ngIf="!currentUser" routerLink="/sign-up" class="btn-primary">Sign Up</a>
-    
-    <a *ngIf="currentUser" routerLink="/profile" class="btn-ghost flex items-center gap-2">
-      <span class="material-symbols-outlined text-lg">person</span>
+
+    <a *ngIf="currentUser" routerLink="/profile" class="btn-ghost">
+      <span class="material-symbols-outlined">person</span>
       Profile
     </a>
-    <button *ngIf="currentUser" (click)="logout()" class="btn-ghost">Logout</button>
+    <button *ngIf="currentUser" (click)="logout()" class="btn-ghost" type="button">Logout</button>
   </div>
 
-  <button class="md:hidden" type="button" aria-label="Open menu">
-    <span class="material-symbols-outlined text-3xl">menu</span>
+  <button class="menu-toggle" type="button" [attr.aria-expanded]="isMobileMenuOpen" aria-label="Toggle menu" (click)="toggleMobileMenu()">
+    <span class="material-symbols-outlined">{{ isMobileMenuOpen ? 'close' : 'menu' }}</span>
   </button>
 </header>
+
+<div *ngIf="isMobileMenuOpen" class="mobile-backdrop" (click)="closeMobileMenu()"></div>
+
+<nav class="mobile-menu" [class.open]="isMobileMenuOpen" aria-label="Mobile navigation">
+  <a routerLink="/cars" routerLinkActive="active" (click)="closeMobileMenu()">Cars</a>
+  <a routerLink="/parts" routerLinkActive="active" (click)="closeMobileMenu()">Parts</a>
+  <a routerLink="/services" routerLinkActive="active" (click)="closeMobileMenu()">Services</a>
+  <a routerLink="/about" routerLinkActive="active" (click)="closeMobileMenu()">About</a>
+  <span class="mobile-divider"></span>
+  <a *ngIf="!currentUser" routerLink="/sign-in" (click)="closeMobileMenu()">Login</a>
+  <a *ngIf="!currentUser" routerLink="/sign-up" class="primary-mobile" (click)="closeMobileMenu()">Sign Up</a>
+  <a *ngIf="currentUser" routerLink="/profile" (click)="closeMobileMenu()">Profile</a>
+  <button *ngIf="currentUser" type="button" (click)="logout()">Logout</button>
+</nav>

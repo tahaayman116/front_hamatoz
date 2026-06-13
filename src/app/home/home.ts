@@ -27,6 +27,7 @@ export class Home implements AfterViewInit, OnDestroy {
   // Frame animation properties
   private readonly TOTAL_FRAMES = 200;
   private readonly BASE_URL = 'frames/';
+  private readonly prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   private frames: HTMLImageElement[] = [];
   private ctx: CanvasRenderingContext2D | null = null;
   private currentFrame = 0;
@@ -65,17 +66,23 @@ export class Home implements AfterViewInit, OnDestroy {
   }
 
   private preloadFrames(): void {
-    let loadedCount = 0;
+    if (this.prefersReducedMotion) {
+      this.isLoading.set(false);
+      return;
+    }
 
-    for (let i = 0; i < this.TOTAL_FRAMES; i++) {
+    let loadedCount = 0;
+    const frameCount = this.getFrameCount();
+
+    for (let i = 0; i < frameCount; i++) {
       const img = new Image();
       img.crossOrigin = 'anonymous';
 
       img.onload = () => {
         loadedCount++;
-        this.loadProgress.set(Math.round((loadedCount / this.TOTAL_FRAMES) * 100));
+        this.loadProgress.set(Math.round((loadedCount / frameCount) * 100));
 
-        if (loadedCount === this.TOTAL_FRAMES) {
+        if (loadedCount === frameCount) {
           this.isLoading.set(false);
           this.initCanvas();
           this.renderFrame(0);
@@ -84,7 +91,7 @@ export class Home implements AfterViewInit, OnDestroy {
 
       img.onerror = () => {
         loadedCount++;
-        this.loadProgress.set(Math.round((loadedCount / this.TOTAL_FRAMES) * 100));
+        this.loadProgress.set(Math.round((loadedCount / frameCount) * 100));
       };
 
       img.src = this.getFrameUrl(i);
@@ -138,7 +145,7 @@ export class Home implements AfterViewInit, OnDestroy {
     const heroHeight = window.innerHeight * 8; 
     const scrollProgress = Math.min(scrollTop / heroHeight, 1);
 
-    this.targetFrame = scrollProgress * (this.TOTAL_FRAMES - 1);
+    this.targetFrame = scrollProgress * (this.getFrameCount() - 1);
   }
 
   private startRenderLoop(): void {
@@ -149,7 +156,7 @@ export class Home implements AfterViewInit, OnDestroy {
       
       const frameIndex = Math.min(
         Math.max(Math.round(this.currentFrameFloat), 0),
-        this.TOTAL_FRAMES - 1
+        this.getFrameCount() - 1
       );
 
       // Only draw if the integer frame actually changed, saving performance
@@ -162,6 +169,12 @@ export class Home implements AfterViewInit, OnDestroy {
     };
 
     this.animationId = requestAnimationFrame(render);
+  }
+
+  private getFrameCount(): number {
+    if (window.innerWidth < 640) return 80;
+    if (window.innerWidth < 1024) return 120;
+    return this.TOTAL_FRAMES;
   }
 
   private renderFrame(frameIndex: number): void {

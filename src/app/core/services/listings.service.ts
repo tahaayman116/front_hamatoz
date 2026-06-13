@@ -181,6 +181,29 @@ export class ListingsService {
     });
   }
 
+  getForYou(userId: number): Observable<Listing[]> {
+    return new Observable((observer) => {
+      this.loading.set(true);
+      this.apiService
+        .get<any>(API_CONFIG.endpoints.listings.forYou, { userId })
+        .subscribe({
+          next: (response: any) => {
+            const listingsArray = this.extractListings(response);
+            this.listings.set(listingsArray);
+            this.error.set(null);
+            this.loading.set(false);
+            observer.next(listingsArray);
+            observer.complete();
+          },
+          error: (err) => {
+            this.error.set(err.message);
+            this.loading.set(false);
+            observer.error(err);
+          },
+        });
+    });
+  }
+
   /**
    * Get local listings array
    */
@@ -203,10 +226,21 @@ export class ListingsService {
   }
 
   private extractListings(response: any): Listing[] {
-    const rawResults = Array.isArray(response) ? response : response?.data || response?.listings || response?.results || [];
+    const rawResults = this.normalizeListingsArray(response);
     return rawResults
       .map((item: any) => this.normalizeListing(item))
       .filter((listing: Listing | null): listing is Listing => !!listing && !this.isDemoListing(listing));
+  }
+
+  private normalizeListingsArray(response: any): any[] {
+    if (Array.isArray(response)) return response;
+
+    const nested = response?.data || response?.listings || response?.results || response?.recommendations;
+    if (Array.isArray(nested)) return nested;
+    if (nested && typeof nested === 'object') return [nested];
+    if (response && typeof response === 'object' && response.id !== undefined) return [response];
+
+    return [];
   }
 
   private normalizeListing(item: any): Listing | null {

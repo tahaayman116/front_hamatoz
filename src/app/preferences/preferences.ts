@@ -2,85 +2,96 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../core/services/auth.service';
+import { UserService } from '../core/services/user.service';
+import { UserOnboardingDto } from '../core/models/api.dtos';
 
 @Component({
   selector: 'app-preferences',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './preferences.html',
-  styleUrls: ['./preferences.css']
+  styleUrls: ['./preferences.css'],
 })
 export class Preferences {
   currentStep = 1;
   totalSteps = 3;
-  
-  selectedModels: string[] = [];
-  selectedBrands: string[] = [];
-  selectedDrivingStyles: string[] = [];
 
-  models = [
-    { id: 'sedan', name: 'Sedan', icon: 'directions_car' },
-    { id: 'suv', name: 'SUV', icon: 'terrain' },
-    { id: 'coupe', name: 'Coupe', icon: 'sports_motorsports' },
-    { id: 'hatchback', name: 'Hatchback', icon: 'directions_car' },
-    { id: 'truck', name: 'Truck', icon: 'local_shipping' },
-    { id: 'convertible', name: 'Convertible', icon: 'beach_access' },
-    { id: 'wagon', name: 'Wagon', icon: 'departure_board' },
-    { id: 'van', name: 'Van', icon: 'delivery_dining' }
+  selectedCarType = '';
+  selectedBrand = '';
+  minBudget = 0;
+  maxBudget = 10000000;
+  isLoading = false;
+  errorMessage = '';
+
+  carTypes = [
+    { id: 'Sedan', name: 'Sedan', icon: 'directions_car', hint: 'Daily comfort' },
+    { id: 'SUV', name: 'SUV', icon: 'terrain', hint: 'Family and travel' },
+    { id: 'Crossover', name: 'Crossover', icon: 'commute', hint: 'City plus space' },
+    { id: 'Hatchback', name: 'Hatchback', icon: 'directions_car', hint: 'Compact city use' },
+    { id: 'Coupe', name: 'Coupe', icon: 'sports_motorsports', hint: 'Sporty profile' },
+    { id: 'Pickup', name: 'Pickup', icon: 'local_shipping', hint: 'Work and utility' },
+    { id: 'Van', name: 'Van', icon: 'airport_shuttle', hint: 'More seats' },
+    { id: 'Wagon', name: 'Wagon', icon: 'departure_board', hint: 'Practical storage' },
+    { id: 'Convertible', name: 'Convertible', icon: 'roofing', hint: 'Open-top driving' },
+    { id: 'Sports', name: 'Sports', icon: 'speed', hint: 'Performance first' },
+    { id: 'Electric', name: 'Electric', icon: 'electric_car', hint: 'EV options' },
+    { id: 'Luxury', name: 'Luxury', icon: 'diamond', hint: 'Premium feel' },
+    { id: 'Family', name: 'Family', icon: 'family_restroom', hint: 'Room and safety' },
+    { id: 'Off-road', name: 'Off-road', icon: 'landscape', hint: 'Rough roads' },
+    { id: 'Commercial', name: 'Commercial', icon: 'business_center', hint: 'Business use' },
+    { id: 'Minivan', name: 'Minivan', icon: 'emoji_transportation', hint: 'Large cabin' },
   ];
 
   brands = [
-    { id: 'bmw', name: 'BMW', color: '#0066CC', logo: '⊙' },
-    { id: 'mercedes', name: 'Mercedes', color: '#00A3E0', logo: '◆' },
-    { id: 'porsche', name: 'Porsche', color: '#D1495E', logo: 'P' },
-    { id: 'audi', name: 'Audi', color: '#E60000', logo: '◯◯' },
-    { id: 'tesla', name: 'Tesla', color: '#E82127', logo: 'T' },
-    { id: 'jaguar', name: 'Jaguar', color: '#004B87', logo: '◀' },
-    { id: 'lamborghini', name: 'Lamborghini', color: '#FFD700', logo: '▲' },
-    { id: 'ferrari', name: 'Ferrari', color: '#DC143C', logo: '馬' },
-    { id: 'rolls-royce', name: 'Rolls-Royce', color: '#1F1F1F', logo: 'RR' },
-    { id: 'bugatti', name: 'Bugatti', color: '#0080FF', logo: '●' }
+    { id: 'BMW', name: 'BMW', color: '#0066CC', logo: 'BMW' },
+    { id: 'Mercedes', name: 'Mercedes', color: '#00A3E0', logo: 'MB' },
+    { id: 'Audi', name: 'Audi', color: '#E60000', logo: 'A' },
+    { id: 'Toyota', name: 'Toyota', color: '#EB0A1E', logo: 'T' },
+    { id: 'Hyundai', name: 'Hyundai', color: '#0B5CAD', logo: 'H' },
+    { id: 'Kia', name: 'Kia', color: '#C41230', logo: 'K' },
+    { id: 'Nissan', name: 'Nissan', color: '#C3002F', logo: 'N' },
+    { id: 'Chevrolet', name: 'Chevrolet', color: '#D4A017', logo: 'CH' },
+    { id: 'Renault', name: 'Renault', color: '#F7C600', logo: 'R' },
+    { id: 'Peugeot', name: 'Peugeot', color: '#1D4F91', logo: 'P' },
+    { id: 'Honda', name: 'Honda', color: '#D71920', logo: 'H' },
+    { id: 'Mitsubishi', name: 'Mitsubishi', color: '#E60012', logo: 'M' },
+    { id: 'MG', name: 'MG', color: '#B11116', logo: 'MG' },
+    { id: 'Chery', name: 'Chery', color: '#B5121B', logo: 'C' },
+    { id: 'BYD', name: 'BYD', color: '#D21F2B', logo: 'BYD' },
+    { id: 'Fiat', name: 'Fiat', color: '#A51E36', logo: 'F' },
+    { id: 'Skoda', name: 'Skoda', color: '#4BA82E', logo: 'S' },
+    { id: 'Volkswagen', name: 'Volkswagen', color: '#1F5AA6', logo: 'VW' },
+    { id: 'Opel', name: 'Opel', color: '#F7C600', logo: 'O' },
+    { id: 'Suzuki', name: 'Suzuki', color: '#004EA2', logo: 'S' },
+    { id: 'Lada', name: 'Lada', color: '#345C9C', logo: 'L' },
+    { id: 'Jeep', name: 'Jeep', color: '#6C6A50', logo: 'J' },
+    { id: 'Land Rover', name: 'Land Rover', color: '#005A2B', logo: 'LR' },
+    { id: 'Porsche', name: 'Porsche', color: '#D1495E', logo: 'P' },
   ];
 
-  drivingStyles = [
-    { id: 'performance', name: 'Performance', icon: 'speed' },
-    { id: 'luxury', name: 'Luxury', icon: 'diamond' },
-    { id: 'eco', name: 'Eco-Friendly', icon: 'eco' },
-    { id: 'comfort', name: 'Comfort', icon: 'chair' },
-    { id: 'off-road', name: 'Off-Road', icon: 'terrain' },
-    { id: 'city', name: 'City Driving', icon: 'location_city' }
-  ];
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private userService: UserService
+  ) {}
 
-  constructor(private router: Router) {}
-
-  toggleSelection(id: string, category: 'model' | 'brand' | 'style') {
-    let selectedArray = this.selectedModels;
-    if (category === 'brand') selectedArray = this.selectedBrands;
-    if (category === 'style') selectedArray = this.selectedDrivingStyles;
-
-    const index = selectedArray.indexOf(id);
-    if (index > -1) {
-      selectedArray.splice(index, 1);
-    } else {
-      selectedArray.push(id);
-    }
+  selectCarType(id: string) {
+    this.selectedCarType = this.selectedCarType === id ? '' : id;
   }
 
-  isSelected(id: string, category: 'model' | 'brand' | 'style'): boolean {
-    let selectedArray = this.selectedModels;
-    if (category === 'brand') selectedArray = this.selectedBrands;
-    if (category === 'style') selectedArray = this.selectedDrivingStyles;
-    return selectedArray.includes(id);
+  selectBrand(id: string) {
+    this.selectedBrand = this.selectedBrand === id ? '' : id;
   }
 
   getStepTitle(): string {
     switch (this.currentStep) {
       case 1:
-        return 'What car models do you love?';
+        return 'Choose one car type';
       case 2:
-        return 'What are your favorite brands?';
+        return 'Choose one preferred brand';
       case 3:
-        return 'What\'s your driving style?';
+        return 'Choose your budget range';
       default:
         return '';
     }
@@ -89,22 +100,24 @@ export class Preferences {
   getStepDescription(): string {
     switch (this.currentStep) {
       case 1:
-        return 'Select the car types that interest you most';
+        return 'Pick the body style you want to see more often';
       case 2:
-        return 'Choose your favorite automotive brands';
+        return 'Pick the brand you care about most right now';
       case 3:
-        return 'Tell us about your driving preferences';
+        return 'Set a range that makes sense for your search';
       default:
         return '';
     }
   }
 
   nextStep() {
+    this.errorMessage = '';
     if (this.currentStep < this.totalSteps) {
       this.currentStep++;
-    } else {
-      this.completePreferences();
+      return;
     }
+
+    this.completePreferences();
   }
 
   previousStep() {
@@ -114,16 +127,43 @@ export class Preferences {
   }
 
   skip() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/cars']);
   }
 
   completePreferences() {
-    console.log('Preferences submitted:', {
-      models: this.selectedModels,
-      brands: this.selectedBrands,
-      drivingStyles: this.selectedDrivingStyles
+    const userId = Number(this.authService.currentUser()?.id);
+    if (!Number.isFinite(userId) || userId <= 0) {
+      this.errorMessage = 'Please sign in again.';
+      setTimeout(() => this.router.navigate(['/sign-in']), 900);
+      return;
+    }
+
+    if (this.maxBudget < this.minBudget) {
+      this.errorMessage = 'Maximum budget must be greater than minimum budget.';
+      return;
+    }
+
+    const payload: UserOnboardingDto = {
+      userId,
+      preferredBrand: this.selectedBrand || null,
+      preferredCarType: this.selectedCarType || null,
+      minBudget: this.minBudget,
+      maxBudget: this.maxBudget,
+    };
+
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.userService.submitOnboarding(payload).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.router.navigate(['/cars'], { queryParams: { mode: 'for-you' } });
+      },
+      error: (err) => {
+        this.errorMessage = err.message || 'Could not save your preferences.';
+        this.isLoading = false;
+      },
     });
-    this.router.navigate(['/']);
   }
 
   getProgressPercentage(): number {

@@ -1,1 +1,18 @@
-/* Agencies list styles */
+:host {
+  display: block;
+  min-width: 0;
+}
+
+table {
+  min-width: 760px;
+}
+
+@media (max-width: 640px) {
+  table {
+    min-width: 680px;
+  }
+
+  :host ::ng-deep .fixed > div {
+    width: min(100%, calc(100vw - 24px));
+  }
+}

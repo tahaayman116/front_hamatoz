@@ -16,6 +16,7 @@ import { AdminGuard } from './core/guards/admin.guard';
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'cars', component: Cars },
+  { path: 'for-you', component: Cars },
   { path: 'cars/:id', component: CarsDetails },
   { path: 'services', component: Services },
   { path: 'about', component: About },

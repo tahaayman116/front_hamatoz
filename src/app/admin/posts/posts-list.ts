@@ -131,9 +131,9 @@ export class PostsList implements OnInit {
 
   private readableError(err: any): string {
     if (err?.status === 401) {
-      return 'Unauthorized. Please sign in with a real admin API account to load and review listings.';
+      return 'Unauthorized. Please sign in with an admin account to load and review listings.';
     }
 
-    return err?.message || 'Could not load listings from the API.';
+    return err?.message || 'Could not load listings.';
   }
 }

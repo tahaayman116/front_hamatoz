@@ -3,10 +3,13 @@
     <header class="catalog-hero">
       <div>
         <p class="eyebrow">Hamatoz marketplace</p>
-        <h1>Spare parts from approved listings</h1>
+        <h1>{{ requestedForYouMode ? 'Parts For You' : 'Spare parts from approved listings' }}</h1>
         <p class="hero-copy">
-          Every result is read from the listings API. AI semantic search and image matching call the
-          backend endpoints, then the page shows real approved parts only.
+          {{
+            requestedForYouMode
+              ? 'Personalized part recommendations based on your onboarding choices.'
+              : 'Browse approved spare parts with smart text and image search to help you find the right match.'
+          }}
         </p>
       </div>
 
@@ -16,6 +19,17 @@
         <span>approved parts</span>
       </div>
     </header>
+
+    <section class="catalog-tabs" aria-label="Parts view">
+      <button type="button" [class.active]="!requestedForYouMode" (click)="showAllParts()">
+        <span class="material-symbols-outlined">inventory_2</span>
+        All parts
+      </button>
+      <button type="button" [class.active]="requestedForYouMode" (click)="showForYouParts()">
+        <span class="material-symbols-outlined">auto_awesome</span>
+        For You
+      </button>
+    </section>
 
     <section class="search-band" aria-label="Parts search">
       <div class="search-input">
@@ -130,15 +144,15 @@
       <section class="results-panel">
         <div class="results-head">
           <div>
-            <h2>{{ isAiResultMode ? 'Matched parts' : 'Available parts' }}</h2>
-            <p>{{ filteredParts.length }} shown from {{ totalParts }} API listings</p>
+            <h2>{{ isForYouMode ? 'Recommended parts for you' : (isAiResultMode ? 'Matched parts' : 'Available parts') }}</h2>
+            <p>{{ filteredParts.length }} shown from {{ totalParts }} approved listings</p>
           </div>
           <span class="sort-chip">{{ sortBy }}</span>
         </div>
 
         <div *ngIf="isLoading || isAiSearching" class="state-banner info">
           <span class="material-symbols-outlined">progress_activity</span>
-          {{ isAiSearching ? 'Running backend AI search...' : 'Loading approved parts...' }}
+          {{ isAiSearching ? 'Finding the best matches...' : 'Loading approved parts...' }}
         </div>
 
         <div *ngIf="errorMessage" class="state-banner error">
@@ -149,7 +163,7 @@
         <div *ngIf="!isLoading && !isAiSearching && filteredParts.length === 0" class="empty-state">
           <span class="material-symbols-outlined">settings</span>
           <h3>No parts found</h3>
-          <p>The API is not returning approved Part listings yet.</p>
+          <p>No approved parts are available yet.</p>
           <button (click)="resetFilters()" type="button">Reset filters</button>
         </div>
 

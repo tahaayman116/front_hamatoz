@@ -6,6 +6,7 @@
 /* Custom Scrollbar - Dark Theme */
 /* Firefox */
 * {
+    box-sizing: border-box;
     scrollbar-width: thin;
     scrollbar-color: #3B82F6 #0A0E13;
 }
@@ -40,12 +41,21 @@
 /* Smooth scrolling */
 html {
     scroll-behavior: smooth;
+    background: #0a0e10;
 }
 
 body, app-root {
     display: block;
     width: 100%;
+    min-width: 0;
     background-color: #0a0e10;
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
+}
+
+img,
+svg,
+canvas {
+    max-width: 100%;
 }

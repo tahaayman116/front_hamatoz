@@ -1,44 +1,40 @@
-<section class="relative bg-background-dark py-0 px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 flex justify-center text-white font-display w-full">
+<section class="relative flex w-full justify-center bg-background-dark px-4 py-0 text-white sm:px-8 md:px-12 lg:px-16 xl:px-24">
   <div class="w-full max-w-[1200px]">
-    <footer class="border-t border-white/10 pt-8 pb-8">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
-        <div class="flex flex-col gap-4 items-center md:items-start">
-          <h4 class="font-semibold">Company</h4>
+    <footer class="border-t border-white/10 py-8">
+      <div class="grid grid-cols-1 gap-10 text-center md:grid-cols-3 md:text-left">
+        <div class="flex flex-col items-center gap-4 md:items-start">
+          <h4 class="font-semibold">Marketplace</h4>
           <ul class="flex flex-col gap-2.5">
-            <li><a class="footer-link" href="#">About Us</a></li>
-            <li><a class="footer-link" href="#">Our Team</a></li>
-            <li><a class="footer-link" href="#">Careers</a></li>
+            <li><a class="footer-link" routerLink="/cars">Cars</a></li>
+            <li><a class="footer-link" routerLink="/parts">Parts</a></li>
+            <li><a class="footer-link" routerLink="/cars" [queryParams]="{ mode: 'for-you' }">For You</a></li>
           </ul>
         </div>
 
-        <div class="flex flex-col gap-4 items-center md:items-start">
-          <h4 class="font-semibold">Legal & Project</h4>
+        <div class="flex flex-col items-center gap-4 md:items-start">
+          <h4 class="font-semibold">Hamatoz</h4>
           <ul class="flex flex-col gap-2.5">
-            <li><a class="footer-link" href="#">Terms of Service</a></li>
-            <li><a class="footer-link" href="#">Privacy Policy</a></li>
-            <li><a class="footer-link" href="#">Project GitHub</a></li>
+            <li><a class="footer-link" routerLink="/about">About Us</a></li>
+            <li><a class="footer-link" routerLink="/services">Services</a></li>
+            <li><a class="footer-link" routerLink="/sign-up">Create Account</a></li>
           </ul>
         </div>
 
-        <div class="flex flex-col gap-4 items-center md:items-end">
+        <div class="flex flex-col items-center gap-4 md:items-end">
           <div class="flex items-center gap-3">
             <div class="size-6">
-              <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#clip0_6_330_footer)">
-                  <path clip-rule="evenodd"
-                    d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z"
-                    fill="currentColor" fill-rule="evenodd"></path>
-                </g>
-                <defs>
-                  <clipPath id="clip0_6_330_footer">
-                    <rect fill="white" height="48" width="48"></rect>
-                  </clipPath>
-                </defs>
+              <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path
+                  clip-rule="evenodd"
+                  d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z"
+                  fill="currentColor"
+                  fill-rule="evenodd"
+                />
               </svg>
             </div>
             <h2 class="text-xl font-bold leading-tight tracking-tight">Hamatoz</h2>
           </div>
-          <p class="text-sm text-white/50">© 2025 Hamatoz. All rights reserved.</p>
+          <p class="text-sm text-white/50">© 2026 Hamatoz. All rights reserved.</p>
         </div>
       </div>
     </footer>

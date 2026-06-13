@@ -112,6 +112,14 @@ export interface UpdateProfileRequestDto {
   email: string; // required
 }
 
+export interface UserOnboardingDto {
+  userId: number;
+  preferredBrand?: string | null;
+  preferredCarType?: string | null;
+  minBudget: number;
+  maxBudget: number;
+}
+
 // Chat DTOs
 export interface ConversationDto {
   id: number;

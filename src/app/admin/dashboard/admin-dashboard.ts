@@ -106,9 +106,9 @@ export class AdminDashboard implements OnInit {
 
   private readableError(err: any): string {
     if (err?.status === 401) {
-      return 'Admin API returned 401. Use a real admin backend account to load live approval queues.';
+      return 'Unauthorized. Please sign in with an admin account to load approval queues.';
     }
 
-    return err?.message || 'Could not load admin API data.';
+    return err?.message || 'Could not load dashboard data.';
   }
 }

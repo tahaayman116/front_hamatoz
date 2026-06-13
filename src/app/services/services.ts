@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 
 interface Service {
   id: number;
@@ -13,7 +12,7 @@ interface Service {
 @Component({
   selector: 'app-services',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule],
   templateUrl: './services.html',
   styleUrl: './services.css'
 })
@@ -93,30 +92,7 @@ export class Services implements OnInit {
     }
   ];
 
-  contactForm = {
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: ''
-  };
-
   ngOnInit() {
     // Initialize component
-  }
-
-  submitContactForm() {
-    if (this.contactForm.name && this.contactForm.email && this.contactForm.message) {
-      console.log('Form submitted:', this.contactForm);
-      // Reset form
-      this.contactForm = {
-        name: '',
-        email: '',
-        phone: '',
-        subject: '',
-        message: ''
-      };
-      alert('Thank you for your message! We will get back to you soon.');
-    }
   }
 }

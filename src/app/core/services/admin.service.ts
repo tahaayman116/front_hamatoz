@@ -297,7 +297,7 @@ export class AdminService {
       return true;
     }
 
-    const error = new Error('Admin API token is required to load live dashboard data.');
+    const error = new Error('Please sign in with an admin account to load dashboard data.');
     this.loading.set(false);
     this.error.set(error.message);
     observer.error(error);

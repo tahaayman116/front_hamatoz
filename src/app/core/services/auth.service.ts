@@ -146,6 +146,11 @@ export class AuthService {
     return this.currentUser()?.role?.toLowerCase() === 'admin';
   }
 
+  updateCurrentUser(user: User): void {
+    this.currentUser.set(user);
+    this.storageService.setItem('current_user', user);
+  }
+
   /**
    * Check if user is agency
    */

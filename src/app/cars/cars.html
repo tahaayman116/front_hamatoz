@@ -3,10 +3,13 @@
     <header class="catalog-hero">
       <div>
         <p class="eyebrow">Hamatoz marketplace</p>
-        <h1>Cars from approved agencies</h1>
+        <h1>{{ requestedForYouMode ? 'For You' : 'Cars from approved agencies' }}</h1>
         <p class="hero-copy">
-          Browse live listings from the API only. AI semantic search and image matching call the
-          backend endpoints, then the page shows real approved cars only.
+          {{
+            requestedForYouMode
+              ? 'Personalized recommendations based on your onboarding choices.'
+              : 'Browse approved cars from trusted agencies, with smart text and image search to help you find the right match.'
+          }}
         </p>
       </div>
 
@@ -16,6 +19,17 @@
         <span>approved cars</span>
       </div>
     </header>
+
+    <section class="catalog-tabs" aria-label="Car view">
+      <button type="button" [class.active]="!requestedForYouMode" (click)="showAllCars()">
+        <span class="material-symbols-outlined">inventory_2</span>
+        All cars
+      </button>
+      <button type="button" [class.active]="requestedForYouMode" (click)="showForYouCars()">
+        <span class="material-symbols-outlined">auto_awesome</span>
+        For You
+      </button>
+    </section>
 
     <section class="search-band" aria-label="Car search">
       <div class="search-input">
@@ -130,15 +144,15 @@
       <section class="results-panel">
         <div class="results-head">
           <div>
-            <h2>{{ isAiResultMode ? 'Matched cars' : 'Available cars' }}</h2>
-            <p>{{ filteredCars.length }} shown from {{ totalCars }} API listings</p>
+            <h2>{{ isForYouMode ? 'Recommended for you' : (isAiResultMode ? 'Matched cars' : 'Available cars') }}</h2>
+            <p>{{ filteredCars.length }} shown from {{ totalCars }} approved listings</p>
           </div>
           <span class="sort-chip">{{ sortBy }}</span>
         </div>
 
         <div *ngIf="isLoading || isAiSearching" class="state-banner info">
           <span class="material-symbols-outlined">progress_activity</span>
-          {{ isAiSearching ? 'Running backend AI search...' : 'Loading approved cars...' }}
+          {{ isAiSearching ? 'Finding the best matches...' : 'Loading approved cars...' }}
         </div>
 
         <div *ngIf="errorMessage" class="state-banner error">
@@ -149,7 +163,7 @@
         <div *ngIf="!isLoading && !isAiSearching && filteredCars.length === 0" class="empty-state">
           <span class="material-symbols-outlined">directions_car</span>
           <h3>No cars found</h3>
-          <p>Only approved, non-demo API listings are shown here.</p>
+          <p>Only approved listings are shown here.</p>
           <button (click)="resetFilters()" type="button">Reset filters</button>
         </div>
 

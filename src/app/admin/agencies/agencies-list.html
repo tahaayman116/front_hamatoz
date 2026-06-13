@@ -1,7 +1,7 @@
 <div class="space-y-6">
   <div class="flex items-center justify-between gap-4 flex-wrap">
     <p class="text-sm text-gray-400">
-      Pending agencies are loaded from <span class="text-gray-200">/api/admin/agencies/pending</span>.
+      Review new agency registrations before they can access the marketplace.
     </p>
     <button
       (click)="loadAgencies()"
@@ -30,7 +30,7 @@
       </thead>
       <tbody>
         <tr *ngIf="isLoading" class="border-b border-gray-700">
-          <td colspan="6" class="px-6 py-8 text-center text-gray-400">Loading agencies from API...</td>
+          <td colspan="6" class="px-6 py-8 text-center text-gray-400">Loading agencies...</td>
         </tr>
 
         <tr *ngIf="!isLoading && agencies.length === 0" class="border-b border-gray-700">

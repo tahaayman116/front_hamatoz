@@ -63,8 +63,10 @@ export class SignIn {
         setTimeout(() => {
           if (userRole === 'admin' || userRole === 'Admin') {
             this.router.navigate(['/admin/dashboard']);
-          } else if ((userRole === 'Agency' || userRole === 'agency') && user.status === 'pending') {
-            alert('Complete your agency profile. Listings unlock after admin approval.');
+          } else if (userRole === 'Agency' || userRole === 'agency') {
+            if (user.status === 'pending') {
+              alert('Complete your agency profile. Listings unlock after admin approval.');
+            }
             this.router.navigate(['/profile']);
           } else {
             this.router.navigate(['/preferences']);

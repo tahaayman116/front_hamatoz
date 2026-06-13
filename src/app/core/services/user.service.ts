@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../api/api.service';
 import { API_CONFIG } from '../api/api.config';
-import { UserProfileDto, UpdateProfileRequestDto } from '../models/api.dtos';
+import { UserProfileDto, UpdateProfileRequestDto, UserOnboardingDto } from '../models/api.dtos';
 
 export interface UserProfile extends UserProfileDto {}
 
@@ -53,6 +53,25 @@ export class UserService {
           this.error.set(null);
           this.loading.set(false);
           observer.next(profile);
+          observer.complete();
+        },
+        error: (err) => {
+          this.error.set(err.message);
+          this.loading.set(false);
+          observer.error(err);
+        },
+      });
+    });
+  }
+
+  submitOnboarding(data: UserOnboardingDto): Observable<any> {
+    return new Observable((observer) => {
+      this.loading.set(true);
+      this.apiService.post<any>(API_CONFIG.endpoints.users.submitOnboarding, data).subscribe({
+        next: (response: any) => {
+          this.error.set(null);
+          this.loading.set(false);
+          observer.next(response);
           observer.complete();
         },
         error: (err) => {

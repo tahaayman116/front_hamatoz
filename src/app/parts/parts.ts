@@ -44,6 +44,8 @@ export class Parts {
   isLoading = false;
   isAiSearching = false;
   isAiResultMode = false;
+  isForYouMode = false;
+  requestedForYouMode = false;
   errorMessage = '';
   allParts: Part[] = [];
   filteredParts: Part[] = [];
@@ -124,6 +126,16 @@ export class Parts {
     this.applyFilters();
   }
 
+  showAllParts() {
+    this.requestedForYouMode = false;
+    this.loadPartsFromApi();
+  }
+
+  showForYouParts() {
+    this.requestedForYouMode = true;
+    this.loadForYouParts();
+  }
+
   runSemanticSearch() {
     const query = this.searchQuery.trim();
     if (!query) {
@@ -136,13 +148,15 @@ export class Parts {
 
     this.listingsService.semanticSearch(query, 25).subscribe({
       next: (listings: ListingDto[]) => {
+        this.isForYouMode = false;
+        this.requestedForYouMode = false;
         this.isAiResultMode = true;
         this.sortBy = 'AI semantic match';
         const rankedListings = this.rankListingsForQuery(listings, query);
         this.setPartsFromListings(rankedListings);
         this.errorMessage = rankedListings.length
           ? ''
-          : 'Semantic search did not return real approved parts for this query.';
+          : 'Smart search did not find approved parts for this query.';
         this.isAiSearching = false;
       },
       error: (error) => {
@@ -164,12 +178,14 @@ export class Parts {
     this.listingsService.visualSearch(file, 'Part', 20).subscribe({
       next: (listings: ListingDto[]) => {
         this.searchQuery = '';
+        this.isForYouMode = false;
+        this.requestedForYouMode = false;
         this.isAiResultMode = true;
         this.sortBy = 'Image match';
         this.setPartsFromListings(listings);
         this.errorMessage = listings.length
           ? ''
-          : 'Image search did not return any real approved parts. The backend image index may still contain demo listings only.';
+          : 'Image search did not return approved parts for this image.';
         this.isAiSearching = false;
       },
       error: (error) => {
@@ -222,23 +238,56 @@ export class Parts {
     this.filteredParts = [...this.allParts];
   }
 
-  private loadPartsFromApi() {
+  private loadPartsFromApi(message = '', keepForYouTab = false) {
     this.isLoading = true;
-    this.errorMessage = '';
+    this.errorMessage = message;
 
     this.listingsService.getPublicListings().subscribe({
       next: (listings: ListingDto[]) => {
+        this.isForYouMode = false;
+        this.requestedForYouMode = keepForYouTab;
         this.isAiResultMode = false;
         this.sortBy = 'Recommended';
         this.setPartsFromListings(listings);
         this.isLoading = false;
       },
       error: (error) => {
-        this.errorMessage = error.message || 'Could not load parts from API';
+        this.errorMessage = error.message || 'Could not load parts.';
         this.allParts = [];
         this.filteredParts = [];
         this.totalParts = 0;
         this.isLoading = false;
+      },
+    });
+  }
+
+  private loadForYouParts() {
+    const userId = Number(this.authService.currentUser()?.id);
+    if (!Number.isFinite(userId) || userId <= 0) {
+      this.loadPartsFromApi('Sign in and complete onboarding to unlock AI part recommendations.', true);
+      return;
+    }
+
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.listingsService.getForYou(userId).subscribe({
+      next: (listings: ListingDto[]) => {
+        const partListings = listings.filter((listing) => listing.type?.toLowerCase() === 'part');
+        if (!partListings.length) {
+          this.loadPartsFromApi('The AI did not return part recommendations for your choices yet, so we are showing approved parts.', true);
+          return;
+        }
+
+        this.isForYouMode = true;
+        this.requestedForYouMode = true;
+        this.isAiResultMode = true;
+        this.sortBy = 'Recommended for you';
+        this.setPartsFromListings(partListings);
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.loadPartsFromApi(error.message || 'Could not load AI part recommendations, so we are showing approved parts.', true);
       },
     });
   }

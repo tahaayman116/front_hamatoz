@@ -1,0 +1,138 @@
+<main class="details-page">
+  <section class="details-shell">
+    <a routerLink="/parts" class="back-link">
+      <span class="material-symbols-outlined">arrow_back</span>
+      Back to parts
+    </a>
+
+    <div *ngIf="isLoading" class="state-panel">
+      <span class="material-symbols-outlined">progress_activity</span>
+      Loading part details...
+    </div>
+
+    <div *ngIf="!isLoading && errorMessage" class="state-panel error">
+      <span class="material-symbols-outlined">error</span>
+      <div>
+        <h1>Part not available</h1>
+        <p>{{ errorMessage }}</p>
+      </div>
+    </div>
+
+    <ng-container *ngIf="!isLoading && listing">
+      <header class="details-header">
+        <div>
+          <p class="eyebrow">Listing #{{ listing.id }} &middot; {{ listing.status || 'Approved' }}</p>
+          <h1>{{ title }}</h1>
+          <div class="header-meta">
+            <span><i class="material-symbols-outlined">domain</i>Agency user #{{ listing.ownerUserId }}</span>
+            <span><i class="material-symbols-outlined">location_on</i>{{ location }}</span>
+            <span *ngIf="listing.createdAtUtc"><i class="material-symbols-outlined">event</i>{{ listing.createdAtUtc | date:'mediumDate' }}</span>
+          </div>
+        </div>
+        <aside class="price-panel">
+          <span>Listed price</span>
+          <strong>EGP {{ listing.price | number:'1.0-0' }}</strong>
+        </aside>
+      </header>
+
+      <div class="details-grid">
+        <section class="gallery-panel">
+          <div class="main-image">
+            <img *ngIf="selectedImage" [src]="selectedImage" [alt]="title" (error)="selectedImage = ''" />
+            <div *ngIf="!selectedImage" class="image-fallback">
+              <span class="material-symbols-outlined">settings</span>
+            </div>
+          </div>
+
+          <div *ngIf="images.length > 1" class="thumb-strip">
+            <button
+              *ngFor="let image of images"
+              type="button"
+              [class.active]="image === selectedImage"
+              (click)="selectImage(image)"
+            >
+              <img [src]="image" [alt]="title + ' image'" />
+            </button>
+          </div>
+        </section>
+
+        <aside class="summary-panel">
+          <h2>Part summary</h2>
+          <dl>
+            <div>
+              <dt>Brand</dt>
+              <dd>{{ listing.brand || 'N/A' }}</dd>
+            </div>
+            <div>
+              <dt>Part name</dt>
+              <dd>{{ listing.modelOrPartName || 'N/A' }}</dd>
+            </div>
+            <div>
+              <dt>Condition</dt>
+              <dd>{{ listing.condition || 'N/A' }}</dd>
+            </div>
+            <div>
+              <dt>City</dt>
+              <dd>{{ listing.city || 'N/A' }}</dd>
+            </div>
+            <div>
+              <dt>Area</dt>
+              <dd>{{ listing.area || 'N/A' }}</dd>
+            </div>
+            <div>
+              <dt>Status</dt>
+              <dd>{{ listing.status || 'Approved' }}</dd>
+            </div>
+          </dl>
+
+          <div class="request-panel">
+            <div>
+              <p class="eyebrow">Purchase request</p>
+              <h3>{{ canOpenChat ? 'Agency chat is open' : 'Request a chat with the agency' }}</h3>
+            </div>
+            <p *ngIf="canSendRequest" class="request-copy">Admin approval is required before the agency chat opens.</p>
+            <p *ngIf="listingRequest && !canOpenChat && !canSendRequest" class="request-copy">
+              {{ requestStatus === 'pending' ? 'Your request is waiting for admin approval.' : 'Request approved. Chat is being prepared.' }}
+            </p>
+            <button *ngIf="canSendRequest" class="request-action" type="button" (click)="submitPurchaseRequest()" [disabled]="isRequesting || isLoadingRequestState">
+              <span class="material-symbols-outlined">forum</span>
+              {{ isRequesting ? 'Sending...' : 'Request chat' }}
+            </button>
+            <button *ngIf="canOpenChat" class="request-action open-chat" type="button" (click)="openChat()">
+              <span class="material-symbols-outlined">chat</span>
+              Open chat
+            </button>
+            <p *ngIf="requestFeedback" class="request-state success">{{ requestFeedback }}</p>
+            <p *ngIf="requestError" class="request-state error">{{ requestError }}</p>
+          </div>
+        </aside>
+      </div>
+
+      <section class="description-panel">
+        <div>
+          <p class="eyebrow">Description</p>
+          <h2>Agency notes</h2>
+        </div>
+        <p>{{ listing.description || 'No description was submitted for this part.' }}</p>
+      </section>
+
+      <section *ngIf="similarParts.length > 0" class="similar-panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Recommended</p>
+            <h2>Similar parts</h2>
+          </div>
+          <a routerLink="/parts">Browse all</a>
+        </div>
+
+        <div class="similar-grid">
+          <a *ngFor="let part of similarParts" [routerLink]="['/parts', part.id]" class="similar-card">
+            <span>{{ part.brand || 'Part' }}</span>
+            <strong>{{ part.title || part.modelOrPartName }}</strong>
+            <em>EGP {{ part.price | number:'1.0-0' }}</em>
+          </a>
+        </div>
+      </section>
+    </ng-container>
+  </section>
+</main>

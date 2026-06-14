@@ -8,6 +8,18 @@
   overflow: hidden;
 }
 
+.listing-media,
+.listing-title a,
+.details-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.listing-title a:hover,
+.details-link:hover {
+  color: oklch(78% 0.12 255);
+}
+
 .part-request-box summary {
   display: flex;
   align-items: center;

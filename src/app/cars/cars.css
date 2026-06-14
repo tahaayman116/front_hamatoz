@@ -665,10 +665,10 @@ button:disabled {
 
 .card-actions .favorite-action:hover {
   transform: translateY(-2px) scale(1.04);
-  border-color: oklch(68% 0.16 25 / 0.48);
-  background: oklch(26% 0.045 25);
-  color: oklch(72% 0.18 25);
-  box-shadow: 0 12px 24px oklch(20% 0.08 25 / 0.22);
+  border-color: oklch(68% 0.16 255 / 0.48);
+  background: oklch(26% 0.045 255);
+  color: oklch(74% 0.16 255);
+  box-shadow: 0 12px 24px oklch(20% 0.08 255 / 0.24);
 }
 
 .card-actions .favorite-action:active {
@@ -676,9 +676,9 @@ button:disabled {
 }
 
 .card-actions .favorite-action.saved {
-  border-color: oklch(68% 0.18 25 / 0.55);
-  background: oklch(28% 0.06 25);
-  color: oklch(72% 0.18 25);
+  border-color: oklch(68% 0.18 255 / 0.55);
+  background: oklch(28% 0.06 255);
+  color: oklch(74% 0.16 255);
 }
 
 .material-symbols-outlined {
@@ -686,7 +686,7 @@ button:disabled {
 }
 
 .material-symbols-outlined.filled {
-  color: oklch(72% 0.18 25);
+  color: oklch(74% 0.16 255);
   font-variation-settings: "FILL" 1, "wght" 430, "GRAD" 0, "opsz" 24;
 }
 

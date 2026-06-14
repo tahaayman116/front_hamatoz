@@ -143,15 +143,28 @@
         </div>
 
         <div class="favorite-section">
-          <h3>Cars</h3>
+          <div class="favorite-section-head">
+            <div>
+              <h3>Saved cars</h3>
+              <p>{{ userFavorites?.cars?.length || 0 }} cars ready to revisit</p>
+            </div>
+            <a routerLink="/cars">Browse cars</a>
+          </div>
           <p *ngIf="!userFavorites || userFavorites.cars.length === 0" class="empty-copy">No saved cars yet.</p>
-          <div class="item-list">
-            <article *ngFor="let car of userFavorites?.cars" class="list-item">
-              <span class="material-symbols-outlined">directions_car</span>
-              <div>
-                <strong>{{ car.name }}</strong>
-                <p>{{ car.price | number }} EGP</p>
-              </div>
+          <div class="favorite-grid">
+            <article *ngFor="let car of userFavorites?.cars" class="favorite-card">
+              <a class="favorite-main" [routerLink]="['/cars', car.id]">
+                <div class="favorite-thumb">
+                  <img *ngIf="car.image" [src]="car.image" [alt]="car.name" loading="lazy" (error)="car.image = ''" />
+                  <span *ngIf="!car.image" class="material-symbols-outlined">directions_car</span>
+                </div>
+                <div class="favorite-copy">
+                  <span class="favorite-type">Car listing</span>
+                  <strong>{{ car.name }}</strong>
+                  <p>EGP {{ car.price | number:'1.0-0' }}</p>
+                  <small *ngIf="car.addedAt">Saved {{ car.addedAt | date:'mediumDate' }}</small>
+                </div>
+              </a>
               <button (click)="removeFavoriteCar(+car.id)" class="icon-button" aria-label="Remove car">
                 <span class="material-symbols-outlined">delete</span>
               </button>
@@ -160,15 +173,28 @@
         </div>
 
         <div class="favorite-section">
-          <h3>Parts</h3>
+          <div class="favorite-section-head">
+            <div>
+              <h3>Saved parts</h3>
+              <p>{{ userFavorites?.parts?.length || 0 }} parts ready to revisit</p>
+            </div>
+            <a routerLink="/parts">Browse parts</a>
+          </div>
           <p *ngIf="!userFavorites || userFavorites.parts.length === 0" class="empty-copy">No saved parts yet.</p>
-          <div class="item-list">
-            <article *ngFor="let part of userFavorites?.parts" class="list-item">
-              <span class="material-symbols-outlined">settings</span>
-              <div>
-                <strong>{{ part.name }}</strong>
-                <p>{{ part.price | number }} EGP</p>
-              </div>
+          <div class="favorite-grid">
+            <article *ngFor="let part of userFavorites?.parts" class="favorite-card">
+              <a class="favorite-main" [routerLink]="['/parts', part.id]">
+                <div class="favorite-thumb">
+                  <img *ngIf="part.image" [src]="part.image" [alt]="part.name" loading="lazy" (error)="part.image = ''" />
+                  <span *ngIf="!part.image" class="material-symbols-outlined">settings</span>
+                </div>
+                <div class="favorite-copy">
+                  <span class="favorite-type">Spare part</span>
+                  <strong>{{ part.name }}</strong>
+                  <p>EGP {{ part.price | number:'1.0-0' }}</p>
+                  <small *ngIf="part.addedAt">Saved {{ part.addedAt | date:'mediumDate' }}</small>
+                </div>
+              </a>
               <button (click)="removeFavoritePart(+part.id)" class="icon-button" aria-label="Remove part">
                 <span class="material-symbols-outlined">delete</span>
               </button>

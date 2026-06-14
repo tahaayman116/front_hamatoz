@@ -1,0 +1,5 @@
+@import "../cars-details/cars-details.css";
+
+.image-fallback .material-symbols-outlined {
+  font-size: 78px;
+}

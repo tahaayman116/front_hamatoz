@@ -179,19 +179,21 @@
 
         <div *ngIf="filteredParts.length > 0" class="listing-grid">
           <article *ngFor="let part of filteredParts" class="listing-card">
-            <div class="listing-media">
+            <a class="listing-media" [routerLink]="['/parts', part.id]" [attr.aria-label]="'View ' + part.name + ' details'">
               <img *ngIf="part.imageUrl" [src]="part.imageUrl" [alt]="part.name" loading="lazy" (error)="part.imageUrl = ''" />
               <div *ngIf="!part.imageUrl" class="media-fallback">
                 <span class="material-symbols-outlined">settings</span>
               </div>
               <span class="status-pill">{{ part.badge1 || 'Approved' }}</span>
               <span *ngIf="part.matchScore" class="score-pill">{{ part.matchScore * 100 | number:'1.0-0' }}% match</span>
-            </div>
+            </a>
 
             <div class="listing-body">
               <div>
                 <p class="brand-line">{{ part.brand }} · {{ part.condition || 'listed' }}</p>
-                <h3 class="listing-title">{{ part.name }}</h3>
+                <h3 class="listing-title">
+                  <a [routerLink]="['/parts', part.id]">{{ part.name }}</a>
+                </h3>
               </div>
               <p class="price">EGP {{ part.price | number:'1.0-0' }}</p>
               <div class="meta-row">
@@ -204,7 +206,7 @@
             </div>
 
             <footer class="card-actions">
-              <span>Listing #{{ part.id }}</span>
+              <a class="details-link" [routerLink]="['/parts', part.id]">View details</a>
               <button
                 class="favorite-action"
                 [class.saved]="part.isFavorited"

@@ -1,7 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FavoritesService } from '../core/services/favorites.service';
 import { AuthService } from '../core/services/auth.service';
 import { ChatService, Conversation } from '../core/services/chat.service';
@@ -27,7 +27,7 @@ interface Part {
 @Component({
   selector: 'app-parts',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './parts.html',
   styleUrls: ['./parts.css'],
 })

@@ -4,8 +4,9 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ListingDto } from '../core/models/api.dtos';
 import { AuthService } from '../core/services/auth.service';
+import { ChatService, Conversation } from '../core/services/chat.service';
 import { ListingsService } from '../core/services/listings.service';
-import { RequestsService } from '../core/services/requests.service';
+import { CustomerRequest, RequestsService } from '../core/services/requests.service';
 
 @Component({
   selector: 'app-cars-details',
@@ -23,6 +24,9 @@ export class CarsDetails implements OnInit, OnDestroy {
   requestFeedback = '';
   requestError = '';
   isRequesting = false;
+  listingRequest: CustomerRequest | null = null;
+  listingConversation: Conversation | null = null;
+  isLoadingRequestState = false;
 
   private routeSubscription?: Subscription;
 
@@ -30,6 +34,7 @@ export class CarsDetails implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
+    private chatService: ChatService,
     private listingsService: ListingsService,
     private requestsService: RequestsService
   ) {}
@@ -82,6 +87,7 @@ export class CarsDetails implements OnInit, OnDestroy {
         next: () => {
           this.requestFeedback = 'Request sent to admin. Chat will open after approval.';
           this.isRequesting = false;
+          this.loadRequestState(this.listing!.id);
         },
         error: (err) => {
           this.requestError = this.readableApiError(err, 'Could not send request.');
@@ -98,6 +104,25 @@ export class CarsDetails implements OnInit, OnDestroy {
   get title(): string {
     if (!this.listing) return 'Car details';
     return this.listing.title || `${this.listing.brand || 'Car'} ${this.listing.modelOrPartName || ''}`.trim();
+  }
+
+  get requestStatus(): string {
+    return this.listingRequest?.status?.toLowerCase() || '';
+  }
+
+  get canOpenChat(): boolean {
+    return Boolean(this.listingConversation);
+  }
+
+  get canSendRequest(): boolean {
+    return !this.listingRequest || ['rejected', 'denied'].includes(this.requestStatus);
+  }
+
+  openChat() {
+    if (!this.listingConversation) return;
+    this.router.navigate(['/messages'], {
+      queryParams: { conversationId: this.listingConversation.id },
+    });
   }
 
   private loadListing(id: string) {
@@ -120,6 +145,7 @@ export class CarsDetails implements OnInit, OnDestroy {
         this.images = this.parseImages(listing.imagesUrlsText);
         this.selectedImage = this.images[0] || '';
         this.loadSimilar(listing.id);
+        this.loadRequestState(listing.id);
         this.isLoading = false;
       },
       error: (error) => {
@@ -144,6 +170,44 @@ export class CarsDetails implements OnInit, OnDestroy {
       },
       error: () => {
         this.similarCars = [];
+      },
+    });
+  }
+
+  private loadRequestState(listingId: number) {
+    const user = this.authService.getCurrentUser();
+    if (!user || !['customer', 'user'].includes(user.role?.toLowerCase())) return;
+
+    this.isLoadingRequestState = true;
+    this.requestsService.getMyRequests().subscribe({
+      next: (requests) => {
+        this.listingRequest =
+          [...requests]
+            .filter((request) => Number(request.listingId) === listingId)
+            .sort((a, b) => String(b.createdAtUtc || '').localeCompare(String(a.createdAtUtc || '')))[0] || null;
+        this.loadConversationForRequest();
+      },
+      error: () => {
+        this.isLoadingRequestState = false;
+      },
+    });
+  }
+
+  private loadConversationForRequest() {
+    if (!this.listingRequest) {
+      this.listingConversation = null;
+      this.isLoadingRequestState = false;
+      return;
+    }
+
+    this.chatService.getConversations().subscribe({
+      next: (conversations) => {
+        this.listingConversation =
+          conversations.find((conversation) => String(conversation.requestId) === String(this.listingRequest?.id)) || null;
+        this.isLoadingRequestState = false;
+      },
+      error: () => {
+        this.isLoadingRequestState = false;
       },
     });
   }

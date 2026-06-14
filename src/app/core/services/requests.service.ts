@@ -114,6 +114,11 @@ export class RequestsService {
     if (!response) return [];
     if (Array.isArray(response)) return response;
     if (Array.isArray(response.data)) return response.data;
+    if (Array.isArray(response.items)) return response.items;
+    if (Array.isArray(response.result)) return response.result;
+    if (Array.isArray(response.$values)) return response.$values;
+    if (Array.isArray(response.data?.$values)) return response.data.$values;
+    if (Array.isArray(response.data?.items)) return response.data.items;
     if (Array.isArray(response.requests)) return response.requests;
     return [response.data || response];
   }

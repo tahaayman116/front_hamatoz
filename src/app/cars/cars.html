@@ -196,7 +196,13 @@
 
             <footer class="card-actions">
               <a [routerLink]="['/cars', car.id]">View details</a>
-              <button (click)="toggleFavorite(car.id)" type="button" [attr.aria-label]="car.isFavorited ? 'Remove from favorites' : 'Add to favorites'">
+              <button
+                class="favorite-action"
+                [class.saved]="car.isFavorited"
+                (click)="toggleFavorite(car.id)"
+                type="button"
+                [attr.aria-label]="car.isFavorited ? 'Remove from favorites' : 'Add to favorites'"
+              >
                 <span class="material-symbols-outlined" [class.filled]="car.isFavorited">{{ car.isFavorited ? 'favorite' : 'favorite_border' }}</span>
               </button>
             </footer>

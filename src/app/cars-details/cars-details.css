@@ -250,6 +250,10 @@
   opacity: 0.55;
 }
 
+.request-action.open-chat {
+  background: oklch(42% 0.12 150);
+}
+
 .request-state {
   margin: 0;
   border-radius: 8px;

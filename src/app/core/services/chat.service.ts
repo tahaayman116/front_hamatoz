@@ -10,6 +10,8 @@ export interface Conversation {
   agencyUserId?: number;
   participantId?: string;
   participantName?: string;
+  customerName?: string;
+  agencyName?: string;
   lastMessage?: string;
   lastMessageTime?: Date;
   unreadCount?: number;
@@ -169,7 +171,9 @@ export class ChatService {
       customerUserId: Number(conversation.customerUserId) || undefined,
       agencyUserId: Number(conversation.agencyUserId) || undefined,
       participantId: conversation.participantId ? String(conversation.participantId) : undefined,
-      participantName: conversation.participantName,
+      participantName: conversation.participantName || conversation.customerName || conversation.agencyName || conversation.otherUserName,
+      customerName: conversation.customerName || conversation.customerFullName,
+      agencyName: conversation.agencyName || conversation.agencyFullName,
       createdAt,
       updatedAt,
       lastMessageTime: conversation.lastMessageTime ? this.toDate(conversation.lastMessageTime) : undefined,

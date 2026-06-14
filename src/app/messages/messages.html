@@ -35,8 +35,8 @@
       >
         <span class="material-symbols-outlined">chat</span>
         <div>
-          <strong>Request #{{ conversation.requestId || conversation.id }}</strong>
-          <p>{{ participantLabel(conversation) }}</p>
+          <strong>{{ conversationTitle(conversation) }}</strong>
+          <p>Request #{{ conversation.requestId || conversation.id }}</p>
         </div>
         <small>{{ conversation.createdAt | date:'mediumDate' }}</small>
       </button>
@@ -47,9 +47,9 @@
         <header class="chat-head">
           <div>
             <p class="eyebrow">Conversation</p>
-            <h2>Request #{{ selectedConversation.requestId || selectedConversation.id }}</h2>
+            <h2>{{ conversationTitle(selectedConversation) }}</h2>
           </div>
-          <span>{{ participantLabel(selectedConversation) }}</span>
+          <span>Request #{{ selectedConversation.requestId || selectedConversation.id }}</span>
         </header>
 
         <div class="thread">

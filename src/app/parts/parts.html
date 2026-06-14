@@ -205,7 +205,13 @@
 
             <footer class="card-actions">
               <span>Listing #{{ part.id }}</span>
-              <button (click)="toggleFavorite(part.id)" type="button" [attr.aria-label]="part.isFavorited ? 'Remove from favorites' : 'Add to favorites'">
+              <button
+                class="favorite-action"
+                [class.saved]="part.isFavorited"
+                (click)="toggleFavorite(part.id)"
+                type="button"
+                [attr.aria-label]="part.isFavorited ? 'Remove from favorites' : 'Add to favorites'"
+              >
                 <span class="material-symbols-outlined" [class.filled]="part.isFavorited">{{ part.isFavorited ? 'favorite' : 'favorite_border' }}</span>
               </button>
             </footer>
@@ -213,13 +219,19 @@
             <details class="part-request-box">
               <summary>
                 <span class="material-symbols-outlined">forum</span>
-                Request chat
+                {{ getPartConversation(part.id) ? 'Open chat' : (canRequestPartChat(part.id) ? 'Request chat' : 'Request pending') }}
               </summary>
               <div>
-                <p>Admin approval is required before the agency chat opens.</p>
-                <button type="button" (click)="submitPartRequest(part)" [disabled]="requestLoadingId === part.id">
+                <p *ngIf="canRequestPartChat(part.id)">Admin approval is required before the agency chat opens.</p>
+                <p *ngIf="getPartRequest(part.id) && !getPartConversation(part.id) && !canRequestPartChat(part.id)">Your request is waiting for admin approval.</p>
+                <p *ngIf="getPartConversation(part.id)">The agency chat is open for this part.</p>
+                <button *ngIf="canRequestPartChat(part.id)" type="button" (click)="submitPartRequest(part)" [disabled]="requestLoadingId === part.id">
                   <span class="material-symbols-outlined">forum</span>
                   {{ requestLoadingId === part.id ? 'Sending...' : 'Request chat' }}
+                </button>
+                <button *ngIf="getPartConversation(part.id)" class="open-chat" type="button" (click)="openPartChat(part.id)">
+                  <span class="material-symbols-outlined">chat</span>
+                  Open chat
                 </button>
               </div>
             </details>

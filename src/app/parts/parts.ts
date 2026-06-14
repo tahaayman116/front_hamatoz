@@ -4,8 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FavoritesService } from '../core/services/favorites.service';
 import { AuthService } from '../core/services/auth.service';
+import { ChatService, Conversation } from '../core/services/chat.service';
 import { ListingsService } from '../core/services/listings.service';
-import { RequestsService } from '../core/services/requests.service';
+import { CustomerRequest, RequestsService } from '../core/services/requests.service';
 import { ListingDto } from '../core/models/api.dtos';
 
 interface Part {
@@ -56,6 +57,8 @@ export class Parts {
   requestLoadingId: number | null = null;
   requestFeedback = '';
   requestError = '';
+  requestsByListing: Record<number, CustomerRequest> = {};
+  conversationsByRequest: Record<number, Conversation> = {};
 
   get activeFilterCount(): number {
     const brandCount = Object.values(this.selectedBrands).filter(Boolean).length;
@@ -69,6 +72,7 @@ export class Parts {
     private authService: AuthService,
     private listingsService: ListingsService,
     private requestsService: RequestsService,
+    private chatService: ChatService,
     private router: Router
   ) {
     const user = this.authService.getCurrentUser();
@@ -260,12 +264,33 @@ export class Parts {
       next: () => {
         this.requestFeedback = `Request for listing #${part.id} was sent to admin. Chat will open after approval.`;
         this.requestLoadingId = null;
+        this.loadRequestState();
       },
       error: (err) => {
         this.requestError = this.readableApiError(err, 'Could not send request.');
         this.requestLoadingId = null;
       },
     });
+  }
+
+  getPartRequest(partId: number): CustomerRequest | null {
+    return this.requestsByListing[partId] || null;
+  }
+
+  getPartConversation(partId: number): Conversation | null {
+    const request = this.getPartRequest(partId);
+    return request ? this.conversationsByRequest[request.id] || null : null;
+  }
+
+  canRequestPartChat(partId: number): boolean {
+    const status = this.getPartRequest(partId)?.status?.toLowerCase() || '';
+    return !this.getPartRequest(partId) || ['rejected', 'denied'].includes(status);
+  }
+
+  openPartChat(partId: number) {
+    const conversation = this.getPartConversation(partId);
+    if (!conversation) return;
+    this.router.navigate(['/messages'], { queryParams: { conversationId: conversation.id } });
   }
 
   private loadUserFavorites() {
@@ -290,6 +315,7 @@ export class Parts {
         this.isAiResultMode = false;
         this.sortBy = 'Recommended';
         this.setPartsFromListings(listings);
+        this.loadRequestState();
         this.isLoading = false;
       },
       error: (error) => {
@@ -325,6 +351,7 @@ export class Parts {
         this.isAiResultMode = true;
         this.sortBy = 'Recommended for you';
         this.setPartsFromListings(partListings);
+        this.loadRequestState();
         this.isLoading = false;
       },
       error: (error) => {
@@ -346,6 +373,39 @@ export class Parts {
     this.allBrands.forEach((brand) => (this.selectedBrands[brand] = false));
     this.loadUserFavorites();
     this.applyFilters();
+  }
+
+  private loadRequestState() {
+    const user = this.authService.getCurrentUser();
+    if (!user || !['customer', 'user'].includes(user.role?.toLowerCase())) return;
+
+    this.requestsService.getMyRequests().subscribe({
+      next: (requests) => {
+        this.requestsByListing = requests.reduce<Record<number, CustomerRequest>>((acc, request) => {
+          const listingId = Number(request.listingId);
+          if (!listingId) return acc;
+          const existing = acc[listingId];
+          if (!existing || String(request.createdAtUtc || '').localeCompare(String(existing.createdAtUtc || '')) > 0) {
+            acc[listingId] = request;
+          }
+          return acc;
+        }, {});
+        this.loadConversationsForRequests();
+      },
+      error: () => {},
+    });
+  }
+
+  private loadConversationsForRequests() {
+    this.chatService.getConversations().subscribe({
+      next: (conversations) => {
+        this.conversationsByRequest = conversations.reduce<Record<number, Conversation>>((acc, conversation) => {
+          if (conversation.requestId) acc[conversation.requestId] = conversation;
+          return acc;
+        }, {});
+      },
+      error: () => {},
+    });
   }
 
   private mapListingToPart(listing: ListingDto): Part {

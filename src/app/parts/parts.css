@@ -59,6 +59,10 @@
   opacity: 0.55;
 }
 
+.part-request-box button.open-chat {
+  background: oklch(42% 0.12 150);
+}
+
 .state-banner.success {
   border-color: oklch(56% 0.12 150 / 0.45);
   background: oklch(28% 0.06 150 / 0.22);

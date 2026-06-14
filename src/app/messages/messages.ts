@@ -1,7 +1,8 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../core/services/auth.service';
 import { ChatService, Conversation, Message } from '../core/services/chat.service';
 import { NotificationsService } from '../core/services/notifications.service';
@@ -14,7 +15,7 @@ import { User } from '../core/models/user.model';
   templateUrl: './messages.html',
   styleUrl: './messages.css',
 })
-export class Messages implements OnInit {
+export class Messages implements OnInit, OnDestroy {
   currentUser: User | null = null;
   conversations: Conversation[] = [];
   selectedConversation: Conversation | null = null;
@@ -24,11 +25,14 @@ export class Messages implements OnInit {
   isLoadingMessages = false;
   isSending = false;
   errorMessage = '';
+  private messageRefreshTimer?: ReturnType<typeof setInterval>;
+  private routeSubscription?: Subscription;
 
   constructor(
     private authService: AuthService,
     private chatService: ChatService,
     private notificationsService: NotificationsService,
+    private route: ActivatedRoute,
     private router: Router
   ) {}
 
@@ -39,11 +43,16 @@ export class Messages implements OnInit {
       return;
     }
 
-    this.loadConversations();
+    this.routeSubscription = this.route.queryParamMap.subscribe(() => this.loadConversations());
     this.notificationsService.getNotifications().subscribe({
       next: () => this.notificationsService.markAllAsRead().subscribe({ error: () => {} }),
       error: () => {},
     });
+  }
+
+  ngOnDestroy() {
+    this.stopMessageAutoRefresh();
+    this.routeSubscription?.unsubscribe();
   }
 
   get isAgency(): boolean {
@@ -58,8 +67,15 @@ export class Messages implements OnInit {
       next: (conversations) => {
         this.conversations = conversations;
         this.isLoadingConversations = false;
-        if (conversations.length) {
-          this.selectConversation(conversations[0]);
+        const requestedConversationId = this.route.snapshot.queryParamMap.get('conversationId');
+        const requestedRequestId = this.route.snapshot.queryParamMap.get('requestId');
+        const selected =
+          conversations.find((conversation) => requestedConversationId && conversation.id === requestedConversationId) ||
+          conversations.find((conversation) => requestedRequestId && String(conversation.requestId) === requestedRequestId) ||
+          conversations.find((conversation) => this.selectedConversation?.id === conversation.id) ||
+          conversations[0];
+        if (selected) {
+          this.selectConversation(selected);
         }
       },
       error: (err) => {
@@ -80,6 +96,7 @@ export class Messages implements OnInit {
       next: (messages) => {
         this.messages = messages;
         this.isLoadingMessages = false;
+        this.startMessageAutoRefresh();
       },
       error: (err) => {
         this.errorMessage = this.readableApiError(err, 'Could not load this conversation.');
@@ -100,6 +117,7 @@ export class Messages implements OnInit {
         this.messages = [...this.messages, message];
         this.replyText = '';
         this.isSending = false;
+        this.startMessageAutoRefresh();
       },
       error: (err) => {
         this.errorMessage = this.readableApiError(err, 'Could not send message.');
@@ -113,13 +131,42 @@ export class Messages implements OnInit {
   }
 
   participantLabel(conversation: Conversation): string {
+    if (this.isAgency && conversation.customerName) return conversation.customerName;
+    if (!this.isAgency && conversation.agencyName) return conversation.agencyName;
+    if (conversation.participantName) return conversation.participantName;
     if (this.isAgency) return `Customer #${conversation.customerUserId || 'N/A'}`;
     return `Agency #${conversation.agencyUserId || 'N/A'}`;
+  }
+
+  conversationTitle(conversation: Conversation): string {
+    return this.participantLabel(conversation);
   }
 
   private readableApiError(err: any, fallback: string): string {
     if (err?.status === 401) return 'Please sign in again.';
     if (err?.details?.errors) return Object.values(err.details.errors).flat().join(' ');
     return err?.details?.message || err?.message || fallback;
+  }
+
+  private startMessageAutoRefresh() {
+    if (this.messageRefreshTimer || !this.selectedConversation) return;
+    this.messageRefreshTimer = setInterval(() => this.refreshSelectedMessages(), 3000);
+  }
+
+  private stopMessageAutoRefresh() {
+    if (!this.messageRefreshTimer) return;
+    clearInterval(this.messageRefreshTimer);
+    this.messageRefreshTimer = undefined;
+  }
+
+  private refreshSelectedMessages() {
+    if (!this.selectedConversation || this.isSending) return;
+
+    this.chatService.getMessages(this.selectedConversation.id).subscribe({
+      next: (messages) => {
+        this.messages = messages;
+      },
+      error: () => {},
+    });
   }
 }

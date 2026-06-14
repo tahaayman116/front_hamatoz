@@ -13,6 +13,7 @@ export interface User {
   createdAt: Date;
   updatedAt: Date;
   lastLogin?: Date;
+  isOnboarded?: boolean;
 }
 
 export interface Agency extends User {

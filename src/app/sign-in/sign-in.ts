@@ -68,6 +68,8 @@ export class SignIn {
               alert('Complete your agency profile. Listings unlock after admin approval.');
             }
             this.router.navigate(['/profile']);
+          } else if (user.isOnboarded === true) {
+            this.router.navigate(['/cars'], { queryParams: { mode: 'for-you' } });
           } else {
             this.router.navigate(['/preferences']);
           }

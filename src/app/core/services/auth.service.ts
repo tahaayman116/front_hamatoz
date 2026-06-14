@@ -69,14 +69,14 @@ export class AuthService {
 
             this.apiService.get<CurrentUserDto>(API_CONFIG.endpoints.auth.me).subscribe({
               next: (currentUser) => {
-                const user = this.mapCurrentUser(currentUser, normalizedEmail);
+                const user = this.mapCurrentUser(currentUser, normalizedEmail, response);
                 this.currentUser.set(user);
                 this.storageService.setItem('current_user', user);
                 observer.next({ token, user, raw: response });
                 observer.complete();
               },
               error: () => {
-                const user = this.mapCurrentUser(response.user || response, normalizedEmail);
+                const user = this.mapCurrentUser(response.user || response, normalizedEmail, response);
                 this.currentUser.set(user);
                 this.storageService.setItem('current_user', user);
                 observer.next({ token, user, raw: response });
@@ -198,9 +198,10 @@ export class AuthService {
     );
   }
 
-  private mapCurrentUser(source: any, email: string): User {
+  private mapCurrentUser(source: any, email: string, loginResponse?: any): User {
     const id = source?.id ?? source?.userId ?? '';
     const role = source?.role ?? 'Customer';
+    const onboardingValue = this.extractOnboardingStatus(source, loginResponse);
 
     return {
       id: String(id),
@@ -211,6 +212,24 @@ export class AuthService {
       status: source?.isVerified === false && String(role).toLowerCase() === 'agency' ? 'pending' : 'active',
       createdAt: source?.createdAt ? new Date(source.createdAt) : new Date(),
       updatedAt: source?.updatedAt ? new Date(source.updatedAt) : new Date(),
+      ...(onboardingValue !== null ? { isOnboarded: onboardingValue } : {}),
     };
+  }
+
+  private extractOnboardingStatus(...sources: any[]): boolean | null {
+    for (const source of sources) {
+      const value =
+        source?.isOnboarded ??
+        source?.isOnboarding ??
+        source?.isonboarded ??
+        source?.isOnbourding ??
+        source?.data?.isOnboarded ??
+        source?.user?.isOnboarded;
+
+      if (typeof value === 'boolean') return value;
+      if (typeof value === 'string') return value.toLowerCase() === 'true';
+    }
+
+    return null;
   }
 }

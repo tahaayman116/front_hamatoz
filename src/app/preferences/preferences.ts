@@ -156,6 +156,10 @@ export class Preferences {
 
     this.userService.submitOnboarding(payload).subscribe({
       next: () => {
+        const currentUser = this.authService.getCurrentUser();
+        if (currentUser) {
+          this.authService.updateCurrentUser({ ...currentUser, isOnboarded: true });
+        }
         this.isLoading = false;
         this.router.navigate(['/cars'], { queryParams: { mode: 'for-you' } });
       },

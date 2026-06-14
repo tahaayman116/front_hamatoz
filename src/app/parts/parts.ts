@@ -253,7 +253,10 @@ export class Parts {
     this.requestError = '';
     this.requestFeedback = '';
 
-    this.requestsService.createRequest({ listingId: part.id }).subscribe({
+    this.requestsService.createRequest({
+      listingId: part.id,
+      message: 'Customer requested to open a chat for this listing.',
+    }).subscribe({
       next: () => {
         this.requestFeedback = `Request for listing #${part.id} was sent to admin. Chat will open after approval.`;
         this.requestLoadingId = null;

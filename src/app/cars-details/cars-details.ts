@@ -76,6 +76,7 @@ export class CarsDetails implements OnInit, OnDestroy {
     this.requestsService
       .createRequest({
         listingId: this.listing.id,
+        message: 'Customer requested to open a chat for this listing.',
       })
       .subscribe({
         next: () => {

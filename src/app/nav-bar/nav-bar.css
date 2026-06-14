@@ -138,59 +138,6 @@
   background: oklch(24% 0.026 252);
 }
 
-.icon-action::after {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  z-index: -1;
-  border-radius: inherit;
-  border: 1px solid oklch(76% 0.15 255 / 0.7);
-  opacity: 0;
-  transform: scale(0.84);
-  pointer-events: none;
-}
-
-.icon-action.notify-pulse {
-  color: oklch(98% 0.006 252);
-  border-color: oklch(76% 0.15 255 / 0.62);
-  background: oklch(28% 0.055 255);
-  animation: messageNudge 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.icon-action.notify-pulse::after {
-  animation: messageRing 1350ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.icon-action b,
-.mobile-menu b {
-  display: grid;
-  min-width: 18px;
-  height: 18px;
-  place-items: center;
-  border-radius: 999px;
-  background: oklch(62% 0.18 25);
-  color: oklch(98% 0.006 252);
-  font-size: 11px;
-  font-weight: 950;
-  line-height: 1;
-}
-
-.icon-action b {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-}
-
-.icon-action.notify-pulse b,
-.mobile-menu a.notify-pulse b {
-  animation: badgePop 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.mobile-menu a.notify-pulse {
-  color: oklch(98% 0.006 252);
-  background: oklch(26% 0.04 255);
-}
-
 .btn-ghost .material-symbols-outlined {
   font-size: 18px;
 }
@@ -267,48 +214,6 @@
   height: 1px;
   margin: 6px 0;
   background: oklch(98% 0.006 252 / 0.1);
-}
-
-@keyframes messageNudge {
-  0% {
-    transform: translateY(0) scale(1);
-  }
-  24% {
-    transform: translateY(-2px) scale(1.08);
-  }
-  54% {
-    transform: translateY(1px) scale(0.98);
-  }
-  100% {
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes messageRing {
-  0% {
-    opacity: 0.75;
-    transform: scale(0.84);
-  }
-  72% {
-    opacity: 0;
-    transform: scale(1.45);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.45);
-  }
-}
-
-@keyframes badgePop {
-  0% {
-    transform: scale(0.78);
-  }
-  38% {
-    transform: scale(1.24);
-  }
-  100% {
-    transform: scale(1);
-  }
 }
 
 @media (max-width: 860px) {

@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../core/services/auth.service';
 import { ChatService, Conversation, Message } from '../core/services/chat.service';
-import { ChatReadStateService } from '../core/services/chat-read-state.service';
 import { NotificationsService } from '../core/services/notifications.service';
 import { User } from '../core/models/user.model';
 
@@ -29,7 +28,6 @@ export class Messages implements OnInit {
   constructor(
     private authService: AuthService,
     private chatService: ChatService,
-    private chatReadState: ChatReadStateService,
     private notificationsService: NotificationsService,
     private router: Router
   ) {}
@@ -81,7 +79,6 @@ export class Messages implements OnInit {
     this.chatService.getMessages(conversation.id).subscribe({
       next: (messages) => {
         this.messages = messages;
-        this.markSelectedConversationRead(messages);
         this.isLoadingMessages = false;
       },
       error: (err) => {
@@ -101,7 +98,6 @@ export class Messages implements OnInit {
     this.chatService.sendMessage(this.selectedConversation.id, text).subscribe({
       next: (message) => {
         this.messages = [...this.messages, message];
-        this.markSelectedConversationRead(this.messages);
         this.replyText = '';
         this.isSending = false;
       },
@@ -125,10 +121,5 @@ export class Messages implements OnInit {
     if (err?.status === 401) return 'Please sign in again.';
     if (err?.details?.errors) return Object.values(err.details.errors).flat().join(' ');
     return err?.details?.message || err?.message || fallback;
-  }
-
-  private markSelectedConversationRead(messages: Message[]) {
-    if (!this.currentUser || !this.selectedConversation) return;
-    this.chatReadState.markConversationRead(this.currentUser.id, this.selectedConversation.id, messages);
   }
 }

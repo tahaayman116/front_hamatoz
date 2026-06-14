@@ -24,9 +24,8 @@
     <a *ngIf="!currentUser" routerLink="/sign-in" class="btn-ghost">Login</a>
     <a *ngIf="!currentUser" routerLink="/sign-up" class="btn-primary">Sign Up</a>
 
-    <a *ngIf="currentUser" routerLink="/messages" routerLinkActive="active" class="icon-action" [class.notify-pulse]="messagePulse" aria-label="Messages">
+    <a *ngIf="currentUser" routerLink="/messages" routerLinkActive="active" class="icon-action" aria-label="Messages">
       <span class="material-symbols-outlined">forum</span>
-      <b *ngIf="unreadMessageBadge > 0">{{ unreadMessageBadge > 9 ? '9+' : unreadMessageBadge }}</b>
     </a>
     <a *ngIf="currentUser" routerLink="/profile" class="btn-ghost">
       <span class="material-symbols-outlined">person</span>
@@ -50,9 +49,8 @@
   <span class="mobile-divider"></span>
   <a *ngIf="!currentUser" routerLink="/sign-in" (click)="closeMobileMenu()">Login</a>
   <a *ngIf="!currentUser" routerLink="/sign-up" class="primary-mobile" (click)="closeMobileMenu()">Sign Up</a>
-  <a *ngIf="currentUser" routerLink="/messages" routerLinkActive="active" [class.notify-pulse]="messagePulse" (click)="closeMobileMenu()">
+  <a *ngIf="currentUser" routerLink="/messages" routerLinkActive="active" (click)="closeMobileMenu()">
     Messages
-    <b *ngIf="unreadMessageBadge > 0">{{ unreadMessageBadge > 9 ? '9+' : unreadMessageBadge }}</b>
   </a>
   <a *ngIf="currentUser" routerLink="/profile" (click)="closeMobileMenu()">Profile</a>
   <button *ngIf="currentUser" type="button" (click)="logout()">Logout</button>

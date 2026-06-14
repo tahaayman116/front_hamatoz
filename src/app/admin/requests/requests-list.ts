@@ -76,21 +76,25 @@ export class RequestsList implements OnInit {
     this.adminService
       .reviewRequest(String(this.selectedRequest.id), {
         approve,
-        adminMessage: this.adminMessage || undefined,
+        adminMessage: this.adminMessage.trim() || undefined,
       })
       .subscribe({
         next: () => {
-          this.successMessage = approve ? 'Request approved.' : 'Request denied.';
-          this.selectedRequest = null;
-          this.adminMessage = '';
-          this.isProcessing = false;
-          this.loadRequests();
+          this.finishReview(approve);
         },
         error: (err) => {
           this.errorMessage = this.readableError(err);
           this.isProcessing = false;
         },
       });
+  }
+
+  private finishReview(approve: boolean, message?: string) {
+    this.successMessage = message || (approve ? 'Request approved.' : 'Request denied.');
+    this.selectedRequest = null;
+    this.adminMessage = '';
+    this.isProcessing = false;
+    this.loadRequests();
   }
 
   private readableError(err: any): string {

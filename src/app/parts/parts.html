@@ -160,6 +160,16 @@
           {{ errorMessage }}
         </div>
 
+        <div *ngIf="requestFeedback" class="state-banner success">
+          <span class="material-symbols-outlined">check_circle</span>
+          {{ requestFeedback }}
+        </div>
+
+        <div *ngIf="requestError" class="state-banner error">
+          <span class="material-symbols-outlined">error</span>
+          {{ requestError }}
+        </div>
+
         <div *ngIf="!isLoading && !isAiSearching && filteredParts.length === 0" class="empty-state">
           <span class="material-symbols-outlined">settings</span>
           <h3>No parts found</h3>
@@ -199,6 +209,20 @@
                 <span class="material-symbols-outlined" [class.filled]="part.isFavorited">{{ part.isFavorited ? 'favorite' : 'favorite_border' }}</span>
               </button>
             </footer>
+
+            <details class="part-request-box">
+              <summary>
+                <span class="material-symbols-outlined">forum</span>
+                Request chat
+              </summary>
+              <form (ngSubmit)="submitPartRequest(part)">
+                <p>Admin approval is required before the agency chat opens.</p>
+                <button type="submit" [disabled]="requestLoadingId === part.id">
+                  <span class="material-symbols-outlined">forum</span>
+                  {{ requestLoadingId === part.id ? 'Sending...' : 'Request chat' }}
+                </button>
+              </form>
+            </details>
           </article>
         </div>
       </section>

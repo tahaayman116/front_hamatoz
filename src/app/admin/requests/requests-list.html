@@ -31,7 +31,7 @@
       <div>
         <span class="status-chip">{{ request.status }}</span>
         <h4>Request #{{ request.id }}</h4>
-        <p>{{ request.message || 'No message provided.' }}</p>
+        <p>Customer requested to open a chat for this listing.</p>
       </div>
       <dl>
         <div>
@@ -54,7 +54,7 @@
     <div>
       <p class="eyebrow">Review</p>
       <h3>Request #{{ selectedRequest.id }}</h3>
-      <p>{{ selectedRequest.message || 'No message provided.' }}</p>
+      <p>Approving this request opens a chat between the customer and the agency.</p>
     </div>
 
     <label>
@@ -62,7 +62,7 @@
       <textarea
         [(ngModel)]="adminMessage"
         rows="3"
-        placeholder="Optional for approval, required when denying..."
+        placeholder="Optional for approval, required when denying"
       ></textarea>
     </label>
 

@@ -5,8 +5,11 @@ import { API_CONFIG } from '../api/api.config';
 
 export interface Conversation {
   id: string;
-  participantId: string;
-  participantName: string;
+  requestId?: number;
+  customerUserId?: number;
+  agencyUserId?: number;
+  participantId?: string;
+  participantName?: string;
   lastMessage?: string;
   lastMessageTime?: Date;
   unreadCount?: number;
@@ -17,9 +20,11 @@ export interface Conversation {
 export interface Message {
   id: string;
   conversationId: string;
-  senderId: string;
-  senderName: string;
+  senderUserId?: number;
+  senderId?: string;
+  senderName?: string;
   content: string;
+  text?: string;
   timestamp: Date;
   read?: boolean;
 }
@@ -43,7 +48,9 @@ export class ChatService {
       this.loading.set(true);
       this.apiService.get<any>(API_CONFIG.endpoints.chat.conversations).subscribe({
         next: (response: any) => {
-          const conversationsArray = this.normalizeArray(response, 'conversations');
+          const conversationsArray = this.normalizeArray(response, 'conversations').map((conversation) =>
+            this.normalizeConversation(conversation)
+          );
           this.conversations.set(conversationsArray);
           this.error.set(null);
           this.loading.set(false);
@@ -71,7 +78,9 @@ export class ChatService {
       );
       this.apiService.get<any>(endpoint).subscribe({
         next: (response: any) => {
-          const messagesArray = this.normalizeArray(response, 'messages');
+          const messagesArray = this.normalizeArray(response, 'messages').map((message) =>
+            this.normalizeMessage(message)
+          );
           this.currentMessages.set(messagesArray);
           this.error.set(null);
           this.loading.set(false);
@@ -100,7 +109,7 @@ export class ChatService {
       const data = { text: content };
       this.apiService.post<any>(endpoint, data).subscribe({
         next: (response: any) => {
-          const message = response.data || response;
+          const message = this.normalizeMessage(response.data || response);
           this.currentMessages.update((messages) => [...messages, message]);
           this.error.set(null);
           this.loading.set(false);
@@ -139,7 +148,61 @@ export class ChatService {
     if (!response) return [];
     if (Array.isArray(response)) return response;
     if (Array.isArray(response.data)) return response.data;
+    if (Array.isArray(response.items)) return response.items;
+    if (Array.isArray(response.result)) return response.result;
+    if (Array.isArray(response.$values)) return response.$values;
     if (Array.isArray(response[key])) return response[key];
+    if (Array.isArray(response.data?.$values)) return response.data.$values;
+    if (Array.isArray(response.data?.items)) return response.data.items;
+    if (Array.isArray(response.data?.[key])) return response.data[key];
     return [response.data || response];
+  }
+
+  private normalizeConversation(conversation: any): Conversation {
+    const createdAt = this.toDate(conversation.createdAtUtc || conversation.createdAt);
+    const updatedAt = this.toDate(conversation.updatedAtUtc || conversation.updatedAt || conversation.createdAtUtc);
+
+    return {
+      ...conversation,
+      id: String(conversation.id),
+      requestId: Number(conversation.requestId) || undefined,
+      customerUserId: Number(conversation.customerUserId) || undefined,
+      agencyUserId: Number(conversation.agencyUserId) || undefined,
+      participantId: conversation.participantId ? String(conversation.participantId) : undefined,
+      participantName: conversation.participantName,
+      createdAt,
+      updatedAt,
+      lastMessageTime: conversation.lastMessageTime ? this.toDate(conversation.lastMessageTime) : undefined,
+    };
+  }
+
+  private normalizeMessage(message: any): Message {
+    const timestamp = this.toDate(message.sentAtUtc || message.timestamp || message.createdAtUtc || message.createdAt);
+    const senderUserId =
+      message.senderUserId ??
+      message.senderUserID ??
+      message.senderId ??
+      message.senderID ??
+      message.userId ??
+      message.userID ??
+      message.fromUserId ??
+      message.fromUserID ??
+      message.createdByUserId;
+
+    return {
+      ...message,
+      id: String(message.id ?? message.messageId ?? message.messageID ?? `${message.conversationId || ''}-${timestamp.getTime()}`),
+      conversationId: String(message.conversationId ?? message.conversationID),
+      senderUserId: Number(senderUserId) || undefined,
+      senderId: senderUserId !== undefined && senderUserId !== null ? String(senderUserId) : undefined,
+      content: message.content || message.text || '',
+      text: message.text || message.content || '',
+      timestamp,
+    };
+  }
+
+  private toDate(value: any): Date {
+    const date = value ? new Date(value) : new Date();
+    return Number.isNaN(date.getTime()) ? new Date() : date;
   }
 }

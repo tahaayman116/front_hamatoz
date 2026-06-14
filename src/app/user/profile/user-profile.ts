@@ -10,7 +10,12 @@ import { User } from '../../core/models/user.model';
 import { UserFavorites } from '../../core/models/favorites.model';
 import { CreateListingDto, CreateOrUpdateAgencyProfileDto } from '../../core/models/api.dtos';
 
-type ProfileTab = 'overview' | 'favorites' | 'agency-profile' | 'agency-listings' | 'new-listing';
+type ProfileTab =
+  | 'overview'
+  | 'favorites'
+  | 'agency-profile'
+  | 'agency-listings'
+  | 'new-listing';
 type ListingType = 'Car' | 'SparePart';
 
 @Component({
@@ -278,6 +283,7 @@ export class UserProfile implements OnInit {
         this.errorMessage = this.readableApiError(err, 'Could not load agency listings.');
       },
     });
+
   }
 
   private afterListingSubmitted() {

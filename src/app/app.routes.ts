@@ -9,6 +9,7 @@ import { SignUp } from './sign-up/sign-up';
 import { SignIn } from './sign-in/sign-in';
 import { Preferences } from './preferences/preferences';
 import { UserProfile } from './user/profile/user-profile';
+import { Messages } from './messages/messages';
 import { AdminSignIn } from './admin/sign-in/admin-sign-in';
 import { AdminDashboard } from './admin/dashboard/admin-dashboard';
 import { AdminGuard } from './core/guards/admin.guard';
@@ -25,6 +26,7 @@ export const routes: Routes = [
   { path: 'sign-in', component: SignIn },
   { path: 'preferences', component: Preferences },
   { path: 'profile', component: UserProfile },
+  { path: 'messages', component: Messages },
   
   // Admin Routes
   { path: 'admin/sign-in', component: AdminSignIn },

@@ -1,9 +1,11 @@
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ListingDto } from '../core/models/api.dtos';
+import { AuthService } from '../core/services/auth.service';
 import { ListingsService } from '../core/services/listings.service';
+import { RequestsService } from '../core/services/requests.service';
 
 @Component({
   selector: 'app-cars-details',
@@ -18,12 +20,18 @@ export class CarsDetails implements OnInit, OnDestroy {
   images: string[] = [];
   isLoading = true;
   errorMessage = '';
+  requestFeedback = '';
+  requestError = '';
+  isRequesting = false;
 
   private routeSubscription?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
-    private listingsService: ListingsService
+    private router: Router,
+    private authService: AuthService,
+    private listingsService: ListingsService,
+    private requestsService: RequestsService
   ) {}
 
   ngOnInit() {
@@ -44,6 +52,41 @@ export class CarsDetails implements OnInit, OnDestroy {
 
   selectImage(imageUrl: string) {
     this.selectedImage = imageUrl;
+  }
+
+  submitPurchaseRequest() {
+    if (!this.listing || this.isRequesting) return;
+
+    const user = this.authService.getCurrentUser();
+    if (!user) {
+      this.router.navigate(['/sign-in']);
+      return;
+    }
+
+    if (!['customer', 'user'].includes(user.role?.toLowerCase())) {
+      this.requestError = 'Only customer accounts can send purchase requests.';
+      this.requestFeedback = '';
+      return;
+    }
+
+    this.isRequesting = true;
+    this.requestError = '';
+    this.requestFeedback = '';
+
+    this.requestsService
+      .createRequest({
+        listingId: this.listing.id,
+      })
+      .subscribe({
+        next: () => {
+          this.requestFeedback = 'Request sent to admin. Chat will open after approval.';
+          this.isRequesting = false;
+        },
+        error: (err) => {
+          this.requestError = this.readableApiError(err, 'Could not send request.');
+          this.isRequesting = false;
+        },
+      });
   }
 
   get location(): string {
@@ -83,6 +126,12 @@ export class CarsDetails implements OnInit, OnDestroy {
         this.isLoading = false;
       },
     });
+  }
+
+  private readableApiError(err: any, fallback: string): string {
+    if (err?.status === 401) return 'Please sign in again before sending a request.';
+    if (err?.details?.errors) return Object.values(err.details.errors).flat().join(' ');
+    return err?.details?.message || err?.message || fallback;
   }
 
   private loadSimilar(id: number) {

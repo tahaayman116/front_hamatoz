@@ -1,0 +1,94 @@
+<main class="messages-shell">
+  <section class="messages-header">
+    <div>
+      <p class="eyebrow">Messages</p>
+      <h1>{{ isAgency ? 'Customer chats' : 'Agency chats' }}</h1>
+      <p>Approved requests open a direct chat here.</p>
+    </div>
+    <button type="button" class="ghost-action" (click)="loadConversations()" [disabled]="isLoadingConversations">
+      <span class="material-symbols-outlined">refresh</span>
+      {{ isLoadingConversations ? 'Loading...' : 'Refresh' }}
+    </button>
+  </section>
+
+  <div *ngIf="errorMessage" class="notice error">
+    <span class="material-symbols-outlined">error</span>
+    {{ errorMessage }}
+  </div>
+
+  <section class="messages-layout">
+    <aside class="conversation-list">
+      <div *ngIf="isLoadingConversations" class="state-panel">Loading conversations...</div>
+
+      <div *ngIf="!isLoadingConversations && conversations.length === 0" class="empty-panel">
+        <span class="material-symbols-outlined">forum</span>
+        <h2>No chats yet</h2>
+        <p>Chats appear here after admin approves a request.</p>
+        <a routerLink="/cars">Browse listings</a>
+      </div>
+
+      <button
+        *ngFor="let conversation of conversations"
+        type="button"
+        [class.active]="selectedConversation?.id === conversation.id"
+        (click)="selectConversation(conversation)"
+      >
+        <span class="material-symbols-outlined">chat</span>
+        <div>
+          <strong>Request #{{ conversation.requestId || conversation.id }}</strong>
+          <p>{{ participantLabel(conversation) }}</p>
+        </div>
+        <small>{{ conversation.createdAt | date:'mediumDate' }}</small>
+      </button>
+    </aside>
+
+    <section class="chat-panel">
+      <ng-container *ngIf="selectedConversation; else noConversation">
+        <header class="chat-head">
+          <div>
+            <p class="eyebrow">Conversation</p>
+            <h2>Request #{{ selectedConversation.requestId || selectedConversation.id }}</h2>
+          </div>
+          <span>{{ participantLabel(selectedConversation) }}</span>
+        </header>
+
+        <div class="thread">
+          <p *ngIf="isLoadingMessages" class="state-panel">Loading messages...</p>
+
+          <div *ngIf="!isLoadingMessages && messages.length === 0" class="empty-thread">
+            <span class="material-symbols-outlined">mark_chat_unread</span>
+            <strong>Chat is open</strong>
+            <p>Send the first message to start the conversation.</p>
+          </div>
+
+          <article *ngFor="let message of messages" class="message-bubble" [class.mine]="isOwnMessage(message)">
+            <p>{{ message.content }}</p>
+            <small>{{ message.timestamp | date:'short' }}</small>
+          </article>
+        </div>
+
+        <form class="reply-form" (ngSubmit)="sendReply()">
+          <textarea
+            [(ngModel)]="replyText"
+            name="replyText"
+            maxlength="1000"
+            rows="3"
+            [placeholder]="isAgency ? 'Reply to the customer' : 'Reply to the agency'"
+          ></textarea>
+          <button type="submit" [disabled]="isSending || !replyText.trim()">
+            <span class="material-symbols-outlined">send</span>
+            {{ isSending ? 'Sending...' : 'Send' }}
+          </button>
+        </form>
+      </ng-container>
+
+      <ng-template #noConversation>
+        <div class="empty-thread solo">
+          <span class="material-symbols-outlined">forum</span>
+          <strong>Select a chat</strong>
+          <p>Your approved request conversations will open here.</p>
+        </div>
+      </ng-template>
+    </section>
+  </section>
+</main>

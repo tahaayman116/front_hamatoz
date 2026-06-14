@@ -1,9 +1,11 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { FavoritesService } from '../core/services/favorites.service';
 import { AuthService } from '../core/services/auth.service';
 import { ListingsService } from '../core/services/listings.service';
+import { RequestsService } from '../core/services/requests.service';
 import { ListingDto } from '../core/models/api.dtos';
 
 interface Part {
@@ -51,6 +53,9 @@ export class Parts {
   filteredParts: Part[] = [];
   totalParts = 0;
   allBrands: string[] = [];
+  requestLoadingId: number | null = null;
+  requestFeedback = '';
+  requestError = '';
 
   get activeFilterCount(): number {
     const brandCount = Object.values(this.selectedBrands).filter(Boolean).length;
@@ -62,7 +67,9 @@ export class Parts {
   constructor(
     private favoritesService: FavoritesService,
     private authService: AuthService,
-    private listingsService: ListingsService
+    private listingsService: ListingsService,
+    private requestsService: RequestsService,
+    private router: Router
   ) {
     const user = this.authService.getCurrentUser();
     if (user) {
@@ -225,6 +232,37 @@ export class Parts {
       const originalPart = this.allParts.find((p) => p.id === partId);
       if (originalPart) originalPart.isFavorited = true;
     }
+  }
+
+  submitPartRequest(part: Part) {
+    if (this.requestLoadingId) return;
+
+    const user = this.authService.getCurrentUser();
+    if (!user) {
+      this.router.navigate(['/sign-in']);
+      return;
+    }
+
+    if (!['customer', 'user'].includes(user.role?.toLowerCase())) {
+      this.requestError = 'Only customer accounts can send purchase requests.';
+      this.requestFeedback = '';
+      return;
+    }
+
+    this.requestLoadingId = part.id;
+    this.requestError = '';
+    this.requestFeedback = '';
+
+    this.requestsService.createRequest({ listingId: part.id }).subscribe({
+      next: () => {
+        this.requestFeedback = `Request for listing #${part.id} was sent to admin. Chat will open after approval.`;
+        this.requestLoadingId = null;
+      },
+      error: (err) => {
+        this.requestError = this.readableApiError(err, 'Could not send request.');
+        this.requestLoadingId = null;
+      },
+    });
   }
 
   private loadUserFavorites() {
@@ -445,6 +483,12 @@ export class Parts {
       .replace(/[^a-z0-9\u0600-\u06FF\s]/g, ' ')
       .replace(/\s+/g, ' ')
       .trim();
+  }
+
+  private readableApiError(err: any, fallback: string): string {
+    if (err?.status === 401) return 'Please sign in again before sending a request.';
+    if (err?.details?.errors) return Object.values(err.details.errors).flat().join(' ');
+    return err?.details?.message || err?.message || fallback;
   }
 
   private isPartListing(listing: ListingDto): boolean {

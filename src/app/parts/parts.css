@@ -24,7 +24,7 @@
   display: none;
 }
 
-.part-request-box form {
+.part-request-box > div {
   display: grid;
   gap: 10px;
   border-top: 1px solid oklch(30% 0.024 252);

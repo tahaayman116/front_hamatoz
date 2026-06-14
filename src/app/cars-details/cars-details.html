@@ -93,19 +93,19 @@
             </div>
           </dl>
 
-          <form class="request-panel" (ngSubmit)="submitPurchaseRequest()">
+          <div class="request-panel">
             <div>
               <p class="eyebrow">Purchase request</p>
               <h3>Request a chat with the agency</h3>
             </div>
             <p class="request-copy">Admin approval is required before the agency chat opens.</p>
-            <button class="request-action" type="submit" [disabled]="isRequesting">
+            <button class="request-action" type="button" (click)="submitPurchaseRequest()" [disabled]="isRequesting">
               <span class="material-symbols-outlined">forum</span>
               {{ isRequesting ? 'Sending...' : 'Request chat' }}
             </button>
             <p *ngIf="requestFeedback" class="request-state success">{{ requestFeedback }}</p>
             <p *ngIf="requestError" class="request-state error">{{ requestError }}</p>
-          </form>
+          </div>
         </aside>
       </div>
 

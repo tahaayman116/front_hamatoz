@@ -215,13 +215,13 @@
                 <span class="material-symbols-outlined">forum</span>
                 Request chat
               </summary>
-              <form (ngSubmit)="submitPartRequest(part)">
+              <div>
                 <p>Admin approval is required before the agency chat opens.</p>
-                <button type="submit" [disabled]="requestLoadingId === part.id">
+                <button type="button" (click)="submitPartRequest(part)" [disabled]="requestLoadingId === part.id">
                   <span class="material-symbols-outlined">forum</span>
                   {{ requestLoadingId === part.id ? 'Sending...' : 'Request chat' }}
                 </button>
-              </form>
+              </div>
             </details>
           </article>
         </div>

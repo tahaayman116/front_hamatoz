@@ -45,7 +45,9 @@
 }
 
 .desktop-nav {
-  justify-self: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   gap: 2px;
   padding: 4px;
   border: 1px solid oklch(98% 0.006 252 / 0.1);
@@ -219,7 +221,7 @@
   background: oklch(98% 0.006 252 / 0.1);
 }
 
-@media (max-width: 860px) {
+@media (max-width: 1050px) {
   .site-header {
     grid-template-columns: minmax(0, 1fr) auto;
   }

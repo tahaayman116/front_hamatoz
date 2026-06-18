@@ -312,7 +312,9 @@ export class Cars implements OnInit {
 
     this.listingsService.getForYou(userId).subscribe({
       next: (listings: ListingDto[]) => {
-        const carListings = listings.filter((listing) => listing.type?.toLowerCase() === 'car');
+        const carListings = listings
+          .map((listing) => this.normalizeForYouCar(listing))
+          .filter((listing) => listing.type?.toLowerCase() === 'car');
         if (!carListings.length) {
           this.loadCarsFromApi('The AI did not return recommendations for your choices yet, so we are showing approved cars.', true);
           return;
@@ -369,6 +371,58 @@ export class Cars implements OnInit {
       searchableText: this.searchableListingText(listing),
       numericYear: listing.year || 0,
     };
+  }
+
+  private normalizeForYouCar(listing: ListingDto): ListingDto {
+    const recommendation = listing as ListingDto & { mainImageUrl?: string };
+
+    return {
+      ...recommendation,
+      type: recommendation.type || 'Car',
+      status: recommendation.status || 'Recommended',
+      brand: recommendation.brand || this.extractBrandFromTitle(recommendation.title) || 'Recommended',
+      modelOrPartName: recommendation.modelOrPartName || recommendation.title || 'Recommended car',
+      condition: recommendation.condition || 'recommended',
+      city: recommendation.city || '',
+      area: recommendation.area || '',
+      description: recommendation.description || recommendation.title || '',
+      ownerUserId: recommendation.ownerUserId || 0,
+      createdAtUtc: recommendation.createdAtUtc || new Date().toISOString(),
+      updatedAtUtc: recommendation.updatedAtUtc,
+      imagesUrlsText: recommendation.imagesUrlsText || recommendation.mainImageUrl || '',
+    };
+  }
+
+  private extractBrandFromTitle(title?: string): string {
+    if (!title) return '';
+
+    const knownBrands = [
+      'Mercedes',
+      'BMW',
+      'Audi',
+      'Toyota',
+      'Hyundai',
+      'Kia',
+      'Nissan',
+      'Chevrolet',
+      'Renault',
+      'Peugeot',
+      'Honda',
+      'Mitsubishi',
+      'MG',
+      'Chery',
+      'BYD',
+      'Fiat',
+      'Skoda',
+      'Volkswagen',
+      'Opel',
+      'Suzuki',
+      'Jeep',
+      'Porsche',
+    ];
+
+    const normalizedTitle = this.normalizeSearchText(title);
+    return knownBrands.find((brand) => normalizedTitle.includes(this.normalizeSearchText(brand))) || '';
   }
 
   private firstImageUrl(imagesUrlsText?: string): string {

@@ -161,8 +161,14 @@ export class ChatService {
   }
 
   private normalizeConversation(conversation: any): Conversation {
-    const createdAt = this.toDate(conversation.createdAtUtc || conversation.createdAt);
-    const updatedAt = this.toDate(conversation.updatedAtUtc || conversation.updatedAt || conversation.createdAtUtc);
+    const createdAt = this.toDate(
+      conversation.createdAtUtc || conversation.createdAt,
+      Boolean(conversation.createdAtUtc)
+    );
+    const updatedAt = this.toDate(
+      conversation.updatedAtUtc || conversation.updatedAt || conversation.createdAtUtc,
+      Boolean(conversation.updatedAtUtc || conversation.createdAtUtc)
+    );
 
     return {
       ...conversation,
@@ -181,7 +187,10 @@ export class ChatService {
   }
 
   private normalizeMessage(message: any): Message {
-    const timestamp = this.toDate(message.sentAtUtc || message.timestamp || message.createdAtUtc || message.createdAt);
+    const timestamp = this.toDate(
+      message.sentAtUtc || message.timestamp || message.createdAtUtc || message.createdAt,
+      Boolean(message.sentAtUtc || message.createdAtUtc)
+    );
     const senderUserId =
       message.senderUserId ??
       message.senderUserID ??
@@ -205,8 +214,17 @@ export class ChatService {
     };
   }
 
-  private toDate(value: any): Date {
-    const date = value ? new Date(value) : new Date();
+  private toDate(value: any, assumeUtc = false): Date {
+    let normalizedValue = value;
+    if (
+      assumeUtc &&
+      typeof value === 'string' &&
+      !/(?:z|[+-]\d{2}:?\d{2})$/i.test(value.trim())
+    ) {
+      normalizedValue = `${value.trim()}Z`;
+    }
+
+    const date = normalizedValue ? new Date(normalizedValue) : new Date();
     return Number.isNaN(date.getTime()) ? new Date() : date;
   }
 }

@@ -1,4 +1,4 @@
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -11,7 +11,7 @@ import { User } from '../core/models/user.model';
 @Component({
   selector: 'app-messages',
   standalone: true,
-  imports: [CommonModule, DatePipe, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './messages.html',
   styleUrl: './messages.css',
 })
@@ -140,6 +140,25 @@ export class Messages implements OnInit, OnDestroy {
 
   conversationTitle(conversation: Conversation): string {
     return this.participantLabel(conversation);
+  }
+
+  formatEgyptDate(value: Date | string | number, includeTime = true): string {
+    const date = value instanceof Date ? value : new Date(value);
+    if (Number.isNaN(date.getTime())) return '';
+
+    return new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Africa/Cairo',
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      ...(includeTime
+        ? {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
+          }
+        : {}),
+    }).format(date);
   }
 
   private readableApiError(err: any, fallback: string): string {

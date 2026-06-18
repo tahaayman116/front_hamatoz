@@ -38,7 +38,7 @@
           <strong>{{ conversationTitle(conversation) }}</strong>
           <p>Request #{{ conversation.requestId || conversation.id }}</p>
         </div>
-        <small>{{ conversation.createdAt | date:'mediumDate' }}</small>
+        <small>{{ formatEgyptDate(conversation.createdAt, false) }}</small>
       </button>
     </aside>
 
@@ -63,7 +63,7 @@
 
           <article *ngFor="let message of messages" class="message-bubble" [class.mine]="isOwnMessage(message)">
             <p>{{ message.content }}</p>
-            <small>{{ message.timestamp | date:'short' }}</small>
+            <small>{{ formatEgyptDate(message.timestamp) }}</small>
           </article>
         </div>
 

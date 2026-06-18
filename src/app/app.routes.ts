@@ -14,6 +14,7 @@ import { Messages } from './messages/messages';
 import { AdminSignIn } from './admin/sign-in/admin-sign-in';
 import { AdminDashboard } from './admin/dashboard/admin-dashboard';
 import { AdminGuard } from './core/guards/admin.guard';
+import { LegalPage } from './legal/legal-page';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -26,6 +27,8 @@ export const routes: Routes = [
   { path: 'parts/:id', component: PartDetails },
   { path: 'sign-up', component: SignUp },
   { path: 'sign-in', component: SignIn },
+  { path: 'terms', component: LegalPage, data: { document: 'terms' } },
+  { path: 'privacy', component: LegalPage, data: { document: 'privacy' } },
   { path: 'preferences', component: Preferences },
   { path: 'profile', component: UserProfile },
   { path: 'messages', component: Messages },

@@ -1,0 +1,19 @@
+<main class="legal-page">
+  <header class="legal-header">
+    <a routerLink="/sign-up" class="back-link">
+      <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+      Back to sign up
+    </a>
+    <p class="eyebrow">{{ document.eyebrow }}</p>
+    <h1>{{ document.title }}</h1>
+    <p class="introduction">{{ document.introduction }}</p>
+    <p class="updated">Last updated: 18 June 2026</p>
+  </header>
+
+  <article class="legal-content">
+    <section *ngFor="let section of document.sections">
+      <h2>{{ section.title }}</h2>
+      <p *ngFor="let paragraph of section.paragraphs">{{ paragraph }}</p>
+    </section>
+  </article>
+</main>

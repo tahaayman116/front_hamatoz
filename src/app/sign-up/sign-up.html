@@ -136,7 +136,10 @@
           class="w-5 h-5 rounded mt-0.5 accent-blue-600 cursor-pointer"
         />
         <span class="text-xs text-white/70 leading-relaxed">
-          I agree to the <a href="#" class="text-blue-400 hover:text-blue-300 font-semibold">Terms of Service</a> and <a href="#" class="text-blue-400 hover:text-blue-300 font-semibold">Privacy Policy</a>
+          I agree to the
+          <a routerLink="/terms" target="_blank" rel="noopener" (click)="$event.stopPropagation()" class="text-blue-400 hover:text-blue-300 font-semibold">Terms of Service</a>
+          and
+          <a routerLink="/privacy" target="_blank" rel="noopener" (click)="$event.stopPropagation()" class="text-blue-400 hover:text-blue-300 font-semibold">Privacy Policy</a>
         </span>
       </label>
 

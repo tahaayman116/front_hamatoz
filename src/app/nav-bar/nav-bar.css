@@ -27,6 +27,7 @@
 }
 
 .brand-link {
+  grid-column: 1;
   justify-self: start;
   gap: 10px;
   color: inherit;
@@ -110,6 +111,7 @@
 }
 
 .desktop-actions {
+  grid-column: 3;
   justify-self: end;
   gap: 8px;
 }
@@ -233,6 +235,7 @@
 
   .menu-toggle {
     display: inline-flex;
+    grid-column: 2;
     justify-self: end;
   }
 }
